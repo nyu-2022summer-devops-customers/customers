@@ -93,6 +93,29 @@ def create_address(customer_id):
 
     return jsonify(message), status.HTTP_201_CREATED, {"Location": location_url}
 
+
+######################################################################
+# LIST ALL ADDRESS OF A GIVEN CUSTOMER
+######################################################################
+@app.route(f"{BASE_URL}/<int:customer_id>/addresses", methods=["GET"])
+def list_addresses(customer_id):
+    """
+    List all Address of a given customer
+    This endpoint will create an Address based the data in the body that is posted
+    """
+    app.logger.info("Request for addresses with customer id: %s", customer_id)
+    addresses = AddressModel.find_by_customer_id(customer_id=customer_id)
+    if addresses.count() == 0:
+        abort(status.HTTP_404_NOT_FOUND, f"Addresses with id '{customer_id}' was not found.")
+    
+    app.logger.info("All address under customer ID [%s].", customer_id)
+
+    res = []
+    for addr in addresses:
+        res.append(addr.serialize())
+    return jsonify(res), status.HTTP_200_OK
+
+
 ######################################################################
 # GET AN ADDRESS OF A CUSTOMER
 ######################################################################

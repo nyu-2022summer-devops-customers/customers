@@ -9,7 +9,7 @@ import os
 import logging
 import unittest
 from service import app
-from service.models import CustomerModel
+from service.models import CustomerModel, Gender
 from service.utils import status
 from tests.factories import CustomerFactory  # HTTP Status Codes
 
@@ -105,3 +105,19 @@ class TestCustomersService(unittest.TestCase):
         self.assertEqual(new_customer["email"], test_customer.email)
         self.assertEqual(new_customer["gender"], test_customer.gender.name)
         self.assertEqual(new_customer["birthday"], test_customer.birthday.isoformat())
+
+    def test_update_a_customer(self):
+        """It should Update an existing Customer"""
+        # create a customer to update
+        test_customer = CustomerFactory()
+        response = self.client.post(BASE_URL, json=test_customer.serialize())
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+
+        # update the customer
+        new_customer = response.get_json()
+        logging.debug(new_customer)
+        new_customer["gender"] = Gender.MALE.name
+        response = self.client.put(f"{BASE_URL}/{new_customer['customer_id']}", json=new_customer)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        updated_customer = response.get_json()
+        self.assertEqual(updated_customer["gender"], Gender.MALE.name)

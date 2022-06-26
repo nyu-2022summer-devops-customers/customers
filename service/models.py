@@ -139,9 +139,9 @@ class CustomerModel(db.Model):
 
 
 
-class AddressesModel(db.Model):
+class AddressModel(db.Model):
     """
-    Class that represents a AddressesModel
+    Class that represents a AddressModel
     """
 
     app = None
@@ -152,11 +152,11 @@ class AddressesModel(db.Model):
     address = db.Column(db.String(63))
 
     def __repr__(self):
-        return "<AddressesModel %r customer_id=[%s] address_id=[%s]>" % (self.address, self.customer_id, self.address_id)
+        return "<AddressModel %r customer_id=[%s] address_id=[%s]>" % (self.address, self.customer_id, self.address_id)
 
     def create(self, customer_id):
         """
-        Creates a AddressesModel to the database
+        Creates a AddressModel to the database
         """
         logger.info("Creating %s", self.address)
         self.customer_id = customer_id
@@ -166,24 +166,24 @@ class AddressesModel(db.Model):
 
     def update(self):
         """
-        Updates a AddressesModel to the database
+        Updates a AddressModel to the database
         """
         logger.info("Saving %s", self.first_name)
         db.session.commit()
 
     def delete(self):
-        """ Removes a AddressesModel from the data store """
+        """ Removes a AddressModel from the data store """
         logger.info("Deleting %s", self.first_name)
         db.session.delete(self)
         db.session.commit()
 
     def serialize(self):
-        """ Serializes a AddressesModel into a dictionary """
+        """ Serializes a AddressModel into a dictionary """
         return {"customer_id": self.customer_id, "address_id": self.address_id, "address": self.address}
 
     def deserialize(self, data):
         """
-        Deserializes a AddressesModel from a dictionary
+        Deserializes a AddressModel from a dictionary
 
         Args:
             data (dict): A dictionary containing the resource data
@@ -196,11 +196,11 @@ class AddressesModel(db.Model):
             )
         except KeyError as error:
             raise DataValidationError(
-                "Invalid AddressesModel: missing " + error.args[0]
+                "Invalid AddressModel: missing " + error.args[0]
             )
         except TypeError as error:
             raise DataValidationError(
-                "Invalid AddressesModel: body of request contained bad or no data"
+                "Invalid AddressModel: body of request contained bad or no data"
             )
         return self
 
@@ -216,22 +216,22 @@ class AddressesModel(db.Model):
 
     @classmethod
     def all(cls):
-        """ Returns all of the AddressesModels in the database """
-        logger.info("Processing all AddressesModels")
+        """ Returns all of the AddressModels in the database """
+        logger.info("Processing all AddressModels")
         return cls.query.all()
 
     @classmethod
     def find(cls, by_id):
-        """ Finds a AddressesModel by it's customer_id """
+        """ Finds a AddressModel by it's customer_id """
         logger.info("Processing lookup for customer_id %s ...", by_id)
         return cls.query.get(by_id)
 
     @classmethod
     def find_by_name(cls, first_name):
-        """Returns all AddressesModels with the given first_name
+        """Returns all AddressModels with the given first_name
 
         Args:
-            first_name (string): the first_name of the AddressesModels you want to match
+            first_name (string): the first_name of the AddressModels you want to match
         """
         logger.info("Processing first_name query for %s ...", first_name)
         return cls.query.filter(cls.first_name == first_name)

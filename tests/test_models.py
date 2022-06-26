@@ -7,7 +7,7 @@ import os
 import logging
 import unittest
 from datetime import date
-from service.models import CustomerModel, AddressesModel, Gender, DataValidationError, db
+from service.models import CustomerModel, AddressModel, Gender, DataValidationError, db
 from service import app
 from tests.factories import CustomerFactory
 

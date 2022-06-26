@@ -18,7 +18,7 @@ Test Factory to make fake objects for testing
 from datetime import date
 from factory.fuzzy import FuzzyChoice, FuzzyDate
 import factory
-from service.models import AddressesModel, CustomerModel, Gender
+from service.models import AddressModel, CustomerModel, Gender
 
 class CustomerFactory(factory.Factory):
     """Creates a customer"""
@@ -44,7 +44,7 @@ class AddressFactory(factory.Factory):
     class Meta:  # pylint: disable=too-few-public-methods
         """Maps factory to data model"""
 
-        model = AddressesModel
+        model = AddressModel
 
     customer_id = None
     address_id = factory.Sequence(lambda n: n)

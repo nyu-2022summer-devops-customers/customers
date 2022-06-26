@@ -54,6 +54,25 @@ def create_customers():
     return jsonify(message), status.HTTP_201_CREATED, {"Location": location_url}
 
 ######################################################################
+# READ A CUSTOMER BY CUSTOMER_ID
+######################################################################
+
+@app.route(f"{BASE_URL}/<int:customer_id>", methods=["GET"])
+def get_a_customer(customer_id):
+    """
+    Retrieve a single Customer
+
+    This endpoint will return a Customer based on it's id
+    """
+    app.logger.info("Request for customer with id: %s", customer_id)
+    customer: CustomerModel = CustomerModel.find(customer_id)
+    if not customer:
+        abort(status.HTTP_404_NOT_FOUND, f"Customer with id '{customer_id}' was not found.")
+
+    app.logger.info("Returning customer: Id %s, Name %s %s", customer.customer_id, customer.first_name, customer.last_name)
+    return jsonify(customer.serialize()), status.HTTP_200_OK
+
+######################################################################
 # CREATE NEW ADDRESS
 # https://flask-sqlalchemy.palletsprojects.com/en/2.x/models/
 ######################################################################

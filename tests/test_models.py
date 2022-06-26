@@ -81,3 +81,18 @@ class TestCustomersModel(unittest.TestCase):
         self.assertIsNotNone(customer.customer_id)
         customers = CustomerModel.all()
         self.assertEqual(len(customers), 1)
+
+    def test_read_a_customer(self):
+        """It should Read a customer"""
+        customer = CustomerFactory()
+        logging.debug(customer)
+        customer.customer_id = None
+        customer.create()
+        self.assertIsNotNone(customer.customer_id)
+        # Fetch it back
+        found_customer: CustomerModel = CustomerModel.find(customer.customer_id)
+        self.assertEqual(found_customer.customer_id, customer.customer_id)
+        self.assertEqual(found_customer.first_name, customer.first_name)
+        self.assertEqual(found_customer.last_name, customer.last_name)
+        self.assertEqual(found_customer.email, customer.email)
+        

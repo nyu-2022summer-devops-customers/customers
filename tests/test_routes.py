@@ -43,7 +43,7 @@ class TestCustomersService(unittest.TestCase):
         """ This runs after each test """
         pass
 
-    def _create_cutomers(self, count):
+    def _create_customers(self, count):
         """Factory method to create customer in bulk"""
 
         customers = []
@@ -105,3 +105,15 @@ class TestCustomersService(unittest.TestCase):
         self.assertEqual(new_customer["email"], test_customer.email)
         self.assertEqual(new_customer["gender"], test_customer.gender.name)
         self.assertEqual(new_customer["birthday"], test_customer.birthday.isoformat())
+
+    def test_get_a_customer(self):
+        """It should Get a single Customer"""
+        # get the id of a pet
+        test_customer: CustomerModel = self._create_customers(1)[0]
+        response = self.client.get(f"{BASE_URL}/{test_customer.customer_id}")
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        data = response.get_json()
+        self.assertEqual(data["customer_id"], test_customer.customer_id)
+        self.assertEqual(data["first_name"], test_customer.first_name)
+        self.assertEqual(data["last_name"], test_customer.last_name)
+        self.assertEqual(data["email"], test_customer.email)

@@ -9,6 +9,7 @@ import os
 import logging
 import unittest
 from service import app
+from service.models import CustomerModel
 from service.utils import status
 from tests.factories import CustomerFactory  # HTTP Status Codes
 
@@ -90,9 +91,13 @@ class TestCustomersService(unittest.TestCase):
         self.assertEqual(new_customer["birthday"], test_customer.birthday.isoformat())
 
         # Check that the location header was correct
-        response = self.client.get(location)
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
-        new_customer = response.get_json()
+        # response = self.client.get(location)
+        # self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+        new_customer = CustomerModel.find(new_customer["customer_id"])
+        self.assertNotEqual(new_customer, None)
+        new_customer = new_customer.serialize()
+        # new_customer = response.get_json()
         self.assertEqual(new_customer["password"], test_customer.password)
         self.assertEqual(new_customer["first_name"], test_customer.first_name)
         self.assertEqual(new_customer["last_name"], test_customer.last_name)

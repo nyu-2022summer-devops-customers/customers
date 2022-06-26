@@ -83,6 +83,27 @@ class TestCustomersModel(unittest.TestCase):
         customers = CustomerModel.all()
         self.assertEqual(len(customers), 1)
 
+    def test_update_a_customer(self):
+        """It should Update a Customer"""
+        customer = CustomerFactory()
+        logging.debug(customer)
+        customer.customer_id = None
+        customer.create()
+        logging.debug(customer)
+        self.assertIsNotNone(customer.customer_id)
+        # Change it an save it
+        customer.gender = Gender.MALE
+        original_id = customer.customer_id
+        customer.update()
+        self.assertEqual(customer.customer_id, original_id)
+        self.assertEqual(customer.gender, Gender.MALE)
+        # Fetch it back and make sure the id hasn't changed
+        # but the data did change
+        customers = CustomerModel.all()
+        self.assertEqual(len(customers), 1)
+        self.assertEqual(customers[0].customer_id, original_id)
+        self.assertEqual(customers[0].gender, Gender.MALE)
+
     def test_read_a_customer(self):
         """It should Read a customer"""
         customer = CustomerFactory()

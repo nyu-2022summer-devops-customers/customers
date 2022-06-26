@@ -239,3 +239,12 @@ class AddressModel(db.Model):
         """
         logger.info("Processing first_name query for %s ...", first_name)
         return cls.query.filter(cls.first_name == first_name)
+    
+    @classmethod
+    def find_by_customer_and_address_id(cls, customer_id, address_id):
+        """Get an Address of a Customer
+        Args:
+            customer_id (int), address_id(int): the customer_id and address_id of the AddressModels you want to match
+        """
+        logger.info("Processing customer_id and address_id query for %s %s ...", customer_id, address_id)
+        return cls.query.filter(cls.customer_id == customer_id).filter(cls.address_id == address_id)

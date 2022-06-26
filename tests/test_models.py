@@ -153,3 +153,34 @@ class TestAddressModel(unittest.TestCase):
         self.assertIsNotNone(address.address_id)
         addresses = CustomerModel.all()
         self.assertEqual(len(addresses), 1)
+
+    def test_list_addresses(self):
+        """It should list all addresses of a customer"""
+        customer_id = 1
+        address="address"
+        addresses = AddressModel.find_by_customer_id(customer_id)
+        self.assertEqual(addresses.count(), 0)
+        
+        for i in range(0, 10):
+            address_str = f"address{i}"
+            address = AddressModel(customer_id=customer_id, address=address_str)
+            self.assertTrue(address is not None)
+            self.assertEqual(str(address), f"<AddressModel '{address_str}' customer_id=[{customer_id}] address_id=[None]>")
+            self.assertEqual(address.customer_id, customer_id)
+            self.assertEqual(address.address, address_str)
+            self.assertEqual(address.address_id, None)
+            address.create()
+            # Assert that it was assigned an id and shows up in the database
+            self.assertIsNotNone(address.address_id)
+        
+        addresses = AddressModel.find_by_customer_id(customer_id)
+        self.assertEqual(addresses.count(), 10)
+
+        for i in range(0, 10):
+            address_str = f"address{i}"
+            address: AddressModel = addresses[i]
+            self.assertTrue(address is not None)
+            self.assertEqual(address.customer_id, customer_id)
+            self.assertEqual(address.address, address_str)
+            self.assertIsNotNone(address.address_id)
+        

@@ -58,6 +58,21 @@ class TestCustomersService(unittest.TestCase):
             customers.append(test_customer)
         return customers
 
+    def _create_addresses(self, customer_id, count):
+        """Factory method to create customer in bulk"""
+
+        addresses = []
+        for _ in range(count):
+            test_address = AddressFactory()
+            test_address.customer_id = customer_id
+            response = self.client.post(f"{BASE_URL}/{customer_id}/addresses", json=test_address.serialize())
+            self.assertEqual(
+                response.status_code, status.HTTP_201_CREATED, "Could not create test customer"
+            )
+            new_customer = response.get_json()
+            test_address.address_id = new_customer["address_id"]
+            addresses.append(test_address)
+        return addresses
     ######################################################################
     #  T E S T   C A S E S
     ######################################################################
@@ -141,3 +156,6 @@ class TestCustomersService(unittest.TestCase):
         location = response.headers.get("Location", None)
         self.assertIsNotNone(location)
         logging.debug("Location: %s", location)
+
+    def test_get_an_address_of_a_customer(self):
+        """It should return an address of a customer"""

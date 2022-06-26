@@ -82,6 +82,20 @@ class TestCustomersModel(unittest.TestCase):
         customers = CustomerModel.all()
         self.assertEqual(len(customers), 1)
 
+    def test_read_a_customer(self):
+        """It should Read a customer"""
+        customer = CustomerFactory()
+        logging.debug(customer)
+        customer.customer_id = None
+        customer.create()
+        self.assertIsNotNone(customer.customer_id)
+        # Fetch it back
+        found_customer: CustomerModel = CustomerModel.find(customer.customer_id)
+        self.assertEqual(found_customer.customer_id, customer.customer_id)
+        self.assertEqual(found_customer.first_name, customer.first_name)
+        self.assertEqual(found_customer.last_name, customer.last_name)
+        self.assertEqual(found_customer.email, customer.email)
+        
 ######################################################################
 #  ADDRESS   M O D E L   T E S T   C A S E S
 ######################################################################
@@ -160,7 +174,7 @@ class TestAddressModel(unittest.TestCase):
         address="address"
         addresses = AddressModel.find_by_customer_id(customer_id)
         self.assertEqual(addresses.count(), 0)
-        
+
         for i in range(0, 10):
             address_str = f"address{i}"
             address = AddressModel(customer_id=customer_id, address=address_str)
@@ -172,7 +186,7 @@ class TestAddressModel(unittest.TestCase):
             address.create()
             # Assert that it was assigned an id and shows up in the database
             self.assertIsNotNone(address.address_id)
-        
+
         addresses = AddressModel.find_by_customer_id(customer_id)
         self.assertEqual(addresses.count(), 10)
 
@@ -183,4 +197,30 @@ class TestAddressModel(unittest.TestCase):
             self.assertEqual(address.customer_id, customer_id)
             self.assertEqual(address.address, address_str)
             self.assertIsNotNone(address.address_id)
+            
+    def test_get_an_address_of_a_customer(self):
+        """It should return an address of a customer"""
+        customer_id = 1
+        address_id = None
+        address_prefix="address"
+
+        for i in range(0, 10):
+            address_str = f"{address_prefix}{i}"
+            address = AddressModel(customer_id=customer_id, address=address_str)
+            self.assertTrue(address is not None)
+            self.assertEqual(str(address), f"<AddressModel '{address_str}' customer_id=[{customer_id}] address_id=[None]>")
+            self.assertEqual(address.customer_id, customer_id)
+            self.assertEqual(address.address, address_str)
+            self.assertEqual(address.address_id, None)
+            address.create()
+            # Assert that it was assigned an id and shows up in the database
+            self.assertIsNotNone(address.address_id)
+            address_id = address.address_id
+
+        found = AddressModel.find_by_customer_and_address_id(customer_id, address_id)
+        self.assertEqual(found.count(), 1)
+        address = found[0]
+        self.assertEqual(address.customer_id, customer_id)
+        self.assertEqual(address.address, "address9")
+        self.assertEqual(address.address_id, address_id)
         

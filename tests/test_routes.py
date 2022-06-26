@@ -44,7 +44,7 @@ class TestCustomersService(unittest.TestCase):
         """ This runs after each test """
         pass
 
-    def _create_cutomers(self, count):
+    def _create_customers(self, count):
         """Factory method to create customer in bulk"""
 
         customers = []
@@ -122,6 +122,18 @@ class TestCustomersService(unittest.TestCase):
         self.assertEqual(new_customer["gender"], test_customer.gender.name)
         self.assertEqual(new_customer["birthday"], test_customer.birthday.isoformat())
 
+    def test_get_a_customer(self):
+        """It should Get a single Customer"""
+        # get the id of a pet
+        test_customer: CustomerModel = self._create_customers(1)[0]
+        response = self.client.get(f"{BASE_URL}/{test_customer.customer_id}")
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        data = response.get_json()
+        self.assertEqual(data["customer_id"], test_customer.customer_id)
+        self.assertEqual(data["first_name"], test_customer.first_name)
+        self.assertEqual(data["last_name"], test_customer.last_name)
+        self.assertEqual(data["email"], test_customer.email)
+
     def test_create_address(self):
         """It should Create a new Customer"""
         test_customer = CustomerFactory()
@@ -183,6 +195,19 @@ class TestCustomersService(unittest.TestCase):
                     has = True
                     break
             self.assertTrue(has)
+        
+    def test_get_an_address_of_a_customer(self):
+        """It should return an address of a customer"""
+        customer_id = 1
+        addresses = self._create_addresses(customer_id=customer_id, count=10)
+        self.assertEqual(len(addresses), 10)
+        address_id = addresses[0].address_id
+        address_str = addresses[0].address
 
+        response = self.client.get(f"{BASE_URL}/{customer_id}/addresses/{address_id}")
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
         
-        
+        new_address = response.get_json()
+        self.assertEqual(new_address["address_id"], address_id)
+        self.assertEqual(new_address["customer_id"], customer_id)
+        self.assertEqual(new_address["address"], address_str)

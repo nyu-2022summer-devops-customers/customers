@@ -4,6 +4,7 @@ My Service
 Describe what your service does here
 """
 
+from audioop import add
 import os
 import sys
 import logging
@@ -76,6 +77,64 @@ def update_a_customer(customer_id):
     app.logger.info("Customer with ID [%s] updated.", customer.customer_id)
     return jsonify(customer.serialize()), status.HTTP_200_OK
 
+######################################################################
+# READ A CUSTOMER BY CUSTOMER_ID
+######################################################################
+
+@app.route(f"{BASE_URL}/<int:customer_id>", methods=["GET"])
+def get_a_customer(customer_id):
+    """
+    Retrieve a single Customer
+
+    This endpoint will return a Customer based on it's id
+    """
+    app.logger.info("Request for customer with id: %s", customer_id)
+    customer: CustomerModel = CustomerModel.find(customer_id)
+    if not customer:
+        abort(status.HTTP_404_NOT_FOUND, f"Customer with id '{customer_id}' was not found.")
+
+    app.logger.info("Returning customer: Id %s, Name %s %s", customer.customer_id, customer.first_name, customer.last_name)
+    return jsonify(customer.serialize()), status.HTTP_200_OK
+
+######################################################################
+# CREATE NEW ADDRESS
+# https://flask-sqlalchemy.palletsprojects.com/en/2.x/models/
+######################################################################
+@app.route(f"{BASE_URL}/<int:customer_id>/addresses", methods=["POST"])
+def create_address(customer_id):
+    """
+    Creates an Address
+    This endpoint will create an Address based the data in the body that is posted
+    """
+    app.logger.info("Request to create an address")
+    check_content_type("application/json")
+    address = AddressModel()
+    address.deserialize(request.get_json())
+    address.create()
+    message = address.serialize()
+    location_url = url_for("create_address", customer_id=customer_id, address_id=address.address_id, _external=True)
+    app.logger.info("Address with ID [%s] created.", address.address_id)
+
+    return jsonify(message), status.HTTP_201_CREATED, {"Location": location_url}
+
+######################################################################
+# GET AN ADDRESS OF A CUSTOMER
+######################################################################
+@app.route(f"{BASE_URL}/<int:customer_id>/addresses/<int:address_id>", methods=["GET"])
+def get_an_address_of_a_customer(customer_id, address_id):
+    """
+    Get an Address of a Customer
+    This endpoint will create an Address based the data in the body that is posted
+    """
+    app.logger.info("Get an Address of a Customer")
+    found = AddressModel.find_by_customer_and_address_id(customer_id=customer_id, address_id=address_id)
+    
+    if found.count() == 0:
+        abort(status.HTTP_404_NOT_FOUND, f"Address '{address_id}' with customer id '{customer_id}' was not found.")
+    address = found[0]
+    app.logger.info("Address with ID [%s] created.", address.address_id)
+
+    return jsonify(address.serialize()), status.HTTP_200_OK
 
 ######################################################################
 #  U T I L I T Y   F U N C T I O N S

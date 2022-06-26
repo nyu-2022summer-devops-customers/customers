@@ -8,12 +8,12 @@ from enum import Enum
 from datetime import date
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
+from sqlalchemy import ForeignKey
 
 logger = logging.getLogger("flask.app")
 
 # Create the SQLAlchemy object to be initialized later in init_db()
 db = SQLAlchemy()
-
 
 class DataValidationError(Exception):
     """ Used for an data validation errors when deserializing """
@@ -31,6 +31,7 @@ class CustomerModel(db.Model):
     """
     Class that represents a CustomerModel
     """
+    __tablename__ = 'customer'
 
     app = None
 
@@ -45,6 +46,8 @@ class CustomerModel(db.Model):
         db.Enum(Gender), nullable=False, server_default=(Gender.UNKNOWN.name)
     )
     birthday = db.Column(db.Date(), nullable=False, default=date.today())
+
+    address = db.relationship("AddressModel", backref="customer", lazy=True)
 
     def __repr__(self):
         return "<CustomerModel %r customer_id=[%s]>" % (self.first_name, self.customer_id)
@@ -143,23 +146,23 @@ class AddressModel(db.Model):
     """
     Class that represents a AddressModel
     """
+    __tablename__ = 'address'
 
     app = None
 
     # Table Schema
-    customer_id = db.Column(db.Integer, primary_key=True)
-    address_id = db.Column(db.Integer, primary_key=True)
+    customer_id = db.Column(db.Integer, ForeignKey("customer.customer_id"))
+    address_id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     address = db.Column(db.String(63))
 
     def __repr__(self):
         return "<AddressModel %r customer_id=[%s] address_id=[%s]>" % (self.address, self.customer_id, self.address_id)
 
-    def create(self, customer_id):
+    def create(self):
         """
         Creates a AddressModel to the database
         """
         logger.info("Creating %s", self.address)
-        self.customer_id = customer_id
         self.address_id = None  # address_id must be none to generate next primary key
         db.session.add(self)
         db.session.commit()
@@ -190,18 +193,19 @@ class AddressModel(db.Model):
         """
         try:
             self.address = data["address"]
+            self.customer_id = data["customer_id"]
         except AttributeError as error:
             raise DataValidationError(
                 "Invalid attribute: " + error.args[0]
-            )
+            ) from error
         except KeyError as error:
             raise DataValidationError(
                 "Invalid AddressModel: missing " + error.args[0]
-            )
+            ) from error
         except TypeError as error:
             raise DataValidationError(
                 "Invalid AddressModel: body of request contained bad or no data"
-            )
+            ) from error
         return self
 
     @classmethod
@@ -235,3 +239,12 @@ class AddressModel(db.Model):
         """
         logger.info("Processing first_name query for %s ...", first_name)
         return cls.query.filter(cls.first_name == first_name)
+    
+    @classmethod
+    def find_by_customer_and_address_id(cls, customer_id, address_id):
+        """Get an Address of a Customer
+        Args:
+            customer_id (int), address_id(int): the customer_id and address_id of the AddressModels you want to match
+        """
+        logger.info("Processing customer_id and address_id query for %s %s ...", customer_id, address_id)
+        return cls.query.filter(cls.customer_id == customer_id).filter(cls.address_id == address_id)

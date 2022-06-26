@@ -57,8 +57,8 @@ def create_customers():
 # CREATE NEW ADDRESS
 # https://flask-sqlalchemy.palletsprojects.com/en/2.x/models/
 ######################################################################
-@app.route(f"{BASE_URL}/addresses", methods=["POST"])
-def create_address():
+@app.route(f"{BASE_URL}/<int:customer_id>/addresses", methods=["POST"])
+def create_address(customer_id):
     """
     Creates an Address
     This endpoint will create an Address based the data in the body that is posted
@@ -69,7 +69,7 @@ def create_address():
     address.deserialize(request.get_json())
     address.create()
     message = address.serialize()
-    location_url = url_for("create_address", customer_id=address.customer_id, address_id=address.address_id, _external=True)
+    location_url = url_for("create_address", customer_id=customer_id, address_id=address.address_id, _external=True)
     app.logger.info("Address with ID [%s] created.", address.address_id)
 
     return jsonify(message), status.HTTP_201_CREATED, {"Location": location_url}

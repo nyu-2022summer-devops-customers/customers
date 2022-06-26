@@ -11,7 +11,7 @@ import unittest
 from service import app
 from service.models import CustomerModel
 from service.utils import status
-from tests.factories import CustomerFactory  # HTTP Status Codes
+from tests.factories import AddressFactory, CustomerFactory  # HTTP Status Codes
 
 DATABASE_URI = os.getenv(
     "DATABASE_URI", "postgresql://postgres:postgres@localhost:5432/testdb"
@@ -58,6 +58,21 @@ class TestCustomersService(unittest.TestCase):
             customers.append(test_customer)
         return customers
 
+    def _create_addresses(self, customer_id, count):
+        """Factory method to create customer in bulk"""
+
+        addresses = []
+        for _ in range(count):
+            test_address = AddressFactory()
+            test_address.customer_id = customer_id
+            response = self.client.post(f"{BASE_URL}/{customer_id}/addresses", json=test_address.serialize())
+            self.assertEqual(
+                response.status_code, status.HTTP_201_CREATED, "Could not create test customer"
+            )
+            new_customer = response.get_json()
+            test_address.address_id = new_customer["address_id"]
+            addresses.append(test_address)
+        return addresses
     ######################################################################
     #  T E S T   C A S E S
     ######################################################################
@@ -117,3 +132,39 @@ class TestCustomersService(unittest.TestCase):
         self.assertEqual(data["first_name"], test_customer.first_name)
         self.assertEqual(data["last_name"], test_customer.last_name)
         self.assertEqual(data["email"], test_customer.email)
+
+    def test_create_address(self):
+        """It should Create a new Customer"""
+        test_customer = CustomerFactory()
+        logging.debug("Test Customer: %s", test_customer.serialize())
+        response = self.client.post(BASE_URL, json=test_customer.serialize())
+        
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+
+        # Make sure location header is set
+        location = response.headers.get("Location", None)
+        self.assertIsNotNone(location)
+        logging.debug("Location: %s", location)
+
+        # Check the data is correct
+        new_customer = response.get_json()
+        self.assertEqual(new_customer["password"], test_customer.password)
+        self.assertEqual(new_customer["first_name"], test_customer.first_name)
+        self.assertEqual(new_customer["last_name"], test_customer.last_name)
+        self.assertEqual(new_customer["nickname"], test_customer.nickname)
+        self.assertEqual(new_customer["email"], test_customer.email)
+        self.assertEqual(new_customer["gender"], test_customer.gender.name)
+        self.assertEqual(new_customer["birthday"], test_customer.birthday.isoformat())
+
+        # Create Address for this customer
+        test_address = AddressFactory()
+        test_address.customer_id = new_customer["customer_id"]
+        logging.debug("Test Address: %s", test_address.serialize())
+        response = self.client.post(f"{BASE_URL}/{test_address.customer_id}/addresses", json=test_address.serialize())
+        
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+
+        # Make sure location header is set
+        location = response.headers.get("Location", None)
+        self.assertIsNotNone(location)
+        logging.debug("Location: %s", location)

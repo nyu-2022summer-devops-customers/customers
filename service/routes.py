@@ -4,6 +4,7 @@ My Service
 Describe what your service does here
 """
 
+from audioop import add
 import os
 import sys
 import logging
@@ -71,6 +72,26 @@ def get_a_customer(customer_id):
     app.logger.info("Returning customer: Id %s, Name %s %s", customer.customer_id, customer.first_name, customer.last_name)
     return jsonify(customer.serialize()), status.HTTP_200_OK
 
+######################################################################
+# CREATE NEW ADDRESS
+# https://flask-sqlalchemy.palletsprojects.com/en/2.x/models/
+######################################################################
+@app.route(f"{BASE_URL}/<int:customer_id>/addresses", methods=["POST"])
+def create_address(customer_id):
+    """
+    Creates an Address
+    This endpoint will create an Address based the data in the body that is posted
+    """
+    app.logger.info("Request to create an address")
+    check_content_type("application/json")
+    address = AddressModel()
+    address.deserialize(request.get_json())
+    address.create()
+    message = address.serialize()
+    location_url = url_for("create_address", customer_id=customer_id, address_id=address.address_id, _external=True)
+    app.logger.info("Address with ID [%s] created.", address.address_id)
+
+    return jsonify(message), status.HTTP_201_CREATED, {"Location": location_url}
 
 ######################################################################
 #  U T I L I T Y   F U N C T I O N S

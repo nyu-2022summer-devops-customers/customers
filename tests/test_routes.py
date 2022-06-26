@@ -9,7 +9,7 @@ import os
 import logging
 import unittest
 from service import app
-from service.models import CustomerModel
+from service.models import AddressModel, CustomerModel
 from service.utils import status
 from tests.factories import AddressFactory, CustomerFactory  # HTTP Status Codes
 
@@ -168,3 +168,19 @@ class TestCustomersService(unittest.TestCase):
         location = response.headers.get("Location", None)
         self.assertIsNotNone(location)
         logging.debug("Location: %s", location)
+
+    def test_get_an_address_of_a_customer(self):
+        """It should return an address of a customer"""
+        customer_id = 1
+        addresses = self._create_addresses(customer_id=customer_id, count=10)
+        self.assertEqual(len(addresses), 10)
+        address_id = addresses[0].address_id
+        address_str = addresses[0].address
+
+        response = self.client.get(f"{BASE_URL}/{customer_id}/addresses/{address_id}")
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        
+        new_address = response.get_json()
+        self.assertEqual(new_address["address_id"], address_id)
+        self.assertEqual(new_address["customer_id"], customer_id)
+        self.assertEqual(new_address["address"], address_str)

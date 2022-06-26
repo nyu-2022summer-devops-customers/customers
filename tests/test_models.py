@@ -38,6 +38,7 @@ class TestCustomersModel(unittest.TestCase):
 
     def setUp(self):
         """This runs before each test"""
+        db.session.query(AddressModel).delete()
         db.session.query(CustomerModel).delete()  # clean up the last tests
         db.session.commit()
 
@@ -170,7 +171,12 @@ class TestAddressModel(unittest.TestCase):
 
     def test_list_addresses(self):
         """It should list all addresses of a customer"""
-        customer_id = 1
+        customer = CustomerFactory()
+        logging.debug(customer)
+        customer.customer_id = None
+        customer.create()
+
+        customer_id = customer.customer_id
         address="address"
         addresses = AddressModel.find_by_customer_id(customer_id)
         self.assertEqual(addresses.count(), 0)
@@ -200,7 +206,12 @@ class TestAddressModel(unittest.TestCase):
             
     def test_get_an_address_of_a_customer(self):
         """It should return an address of a customer"""
-        customer_id = 1
+        customer = CustomerFactory()
+        logging.debug(customer)
+        customer.customer_id = None
+        customer.create()
+
+        customer_id = customer.customer_id
         address_id = None
         address_prefix="address"
 

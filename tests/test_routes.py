@@ -135,7 +135,7 @@ class TestCustomersService(unittest.TestCase):
         self.assertEqual(data["email"], test_customer.email)
 
     def test_create_address(self):
-        """It should Create a new Customer"""
+        """It should Create a new Address for a Customer"""
         test_customer = CustomerFactory()
         logging.debug("Test Customer: %s", test_customer.serialize())
         response = self.client.post(BASE_URL, json=test_customer.serialize())
@@ -198,7 +198,13 @@ class TestCustomersService(unittest.TestCase):
         
     def test_get_an_address_of_a_customer(self):
         """It should return an address of a customer"""
-        customer_id = 1
+        test_customer = CustomerFactory()
+        logging.debug("Test Customer: %s", test_customer.serialize())
+        response = self.client.post(BASE_URL, json=test_customer.serialize())
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        new_customer = response.get_json()
+
+        customer_id = new_customer["customer_id"]
         addresses = self._create_addresses(customer_id=customer_id, count=10)
         self.assertEqual(len(addresses), 10)
         address_id = addresses[0].address_id

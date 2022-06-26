@@ -133,7 +133,7 @@ class TestCustomersService(unittest.TestCase):
         test_address = AddressFactory()
         test_address.customer_id = new_customer["customer_id"]
         logging.debug("Test Address: %s", test_address.serialize())
-        response = self.client.post(f"{BASE_URL}/addresses", json=test_address.serialize())
+        response = self.client.post(f"{BASE_URL}/{test_address.customer_id}/addresses", json=test_address.serialize())
         
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
 

@@ -9,8 +9,10 @@ from curses.ascii import BS
 import os
 import logging
 import unittest
+
+
 from service import app
-from service.models import CustomerModel, Gender
+from service.models import CustomerModel, AddressModel, Gender, db
 from service.utils import status
 from tests.factories import AddressFactory, CustomerFactory  # HTTP Status Codes
 
@@ -18,6 +20,7 @@ DATABASE_URI = os.getenv(
     "DATABASE_URI", "postgresql://postgres:postgres@localhost:5432/testdb"
 )
 BASE_URL = "/customers"
+CONTENT_TYPE_JSON = "application/json"
 
 
 ######################################################################
@@ -28,21 +31,29 @@ class TestCustomersService(unittest.TestCase):
 
     @classmethod
     def setUpClass(cls):
-        """ This runs once before the entire test suite """
-        pass
+        """Run once before all tests"""
+        app.config["TESTING"] = True
+        app.config["DEBUG"] = False
+        app.config["SQLALCHEMY_DATABASE_URI"] = DATABASE_URI
+        app.logger.setLevel(logging.CRITICAL)
+        CustomerModel.init_db(app)
+        AddressModel.init_db(app)
 
     @classmethod
     def tearDownClass(cls):
         """ This runs once after the entire test suite """
-        pass
+        db.session.close()
 
     def setUp(self):
         """ This runs before each test """
         self.client = app.test_client()
+        db.session.query(AddressModel).delete()
+        db.session.query(CustomerModel).delete()  # clean up the last tests
+        db.session.commit()
 
     def tearDown(self):
         """ This runs after each test """
-        pass
+        db.session.remove()
 
     def _create_customers(self, count):
         """Factory method to create customer in bulk"""
@@ -50,7 +61,8 @@ class TestCustomersService(unittest.TestCase):
         customers = []
         for _ in range(count):
             test_customer = CustomerFactory()
-            response = self.client.post(BASE_URL, json=test_customer.serialize())
+            response = self.client.post(
+                BASE_URL, json=test_customer.serialize(),content_type=CONTENT_TYPE_JSON)
             self.assertEqual(
                 response.status_code, status.HTTP_201_CREATED, "Could not create test customer"
             )
@@ -77,12 +89,13 @@ class TestCustomersService(unittest.TestCase):
     ######################################################################
     #  T E S T   C A S E S
     ######################################################################
-
+    
     def test_index(self):
         """ It should call the home page """
         resp = self.client.get("/")
         self.assertEqual(resp.status_code, status.HTTP_200_OK)
-
+    
+    
     def test_create_customer(self):
         """It should Create a new Customer"""
         test_customer = CustomerFactory()
@@ -121,35 +134,17 @@ class TestCustomersService(unittest.TestCase):
         self.assertEqual(new_customer["email"], test_customer.email)
         self.assertEqual(new_customer["gender"], test_customer.gender.name)
         self.assertEqual(new_customer["birthday"], test_customer.birthday.isoformat())
-
-    def test_update_a_customer(self):
-        """It should Update an existing Customer"""
-        # create a customer to update
-        test_customer = CustomerFactory()
-        response = self.client.post(BASE_URL, json=test_customer.serialize())
-        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
-
-        # update the customer
-        new_customer = response.get_json()
-        logging.debug(new_customer)
-        new_customer["gender"] = Gender.MALE.name
-        response = self.client.put(f"{BASE_URL}/{new_customer['customer_id']}", json=new_customer)
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
-        updated_customer = response.get_json()
-        self.assertEqual(updated_customer["gender"], Gender.MALE.name)
-        
-    def test_get_a_customer(self):
-        """It should Get a single Customer"""
-        # get the id of a pet
-        test_customer: CustomerModel = self._create_customers(1)[0]
+    
+    def test_delete_customer(self):
+        """It should Delete a Customer"""
+        test_customer = self._create_customers(1)[0]
+        response = self.client.delete(f"{BASE_URL}/{test_customer.customer_id}")
+        self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
+        self.assertEqual(len(response.data), 0)
+        # make sure they are deleted
         response = self.client.get(f"{BASE_URL}/{test_customer.customer_id}")
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
-        data = response.get_json()
-        self.assertEqual(data["customer_id"], test_customer.customer_id)
-        self.assertEqual(data["first_name"], test_customer.first_name)
-        self.assertEqual(data["last_name"], test_customer.last_name)
-        self.assertEqual(data["email"], test_customer.email)
-
+        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
+    
     def test_create_address(self):
         """It should Create a new Address for a Customer"""
         test_customer = CustomerFactory()
@@ -185,11 +180,12 @@ class TestCustomersService(unittest.TestCase):
         location = response.headers.get("Location", None)
         self.assertIsNotNone(location)
         logging.debug("Location: %s", location)
-
+    
+    
     def test_list_addresses(self):
         """It should List all addresses of a Customer"""
         test_customer = CustomerFactory()
-        logging.debug("Test Customer: %s", test_customer.serialize())
+        logging.debug("Test Customer: %s ", test_customer.serialize())
         response = self.client.post(BASE_URL, json=test_customer.serialize())
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
         new_customer = response.get_json()
@@ -211,7 +207,8 @@ class TestCustomersService(unittest.TestCase):
                     has = True
                     break
             self.assertTrue(has)
-        
+    
+    
     def test_get_an_address_of_a_customer(self):
         """It should return an address of a customer"""
         test_customer = CustomerFactory()
@@ -233,3 +230,4 @@ class TestCustomersService(unittest.TestCase):
         self.assertEqual(new_address["address_id"], address_id)
         self.assertEqual(new_address["customer_id"], customer_id)
         self.assertEqual(new_address["address"], address_str)
+    

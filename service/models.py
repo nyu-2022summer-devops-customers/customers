@@ -8,12 +8,14 @@ from enum import Enum
 from datetime import date
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
+from psycopg2 import DataError
 from sqlalchemy import ForeignKey
 
 logger = logging.getLogger("flask.app")
 
 # Create the SQLAlchemy object to be initialized later in init_db()
 db = SQLAlchemy()
+
 
 class DataValidationError(Exception):
     """ Used for an data validation errors when deserializing """
@@ -76,7 +78,16 @@ class CustomerModel(db.Model):
 
     def serialize(self):
         """ Serializes a CustomerModel into a dictionary """
-        return {"customer_id": self.customer_id, "first_name": self.first_name, "last_name": self.last_name, "nickname": self.nickname, "email": self.email, "gender": self.gender.name, "birthday": self.birthday.isoformat(), "password": self.password}
+        return {
+            "customer_id": self.customer_id, 
+            "first_name": self.first_name, 
+            "last_name": self.last_name, 
+            "nickname": self.nickname, 
+            "email": self.email, 
+            "gender": self.gender.name, 
+            "birthday": self.birthday.isoformat(),
+            "password": self.password
+        }
 
     def deserialize(self, data):
         """
@@ -109,7 +120,7 @@ class CustomerModel(db.Model):
         return self
 
     @classmethod
-    def init_db(cls, app):
+    def init_db(cls, app: Flask):
         """ Initializes the database session """
         logger.info("Initializing database")
         cls.app = app
@@ -129,6 +140,20 @@ class CustomerModel(db.Model):
         """ Finds a CustomerModel by it's customer_id """
         logger.info("Processing lookup for customer_id %s ...", by_id)
         return cls.query.get(by_id)
+    
+    @classmethod
+    def find_or_404(cls, customer_id: int):
+        """Find a Pet by it's id
+
+        :param pet_id: the id of the Pet to find
+        :type pet_id: int
+
+        :return: an instance with the pet_id, or 404_NOT_FOUND if not found
+        :rtype: Pet
+
+        """
+        logger.info("Processing lookup or 404 for id %s ...", customer_id)
+        return cls.query.get_or_404(customer_id)
 
     @classmethod
     def find_by_name(cls, first_name):
@@ -139,9 +164,7 @@ class CustomerModel(db.Model):
         """
         logger.info("Processing first_name query for %s ...", first_name)
         return cls.query.filter(cls.first_name == first_name)
-
-
-
+        
 class AddressModel(db.Model):
     """
     Class that represents a AddressModel
@@ -153,10 +176,11 @@ class AddressModel(db.Model):
     # Table Schema
     customer_id = db.Column(db.Integer, ForeignKey("customer.customer_id"), primary_key=True)
     address_id = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    address = db.Column(db.String(63))
+    address = db.Column(db.String(63),nullable=False)
 
     def __repr__(self):
         return "<AddressModel %r customer_id=[%s] address_id=[%s]>" % (self.address, self.customer_id, self.address_id)
+
 
     def create(self):
         """
@@ -171,12 +195,14 @@ class AddressModel(db.Model):
         """
         Updates a AddressModel to the database
         """
-        logger.info("Saving %s", self.first_name)
+        logger.info("Saving %s", self.address_id)
+        if not self.address_id:
+            raise DataValidationError("Update called with empty ID field")
         db.session.commit()
 
     def delete(self):
         """ Removes a AddressModel from the data store """
-        logger.info("Deleting %s", self.first_name)
+        logger.info("Deleting %s %s", self.address_id)
         db.session.delete(self)
         db.session.commit()
 
@@ -234,7 +260,8 @@ class AddressModel(db.Model):
     def find_by_customer_id(cls, customer_id):
         logger.info("Processing customer_id query for %s ...", customer_id)
         return cls.query.filter(cls.customer_id == customer_id)
-
+    
+    
     @classmethod
     def find_by_name(cls, first_name):
         """Returns all AddressModels with the given first_name
@@ -253,3 +280,42 @@ class AddressModel(db.Model):
         """
         logger.info("Processing customer_id and address_id query for %s %s ...", customer_id, address_id)
         return cls.query.filter(cls.customer_id == customer_id).filter(cls.address_id == address_id)
+    
+
+    @classmethod
+    def find_by_address_id(cls,  address_id):
+        """Get an Address information under address_id
+        Args:
+            address_id(int): address_id of the AddressModels you want to match
+        """
+        logger.info("Processing address_id query for %s ...",  address_id)
+        return cls.query.filter(cls.address_id == address_id)
+    
+    @classmethod
+    def update_address_by_address_id(cls,address_id,new_address):
+        """Update an Address information under address_id
+        
+        Args:
+            address_id(int): address_id of the AddressModels you want to match
+        """
+        logger.info("Processing address update for %s ...",  address_id)
+        
+        address_found=AddressModel.find_by_address_id(address_id)
+        if address_found.count()==0:
+            raise DataValidationError("the address_id dosen't exist")
+        else:
+            address_model=address_found[0]
+            address_model.address=new_address
+            address_model.update()
+        
+        
+
+
+    
+    
+
+    
+
+        
+
+

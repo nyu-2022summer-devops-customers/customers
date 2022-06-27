@@ -27,10 +27,25 @@ BASE_URL = "/customers"
 @app.route("/")
 def index():
     """ Root URL response """
-    return (
-        "Reminder: return some useful information in json format about the service here",
-        status.HTTP_200_OK,
+    # return (
+    #     "Reminder: return some useful information in json format about the service here",
+    #     status.HTTP_200_OK,
+    # )
+    return jsonify(
+        message="This is the customers service",
+        create_customers=f"POST {BASE_URL}",
+        get_a_customer=f"GET {BASE_URL}/<int:customer_id>",
+        list_customers=f"GET {BASE_URL}",
+        update_a_customer=f"PUT {BASE_URL}/<int:customer_id>",
+        delete_a_customer=f"DELETE {BASE_URL}/<int:customer_id>",
+        create_address=f"POST {BASE_URL}/<int:customer_id>/addresses",
+        get_an_address_of_a_customer=f"GET {BASE_URL}/<int:customer_id>/addresses/<int:address_id>",
+        list_addresses=f"GET {BASE_URL}/<int:customer_id>/addresses",
+        update_an_address_of_a_customer=f"PUT {BASE_URL}/<int:customer_id>/addresses/<int:address_id>",
+        delete_an_address_of_a_customer=f"DELETE {BASE_URL}/<int:customer_id>/addresses/<int:address_id>",
+        status=status.HTTP_200_OK
     )
+
 
 
 ######################################################################
@@ -96,6 +111,21 @@ def get_a_customer(customer_id):
     app.logger.info("Returning customer: Id %s, Name %s %s", customer.customer_id, customer.first_name, customer.last_name)
     return jsonify(customer.serialize()), status.HTTP_200_OK
 
+
+######################################################################
+# LIST ALL CUSTOMERS
+######################################################################
+@app.route("/customers", methods=["GET"])
+def list_customers():
+    """Returns all of the Customers"""
+    app.logger.info("Request for customer list")
+    customers = []
+    customers = CustomerModel.all()
+
+    results = [customer.serialize() for customer in customers]
+    app.logger.info("Returning %d customers", len(results))
+    return jsonify(results), status.HTTP_200_OK
+
 ######################################################################
 # CREATE NEW ADDRESS
 # https://flask-sqlalchemy.palletsprojects.com/en/2.x/models/
@@ -158,6 +188,24 @@ def get_an_address_of_a_customer(customer_id, address_id):
     app.logger.info("Address with ID [%s] created.", address.address_id)
 
     return jsonify(address.serialize()), status.HTTP_200_OK
+
+######################################################################
+# DELETE A CUSTOMER
+######################################################################
+@app.route(f"{BASE_URL}/<int:customer_id>", methods=["DELETE"])
+def delete_customers(customer_id):
+    """
+    Delete a Customer
+
+    This endpoint will delete a Customer based on the id specified in the path
+    """
+    app.logger.info("Request to delete customer with id: %s", customer_id)
+    customer = CustomerModel.find(customer_id)
+    if customer:
+        customer.delete()
+
+    app.logger.info("Customer with ID [%s] delete complete.", customer_id)
+    return "", status.HTTP_204_NO_CONTENT
 
 ######################################################################
 #  U T I L I T Y   F U N C T I O N S

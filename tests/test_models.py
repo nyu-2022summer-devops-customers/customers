@@ -130,6 +130,20 @@ class TestCustomersModel(unittest.TestCase):
         customers = CustomerModel.all()
         self.assertEqual(len(customers), 5)
 
+    def test_delete_a_customer(self):
+        """It should Delete a Customer"""
+        customers = CustomerModel.all()
+        self.assertEqual(customers, [])
+        customer = CustomerModel(password="password", first_name="Fido", last_name="Lido", nickname="helloFido", email="fido@gmail.com", gender=Gender.FEMALE, birthday=date(2018, 1, 1))
+        self.assertTrue(customer is not None)
+        self.assertEqual(customer.customer_id, None)
+        customer.create()
+        customers = CustomerModel.all()
+        self.assertEqual(len(customers), 1)
+        # delete the pet and make sure it isn't in the database
+        customer.delete()
+        customers = CustomerModel.all()
+        self.assertEqual(len(customers), 0)
       
 ######################################################################
 #  ADDRESS   M O D E L   T E S T   C A S E S

@@ -28,6 +28,9 @@ class Gender(Enum):
     FEMALE = 1
     UNKNOWN = 3
 
+    def __str__(self):
+        return '{0}'.format(self.value)
+
 class CustomerModel(db.Model):
     """
     Class that represents a CustomerModel

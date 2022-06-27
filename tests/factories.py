@@ -20,6 +20,7 @@ from factory.fuzzy import FuzzyChoice, FuzzyDate
 import factory
 from service.models import AddressModel, CustomerModel, Gender
 
+
 class CustomerFactory(factory.Factory):
     """Creates a customer"""
 

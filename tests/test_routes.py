@@ -5,13 +5,14 @@ Test cases can be run with the following:
   nosetests -v --with-spec --spec-color
   coverage report -m
 """
+from curses.ascii import BS
 import os
 import logging
 import unittest
 
 
 from service import app
-from service.models import CustomerModel
+from service.models import CustomerModel, AddressModel, Gender, db
 from service.utils import status
 from tests.factories import AddressFactory, CustomerFactory  # HTTP Status Codes
 
@@ -30,21 +31,29 @@ class TestCustomersService(unittest.TestCase):
 
     @classmethod
     def setUpClass(cls):
-        """ This runs once before the entire test suite """
-        pass
+        """Run once before all tests"""
+        app.config["TESTING"] = True
+        app.config["DEBUG"] = False
+        app.config["SQLALCHEMY_DATABASE_URI"] = DATABASE_URI
+        app.logger.setLevel(logging.CRITICAL)
+        CustomerModel.init_db(app)
+        AddressModel.init_db(app)
 
     @classmethod
     def tearDownClass(cls):
         """ This runs once after the entire test suite """
-        pass
+        db.session.close()
 
     def setUp(self):
         """ This runs before each test """
         self.client = app.test_client()
+        db.session.query(AddressModel).delete()
+        db.session.query(CustomerModel).delete()  # clean up the last tests
+        db.session.commit()
 
     def tearDown(self):
         """ This runs after each test """
-        pass
+        db.session.remove()
 
     def _create_customers(self, count):
         """Factory method to create customer in bulk"""
@@ -80,12 +89,13 @@ class TestCustomersService(unittest.TestCase):
     ######################################################################
     #  T E S T   C A S E S
     ######################################################################
-
+    
     def test_index(self):
         """ It should call the home page """
         resp = self.client.get("/")
         self.assertEqual(resp.status_code, status.HTTP_200_OK)
-
+    
+    
     def test_create_customer(self):
         """It should Create a new Customer"""
         test_customer = CustomerFactory()
@@ -136,7 +146,7 @@ class TestCustomersService(unittest.TestCase):
         self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
     
     def test_create_address(self):
-        """It should Create a new Customer"""
+        """It should Create a new Address for a Customer"""
         test_customer = CustomerFactory()
         logging.debug("Test Customer: %s", test_customer.serialize())
         response = self.client.post(BASE_URL, json=test_customer.serialize())
@@ -170,8 +180,54 @@ class TestCustomersService(unittest.TestCase):
         location = response.headers.get("Location", None)
         self.assertIsNotNone(location)
         logging.debug("Location: %s", location)
+    
+    
+    def test_list_addresses(self):
+        """It should List all addresses of a Customer"""
+        test_customer = CustomerFactory()
+        logging.debug("Test Customer: %s ", test_customer.serialize())
+        response = self.client.post(BASE_URL, json=test_customer.serialize())
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        new_customer = response.get_json()
 
+        customer_id = new_customer["customer_id"]
+        addresses = self._create_addresses(customer_id, 10)
+        self.assertEqual(len(addresses), 10)
+
+        response = self.client.get(f"{BASE_URL}/{customer_id}/addresses")
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+        addr_arr = response.get_json()
+        logging.debug("All Addresses %s", addr_arr)
+
+        for addr1 in addr_arr:
+            has = False
+            for addr2 in addresses:
+                if addr1["address_id"] == addr2.address_id and addr1["customer_id"] == addr2.customer_id and addr1["address"] == addr2.address:
+                    has = True
+                    break
+            self.assertTrue(has)
+    
+    
     def test_get_an_address_of_a_customer(self):
         """It should return an address of a customer"""
+        test_customer = CustomerFactory()
+        logging.debug("Test Customer: %s", test_customer.serialize())
+        response = self.client.post(BASE_URL, json=test_customer.serialize())
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        new_customer = response.get_json()
+
+        customer_id = new_customer["customer_id"]
+        addresses = self._create_addresses(customer_id=customer_id, count=10)
+        self.assertEqual(len(addresses), 10)
+        address_id = addresses[0].address_id
+        address_str = addresses[0].address
+
+        response = self.client.get(f"{BASE_URL}/{customer_id}/addresses/{address_id}")
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        
+        new_address = response.get_json()
+        self.assertEqual(new_address["address_id"], address_id)
+        self.assertEqual(new_address["customer_id"], customer_id)
+        self.assertEqual(new_address["address"], address_str)
     
-   

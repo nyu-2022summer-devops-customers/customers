@@ -271,7 +271,7 @@ class AddressModel(db.Model):
         return cls.query.filter(cls.address_id == address_id)
     
     @classmethod
-    def update_address_under_address_id(cls,address_id,new_address):
+    def update_address_by_address_id(cls,address_id,new_address):
         """Update an Address information under address_id
         
         Args:

@@ -217,22 +217,8 @@ class AddressModel(db.Model):
         Args:
             data (dict): A dictionary containing the resource data
         """
-        try:
-            self.address = data["address"]
-            self.customer_id = data["customer_id"]
-        except AttributeError as error:
-            raise DataValidationError(
-                "Invalid attribute: " + error.args[0]
-            ) from error
-        except KeyError as error:
-            raise DataValidationError(
-                "Invalid AddressModel: missing " + error.args[0]
-            ) from error
-        except TypeError as error:
-            raise DataValidationError(
-                "Invalid AddressModel: body of request contained bad or no data"
-            ) from error
-        return self
+        self.address = data["address"]
+        self.customer_id = data["customer_id"]
 
     @classmethod
     def init_db(cls, app):
@@ -281,18 +267,9 @@ class AddressModel(db.Model):
         logger.info("Processing customer_id and address_id query for %s %s ...", customer_id, address_id)
         return cls.query.filter(cls.customer_id == customer_id).filter(cls.address_id == address_id)
     
-
-    @classmethod
-    def find_by_address_id(cls,  address_id):
-        """Get an Address information under address_id
-        Args:
-            address_id(int): address_id of the AddressModels you want to match
-        """
-        logger.info("Processing address_id query for %s ...",  address_id)
-        return cls.query.filter(cls.address_id == address_id)
     
     @classmethod
-    def update_address_by_address_id(cls,address_id,new_address):
+    def update_address_by_address_and_customer_id(cls,address_id,customer_id,new_address):
         """Update an Address information under address_id
         
         Args:
@@ -300,7 +277,7 @@ class AddressModel(db.Model):
         """
         logger.info("Processing address update for %s ...",  address_id)
         
-        address_found=AddressModel.find_by_address_id(address_id)
+        address_found=AddressModel.find_by_customer_and_address_id(address_id,customer_id)
         if address_found.count()==0:
             raise DataValidationError("the address_id dosen't exist")
         else:

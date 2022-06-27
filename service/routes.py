@@ -27,10 +27,25 @@ BASE_URL = "/customers"
 @app.route("/")
 def index():
     """ Root URL response """
-    return (
-        "Reminder: return some useful information in json format about the service here",
-        status.HTTP_200_OK,
+    # return (
+    #     "Reminder: return some useful information in json format about the service here",
+    #     status.HTTP_200_OK,
+    # )
+    return jsonify(
+        message="This is the customers service",
+        create_customers=f"POST {BASE_URL}",
+        get_a_customer=f"GET {BASE_URL}/<int:customer_id>",
+        list_customers=f"GET {BASE_URL}",
+        update_a_customer=f"PUT {BASE_URL}/<int:customer_id>",
+        delete_a_customer=f"DELETE {BASE_URL}/<int:customer_id>",
+        create_address=f"POST {BASE_URL}/<int:customer_id>/addresses",
+        get_an_address_of_a_customer=f"GET {BASE_URL}/<int:customer_id>/addresses/<int:address_id>",
+        list_addresses=f"GET {BASE_URL}/<int:customer_id>/addresses",
+        update_an_address_of_a_customer=f"PUT {BASE_URL}/<int:customer_id>/addresses/<int:address_id>",
+        delete_an_address_of_a_customer=f"DELETE {BASE_URL}/<int:customer_id>/addresses/<int:address_id>",
+        status=status.HTTP_200_OK
     )
+
 
 
 ######################################################################
@@ -54,6 +69,30 @@ def create_customers():
     return jsonify(message), status.HTTP_201_CREATED, {"Location": location_url}
 
 ######################################################################
+# UPDATE A CUSTOMER
+######################################################################
+@app.route(f"{BASE_URL}/<int:customer_id>", methods=["PUT"])
+def update_a_customer(customer_id):
+    """
+    Update a Customer
+
+    This endpoint will update a Customer based the body that is posted
+    """
+    app.logger.info("Request to update customer with id: %s", customer_id)
+    check_content_type("application/json")
+
+    customer = CustomerModel.find(customer_id)
+    if not customer:
+        abort(status.HTTP_404_NOT_FOUND, f"Customer with id '{customer_id}' was not found.")
+
+    customer.deserialize(request.get_json())
+    customer.customer_id = customer_id
+    customer.update()
+
+    app.logger.info("Customer with ID [%s] updated.", customer.customer_id)
+    return jsonify(customer.serialize()), status.HTTP_200_OK
+
+######################################################################
 # READ A CUSTOMER BY CUSTOMER_ID
 ######################################################################
 
@@ -71,6 +110,21 @@ def get_a_customer(customer_id):
 
     app.logger.info("Returning customer: Id %s, Name %s %s", customer.customer_id, customer.first_name, customer.last_name)
     return jsonify(customer.serialize()), status.HTTP_200_OK
+
+
+######################################################################
+# LIST ALL CUSTOMERS
+######################################################################
+@app.route("/customers", methods=["GET"])
+def list_customers():
+    """Returns all of the Customers"""
+    app.logger.info("Request for customer list")
+    customers = []
+    customers = CustomerModel.all()
+
+    results = [customer.serialize() for customer in customers]
+    app.logger.info("Returning %d customers", len(results))
+    return jsonify(results), status.HTTP_200_OK
 
 ######################################################################
 # CREATE NEW ADDRESS

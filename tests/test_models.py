@@ -2,7 +2,7 @@
 Test cases for CustomersModel Model
 
 """
-from audioop import add
+# from audioop import add
 import os
 import logging
 import unittest
@@ -84,6 +84,27 @@ class TestCustomersModel(unittest.TestCase):
         customers = CustomerModel.all()
         self.assertEqual(len(customers), 1)
 
+    def test_update_a_customer(self):
+        """It should Update a Customer"""
+        customer = CustomerFactory()
+        logging.debug(customer)
+        customer.customer_id = None
+        customer.create()
+        logging.debug(customer)
+        self.assertIsNotNone(customer.customer_id)
+        # Change it an save it
+        customer.gender = Gender.MALE
+        original_id = customer.customer_id
+        customer.update()
+        self.assertEqual(customer.customer_id, original_id)
+        self.assertEqual(customer.gender, Gender.MALE)
+        # Fetch it back and make sure the id hasn't changed
+        # but the data did change
+        customers = CustomerModel.all()
+        self.assertEqual(len(customers), 1)
+        self.assertEqual(customers[0].customer_id, original_id)
+        self.assertEqual(customers[0].gender, Gender.MALE)
+
     def test_read_a_customer(self):
         """It should Read a customer"""
         customer = CustomerFactory()
@@ -97,7 +118,20 @@ class TestCustomersModel(unittest.TestCase):
         self.assertEqual(found_customer.first_name, customer.first_name)
         self.assertEqual(found_customer.last_name, customer.last_name)
         self.assertEqual(found_customer.email, customer.email)
-        
+
+    def test_list_all_customers(self):
+        """It should List all Customers in the database"""
+        customers = CustomerModel.all()
+        self.assertEqual(customers, [])
+        # Create 5 Pets
+        for i in range(5):
+            customer = CustomerFactory()
+            customer.create()
+        # See if we get back 5 pets
+        customers = CustomerModel.all()
+        self.assertEqual(len(customers), 5)
+
+      
 ######################################################################
 #  ADDRESS   M O D E L   T E S T   C A S E S
 ######################################################################
@@ -236,6 +270,7 @@ class TestAddressModel(unittest.TestCase):
         self.assertEqual(address.customer_id, customer_id)
         self.assertEqual(address.address, "address9")
         self.assertEqual(address.address_id, address_id)
+
         
     def test_find_by_address_id(self):
         """It should Find an address by address_id"""
@@ -290,14 +325,5 @@ class TestAddressModel(unittest.TestCase):
         address.address_id = None  
         with self.assertRaises(DataValidationError):
             AddressModel.update_address_under_address_id(address.address_id,"new_address")
-
-    
-
-    
-        
-
-
-        
-        
 
 

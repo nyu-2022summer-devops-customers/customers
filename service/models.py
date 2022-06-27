@@ -173,6 +173,8 @@ class AddressModel(db.Model):
         Updates a AddressModel to the database
         """
         logger.info("Saving %s", self.address_id)
+        if not self.address_id:
+            raise DataValidationError("Update called with empty ID field")
         db.session.commit()
 
     def delete(self):
@@ -259,12 +261,32 @@ class AddressModel(db.Model):
 
     @classmethod
     def find_by_address_id(cls,  address_id):
-        """Get an Address
+        """Get an Address information under address_id
         Args:
             address_id(int): address_id of the AddressModels you want to match
         """
         logger.info("Processing address_id query for %s ...",  address_id)
         return cls.query.filter(cls.address_id == address_id)
+    
+    @classmethod
+    def update_address_under_address_id(cls,address_id,new_address):
+        """Update an Address information under address_id
+        
+        Args:
+            address_id(int): address_id of the AddressModels you want to match
+        """
+        logger.info("Processing address update for %s ...",  address_id)
+        
+        address_found=AddressModel.find_by_address_id(address_id)
+        if address_found.count()==0:
+            raise ValueError("the address_id dosen't exist")
+        else:
+            address_model=address_found[0]
+            address_model.address=new_address
+            address_model.update()
+        
+        
+
 
     
     

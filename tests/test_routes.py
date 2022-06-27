@@ -10,7 +10,7 @@ import os
 import logging
 import unittest
 from service import app
-from service.models import CustomerModel, Gender
+from service.models import CustomerModel, AddressModel, Gender, db
 from service.utils import status
 from tests.factories import AddressFactory, CustomerFactory  # HTTP Status Codes
 
@@ -29,20 +29,28 @@ class TestCustomersService(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
         """Run once before all tests"""
-        pass
+        app.config["TESTING"] = True
+        app.config["DEBUG"] = False
+        app.config["SQLALCHEMY_DATABASE_URI"] = DATABASE_URI
+        app.logger.setLevel(logging.CRITICAL)
+        CustomerModel.init_db(app)
+        AddressModel.init_db(app)
 
     @classmethod
     def tearDownClass(cls):
         """ This runs once after the entire test suite """
-        pass
+        db.session.close()
 
     def setUp(self):
         """ This runs before each test """
         self.client = app.test_client()
+        db.session.query(AddressModel).delete()
+        db.session.query(CustomerModel).delete()  # clean up the last tests
+        db.session.commit()
 
     def tearDown(self):
         """ This runs after each test """
-        pass
+        db.session.remove()
 
     def _create_customers(self, count):
         """Factory method to create customer in bulk"""
@@ -159,7 +167,7 @@ class TestCustomersService(unittest.TestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         data = response.get_json()
         # There should be only 5 customers, but there are 5 customers created when testing Address. Need to be fixed
-        self.assertEqual(len(data), 10)
+        self.assertEqual(len(data), 5)
     
     
     def test_create_address(self):

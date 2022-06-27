@@ -300,7 +300,7 @@ class TestAddressModel(unittest.TestCase):
         logging.debug(address)
         self.assertIsNotNone(address.address_id)
         # Change it an save it
-        AddressModel.update_address_under_address_id(address.address_id,"new_address")
+        address.address="new_address"
         original_id = address.address_id
         address.update()
         self.assertEqual(address.address_id, original_id)
@@ -312,6 +312,27 @@ class TestAddressModel(unittest.TestCase):
         self.assertEqual(addresses[0].address_id, original_id)
         self.assertEqual(addresses[0].address, "new_address")
 
+
+    def test_update_an_address_by_address_id(self):
+        """It should Update a AddressModel"""
+        address = AddressFactory()
+        logging.debug(address)
+        address.address_id = None
+        address.create()
+        logging.debug(address)
+        self.assertIsNotNone(address.address_id)
+        # Change it an save it
+        AddressModel.update_address_under_address_id(address.address_id,"new_address")
+        original_id = address.address_id
+        address.update()
+        self.assertEqual(address.address_id, original_id)
+        self.assertEqual(address.address, "new_address")
+        # Fetch it back and make sure the id hasn't changed
+        # but the data did change
+        addresses = AddressModel.all()
+        self.assertEqual(len(addresses), 1)
+        self.assertEqual(addresses[0].address_id, original_id)
+        self.assertEqual(addresses[0].address, "new_address")
         
     def test_update_no_address_id(self):
         """It should not Update a Address  with no address_id"""

@@ -153,6 +153,20 @@ class TestCustomersModel(unittest.TestCase):
         self.assertIn("birthday", data)
         self.assertEqual(date.fromisoformat(data["birthday"]), customer.birthday)
 
+    def test_deserialize_a_customer(self):
+        """It should de-serialize a Customer"""
+        data = CustomerFactory().serialize()
+        customer = CustomerModel()
+        customer.deserialize(data)
+        self.assertNotEqual(customer, None)
+        self.assertEqual(customer.customer_id, None)
+        self.assertEqual(customer.first_name,data["first_name"])
+        self.assertEqual(customer.last_name,data["last_name"])
+        self.assertEqual(customer.nickname,data["nickname"])
+        self.assertEqual(customer.email,data["email"])
+        self.assertEqual(customer.gender.name,data["gender"])
+        self.assertEqual(customer.password,data["password"])
+        self.assertEqual(customer.birthday,date.fromisoformat(data["birthday"]))
     
       
 ######################################################################

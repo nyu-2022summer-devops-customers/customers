@@ -131,6 +131,30 @@ class TestCustomersModel(unittest.TestCase):
         customers = CustomerModel.all()
         self.assertEqual(len(customers), 5)
 
+    def test_serialize_a_customer(self):
+        """It should serialize a Customer"""
+        customer = CustomerFactory()
+        data = customer.serialize()
+        self.assertNotEqual(data, None)
+
+        self.assertIn("customer_id", data)
+        self.assertEqual(data["customer_id"], customer.customer_id)
+        self.assertIn("first_name", data)
+        self.assertEqual(data["first_name"],customer.first_name)
+        self.assertIn("last_name", data)
+        self.assertEqual(data["last_name"], customer.last_name)
+        self.assertIn("nickname", data)
+        self.assertEqual(data["nickname"], customer.nickname)
+        self.assertIn("email", data)
+        self.assertEqual(data["email"], customer.email)
+        self.assertIn("gender", data)
+        self.assertEqual(data["gender"], customer.gender.name)
+        self.assertIn("password", data)
+        self.assertEqual(data["password"], customer.password)
+        self.assertIn("birthday", data)
+        self.assertEqual(date.fromisoformat(data["birthday"]), customer.birthday)
+
+    
       
 ######################################################################
 #  ADDRESS   M O D E L   T E S T   C A S E S

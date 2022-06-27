@@ -267,4 +267,3 @@ class TestAddressModel(unittest.TestCase):
         self.assertEqual(address.customer_id, customer_id)
         self.assertEqual(address.address, "address9")
         self.assertEqual(address.address_id, address_id)
-        

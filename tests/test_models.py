@@ -4,7 +4,7 @@ Test cases for CustomersModel Model
 """
 # from audioop import add
 import os
-import logging
+# import logging
 import unittest
 from datetime import date
 # from service.models import CustomerModel, AddressModel, Gender, DataValidationError, db

@@ -312,7 +312,6 @@ class TestAddressModel(unittest.TestCase):
         self.assertEqual(addresses[0].address_id, original_id)
         self.assertEqual(addresses[0].address, "new_address")
 
-
     def test_update_an_address_by_address_id(self):
         """It should Update a AddressModel"""
         address = AddressFactory()

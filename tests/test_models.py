@@ -3,6 +3,7 @@ Test cases for CustomersModel Model
 
 """
 # from audioop import add
+from distutils.sysconfig import customize_compiler
 import os
 import logging
 import unittest
@@ -184,15 +185,42 @@ class TestCustomersModel(unittest.TestCase):
         self.assertEqual(customer.password,data["password"])
         self.assertEqual(customer.birthday,date.fromisoformat(data["birthday"]))
     
+    def test_deserialize_bad_data(self):
+        """It should not deserialize bad data"""
+        data = "this is not a dictionary"
+        test_customer = CustomerModel()
+        self.assertRaises(DataValidationError, test_customer.deserialize, data)
+
     def test_deserialize_a_customer_with_type_error(self):
         """ Deserialize a Customer with a TypeError """
-        customer = CustomerModel()
-        self.assertRaises(DataValidationError, customer.deserialize, [])
+        test_customer = CustomerModel()
+        self.assertRaises(DataValidationError, test_customer.deserialize, [])
 
     def test_deserialize_a_customer_with_key_error(self):
         """ Deserialize a Customer with a KeyError """
+        test_customer = CustomerModel()
+        self.assertRaises(DataValidationError, test_customer.deserialize, {})
+    
+    def test_deserialize_missing_data(self):
+        """It should not deserialize a Pet with missing data"""
+        data = {"customer_id": 1, "first_name": "Kitty", "last_name": "cat"}
+        test_customer = CustomerModel()
+        self.assertRaises(DataValidationError, test_customer.deserialize, data)
+
+    def test_deserialize_bad_email(self):
+        """It should not deserialize a Pet with missing data"""
+        test_customer = CustomerFactory()
+        data = test_customer.serialize()
+        data["email"] = "this is not an email"
+        self.assertRaises(DataValidationError, test_customer.deserialize, data)
+
+    def test_deserialize_bad_gender(self):
+        """ Deserialize a Customer with a bad gender attribute """
+        test_customer = CustomerFactory()
+        data = test_customer.serialize()
+        data["gender"] = "male"
         customer = CustomerModel()
-        self.assertRaises(DataValidationError, customer.deserialize, {})
+        self.assertRaises(DataValidationError, customer.deserialize, data)
 
       
 ######################################################################

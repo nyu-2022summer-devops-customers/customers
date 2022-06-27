@@ -123,11 +123,11 @@ class TestCustomersModel(unittest.TestCase):
         """It should List all Customers in the database"""
         customers = CustomerModel.all()
         self.assertEqual(customers, [])
-        # Create 5 Pets
+        # Create 5 Customers
         for i in range(5):
             customer = CustomerFactory()
             customer.create()
-        # See if we get back 5 pets
+        # See if we get back 5 customers
         customers = CustomerModel.all()
         self.assertEqual(len(customers), 5)
 
@@ -142,7 +142,7 @@ class TestCustomersModel(unittest.TestCase):
         customer.create()
         customers = CustomerModel.all()
         self.assertEqual(len(customers), 1)
-        # delete the pet and make sure it isn't in the database
+        # delete the customer and make sure it isn't in the database
         customer.delete()
         customers = CustomerModel.all()
         self.assertEqual(len(customers), 0)

@@ -4,11 +4,10 @@ Test cases for CustomersModel Model
 """
 # from audioop import add
 import os
-# import logging
+import logging
 import unittest
 from datetime import date
-# from service.models import CustomerModel, AddressModel, Gender, DataValidationError, db
-from service.models import CustomerModel, AddressModel, Gender, db
+from service.models import CustomerModel, AddressModel, Gender, DataValidationError, db
 from service import app
 from tests.factories import CustomerFactory
 

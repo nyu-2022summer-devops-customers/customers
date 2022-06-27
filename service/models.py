@@ -23,7 +23,7 @@ class DataValidationError(Exception):
     pass
 
 class Gender(Enum):
-    """Enumeration of valid Pet Genders"""
+    """Enumeration of valid Customer Genders"""
 
     MALE = 0
     FEMALE = 1
@@ -143,13 +143,13 @@ class CustomerModel(db.Model):
     
     @classmethod
     def find_or_404(cls, customer_id: int):
-        """Find a Pet by it's id
+        """Find a Customer by it's id
 
-        :param pet_id: the id of the Pet to find
-        :type pet_id: int
+        :param customer_id: the id of the Customer to find
+        :type customer_id: int
 
-        :return: an instance with the pet_id, or 404_NOT_FOUND if not found
-        :rtype: Pet
+        :return: an instance with the customer_id, or 404_NOT_FOUND if not found
+        :rtype: Customer
 
         """
         logger.info("Processing lookup or 404 for id %s ...", customer_id)

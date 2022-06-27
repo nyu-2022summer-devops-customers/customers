@@ -123,11 +123,11 @@ class TestCustomersModel(unittest.TestCase):
         """It should List all Customers in the database"""
         customers = CustomerModel.all()
         self.assertEqual(customers, [])
-        # Create 5 Pets
+        # Create 5 Customers
         for i in range(5):
             customer = CustomerFactory()
             customer.create()
-        # See if we get back 5 pets
+        # See if we get back 5 customers
         customers = CustomerModel.all()
         self.assertEqual(len(customers), 5)
 
@@ -142,7 +142,7 @@ class TestCustomersModel(unittest.TestCase):
         customer.create()
         customers = CustomerModel.all()
         self.assertEqual(len(customers), 1)
-        # delete the pet and make sure it isn't in the database
+        # delete the sustomer and make sure it isn't in the database
         customer.delete()
         customers = CustomerModel.all()
         self.assertEqual(len(customers), 0)
@@ -460,3 +460,33 @@ class TestAddressModel(unittest.TestCase):
         """ Deserialize an Address with a KeyError """
         address = AddressModel()
         self.assertRaises(DataValidationError, address.deserialize, {})
+
+    def test_delete_an_address_of_a_customer(self):
+        """It should delete an address of a customer"""
+        customer = CustomerFactory()
+        logging.debug(customer)
+        customer.customer_id = None
+        customer.create()
+
+        customer_id = customer.customer_id
+        address_id = None
+        address_prefix="address"
+
+        for i in range(0, 10):
+            address_str = f"{address_prefix}{i}"
+            address = AddressModel(customer_id=customer_id, address=address_str)
+            self.assertTrue(address is not None)
+            self.assertEqual(str(address), f"<AddressModel '{address_str}' customer_id=[{customer_id}] address_id=[None]>")
+            self.assertEqual(address.customer_id, customer_id)
+            self.assertEqual(address.address, address_str)
+            self.assertEqual(address.address_id, None)
+            address.create()
+            # Assert that it was assigned an id and shows up in the database
+            self.assertIsNotNone(address.address_id)
+            address_id = address.address_id
+
+        found = AddressModel.find_by_customer_and_address_id(customer_id, address_id)
+        self.assertEqual(found.count(), 1)
+        address = found[0]
+        found.delete()
+        self.assertEqual(found.count(), 0)

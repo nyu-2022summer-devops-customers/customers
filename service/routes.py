@@ -59,16 +59,14 @@ def create_customers():
     """
     app.logger.info("Request to create a customer")
     check_content_type("application/json")
-    try:
-        customer = CustomerModel()
-        customer.deserialize(request.get_json())
-        customer.create()
-        message = customer.serialize()
-        location_url = url_for("create_customers", customer_id=customer.customer_id, _external=True)
-        app.logger.info("Customer with ID [%s] created.", customer.customer_id)    
-        return jsonify(message), status.HTTP_201_CREATED, {"Location": location_url}
-    except DataValidationError:
-        abort(status.HTTP_500_INTERNAL_SERVER_ERROR, "DataValidationError")
+    customer = CustomerModel()
+    customer.deserialize(request.get_json())
+    customer.create()
+    message = customer.serialize()
+    location_url = url_for("create_customers", customer_id=customer.customer_id, _external=True)
+    app.logger.info("Customer with ID [%s] created.", customer.customer_id)    
+
+    return jsonify(message), status.HTTP_201_CREATED, {"Location": location_url}
 
 ######################################################################
 # UPDATE A CUSTOMER
@@ -138,19 +136,16 @@ def create_address(customer_id):
     Creates an Address
     This endpoint will create an Address based the data in the body that is posted
     """
-    try:
-        app.logger.info("Request to create an address")
-        check_content_type("application/json")
-        address = AddressModel()
-        address.deserialize(request.get_json())
-        address.create()
-        message = address.serialize()
-        location_url = url_for("create_address", customer_id=customer_id, address_id=address.address_id, _external=True)
-        app.logger.info("Address with ID [%s] created.", address.address_id)
+    app.logger.info("Request to create an address")
+    check_content_type("application/json")
+    address = AddressModel()
+    address.deserialize(request.get_json())
+    address.create()
+    message = address.serialize()
+    location_url = url_for("create_address", customer_id=customer_id, address_id=address.address_id, _external=True)
+    app.logger.info("Address with ID [%s] created.", address.address_id)
 
-        return jsonify(message), status.HTTP_201_CREATED, {"Location": location_url}
-    except DataValidationError:
-        abort(status.HTTP_500_INTERNAL_SERVER_ERROR, "DataValidationError")
+    return jsonify(message), status.HTTP_201_CREATED, {"Location": location_url}
 
 
 ######################################################################

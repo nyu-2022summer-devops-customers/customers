@@ -268,9 +268,3 @@ class TestCustomersService(unittest.TestCase):
         data = response.get_json()
         # There should be only 5 customers, but there are 5 customers created when testing Address. Need to be fixed
         self.assertEqual(len(data), 5)
-
-    def test_internal_error(self):
-        """It should raise an internal error"""
-        date = {'customer_id': 0, 'first_name': 'Clayton', 'last_name': 'Proctor', 'nickname': 'Jessica Osborn', 'email': 'xxx@dddd.com', 'gender': 'male', 'birthday': '2011-08-21', 'password': 'v_Wa#vFNep)5K(0tuGNGs56rh3FMz!E!^$Ocpjoln403Ftc$EtC$gifm%zQr+Sm'}
-        response = self.client.post(BASE_URL, json=date)
-        self.assertEqual(response.status_code, status.HTTP_500_INTERNAL_SERVER_ERROR)

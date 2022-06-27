@@ -217,8 +217,22 @@ class AddressModel(db.Model):
         Args:
             data (dict): A dictionary containing the resource data
         """
-        self.address = data["address"]
-        self.customer_id = data["customer_id"]
+        try:
+            self.address = data["address"]
+            self.customer_id = data["customer_id"]
+        except AttributeError as error:
+            raise DataValidationError(
+                "Invalid attribute: " + error.args[0]
+            ) from error
+        except KeyError as error:
+            raise DataValidationError(
+                "Invalid AddressModel: missing " + error.args[0]
+            ) from error
+        except TypeError as error:
+            raise DataValidationError(
+                "Invalid AddressModel: body of request contained bad or no data"
+            ) from error
+        return self
 
     @classmethod
     def init_db(cls, app):

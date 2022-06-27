@@ -335,8 +335,8 @@ class TestAddressModel(unittest.TestCase):
         self.assertEqual(address.address_id, address_id)
 
         
-    def test_find_by_address_id(self):
-        """It should Find an address by address_id"""
+    def test_find_by_customer_id_and_address_id(self):
+        """It should Find an address by customer_id and address_id"""
         addresses=AddressFactory.create_batch(10)
         for address in addresses:
             address.create()

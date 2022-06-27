@@ -400,3 +400,23 @@ class TestAddressModel(unittest.TestCase):
         self.assertEqual(data["address_id"], address.address_id)
         self.assertIn("address", data)
         self.assertEqual(data["address"], address.address)
+
+    def test_deserialize_an_address(self):
+        """It should de-serialize an Address"""
+        data = AddressFactory().serialize()
+        address = AddressModel()
+        address.deserialize(data)
+        self.assertNotEqual(address, None)
+        self.assertEqual(address.address_id, None)
+        self.assertEqual(address.customer_id,data["customer_id"])
+        self.assertEqual(address.address,data["address"])
+    
+    def test_deserialize_an_address_with_type_error(self):
+        """ Deserialize a Customer with a TypeError """
+        address = AddressModel()
+        self.assertRaises(DataValidationError, address.deserialize, [])
+
+    def test_deserialize_an_address_with_key_error(self):
+        """ Deserialize a Customer with a KeyError """
+        address = AddressModel()
+        self.assertRaises(DataValidationError, address.deserialize, {})

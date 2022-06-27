@@ -143,28 +143,18 @@ class CustomerModel(db.Model):
     
     @classmethod
     def find_or_404(cls, customer_id: int):
-        """Find a Pet by it's id
+        """Find a Customer by it's id
 
-        :param pet_id: the id of the Pet to find
-        :type pet_id: int
+        :param customer_id: the id of the Customer to find
+        :type customer_id: int
 
-        :return: an instance with the pet_id, or 404_NOT_FOUND if not found
-        :rtype: Pet
+        :return: an instance with the customer_id, or 404_NOT_FOUND if not found
+        :rtype: Customer
 
         """
         logger.info("Processing lookup or 404 for id %s ...", customer_id)
         return cls.query.get_or_404(customer_id)
 
-    @classmethod
-    def find_by_name(cls, first_name):
-        """Returns all CustomerModels with the given first_name
-
-        Args:
-            first_name (string): the first_name of the CustomerModels you want to match
-        """
-        logger.info("Processing first_name query for %s ...", first_name)
-        return cls.query.filter(cls.first_name == first_name)
-        
 class AddressModel(db.Model):
     """
     Class that represents a AddressModel
@@ -262,15 +252,6 @@ class AddressModel(db.Model):
         return cls.query.filter(cls.customer_id == customer_id)
     
     
-    @classmethod
-    def find_by_name(cls, first_name):
-        """Returns all AddressModels with the given first_name
-
-        Args:
-            first_name (string): the first_name of the AddressModels you want to match
-        """
-        logger.info("Processing first_name query for %s ...", first_name)
-        return cls.query.filter(cls.first_name == first_name)
     
     @classmethod
     def find_by_customer_and_address_id(cls, customer_id, address_id):
@@ -307,6 +288,21 @@ class AddressModel(db.Model):
             address_model=address_found[0]
             address_model.address=new_address
             address_model.update()
+
+
+    @classmethod
+    def find_or_404(cls, address_id: int):
+        """Find an Address by it's id
+
+        :param address_id: the id of the Customer to find
+        :type address_id: int
+
+        :return: an instance with the address_id, or 404_NOT_FOUND if not found
+        :rtype: Address
+
+        """
+        logger.info("Processing lookup or 404 for id %s ...", address_id)
+        return cls.query.get_or_404(address_id)
         
         
 

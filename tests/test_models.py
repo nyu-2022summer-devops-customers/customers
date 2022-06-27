@@ -10,6 +10,7 @@ from datetime import date
 from service.models import CustomerModel, AddressModel, Gender, DataValidationError, db
 from service import app
 from tests.factories import CustomerFactory
+from tests.factories import AddressFactory
 
 DATABASE_URI = os.getenv(
     "DATABASE_URI", "postgresql://postgres:postgres@localhost:5432/testdb"
@@ -175,7 +176,8 @@ class TestAddressModel(unittest.TestCase):
         self.assertEqual(address.customer_id, 1)
         self.assertEqual(address.address, "address")
         self.assertEqual(address.address_id, None)
-    
+
+
     def test_add_an_address(self):
         """It should Create a customer and add it to the database"""
         customers = CustomerModel.all()
@@ -268,3 +270,60 @@ class TestAddressModel(unittest.TestCase):
         self.assertEqual(address.customer_id, customer_id)
         self.assertEqual(address.address, "address9")
         self.assertEqual(address.address_id, address_id)
+
+        
+    def test_find_by_address_id(self):
+        """It should Find an address by address_id"""
+        addresses=AddressFactory.create_batch(10)
+        for address in addresses:
+            address.create()
+        address_id=addresses[0].address_id
+        found=AddressModel.find_by_address_id(address_id)
+        self.assertEqual(found.count(),1)
+        self.assertEqual(found[0].customer_id,addresses[0].customer_id)
+        self.assertEqual(found[0].address,addresses[0].address)
+
+        #test for address not exist
+        addresses=AddressFactory.create_batch(10)
+        not_exist_address_id=-1
+        for address in addresses:
+            address.create()
+        found=AddressModel.find_by_address_id(not_exist_address_id)
+        self.assertEqual(found.count(),0)
+
+    def test_update_an_address(self):
+        """It should Update a AddressModel"""
+        address = AddressFactory()
+        logging.debug(address)
+        address.address_id = None
+        address.create()
+        logging.debug(address)
+        self.assertIsNotNone(address.address_id)
+        # Change it an save it
+        AddressModel.update_address_under_address_id(address.address_id,"new_address")
+        original_id = address.address_id
+        address.update()
+        self.assertEqual(address.address_id, original_id)
+        self.assertEqual(address.address, "new_address")
+        # Fetch it back and make sure the id hasn't changed
+        # but the data did change
+        addresses = AddressModel.all()
+        self.assertEqual(len(addresses), 1)
+        self.assertEqual(addresses[0].address_id, original_id)
+        self.assertEqual(addresses[0].address, "new_address")
+
+        
+    def test_update_no_address_id(self):
+        """It should not Update a Address  with no address_id"""
+        address = AddressFactory()
+        logging.debug(address)
+        address.address_id = None
+        self.assertRaises(DataValidationError, address.update)  
+
+        address = AddressFactory()
+        logging.debug(address)
+        address.address_id = None  
+        with self.assertRaises(DataValidationError):
+            AddressModel.update_address_under_address_id(address.address_id,"new_address")
+
+

@@ -8,6 +8,7 @@ from enum import Enum
 from datetime import date
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
+from psycopg2 import DataError
 from sqlalchemy import ForeignKey
 
 logger = logging.getLogger("flask.app")
@@ -152,12 +153,13 @@ class AddressModel(db.Model):
     app = None
 
     # Table Schema
-    customer_id = db.Column(db.Integer, ForeignKey("customer.customer_id"))
+    customer_id = db.Column(db.Integer, ForeignKey("customer.customer_id"),nullable=False)
     address_id = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    address = db.Column(db.String(63))
+    address = db.Column(db.String(63),nullable=False)
 
     def __repr__(self):
         return "<AddressModel %r customer_id=[%s] address_id=[%s]>" % (self.address, self.customer_id, self.address_id)
+
 
     def create(self):
         """
@@ -172,12 +174,14 @@ class AddressModel(db.Model):
         """
         Updates a AddressModel to the database
         """
-        logger.info("Saving %s", self.first_name)
+        logger.info("Saving %s", self.address_id)
+        if not self.address_id:
+            raise DataValidationError("Update called with empty ID field")
         db.session.commit()
 
     def delete(self):
         """ Removes a AddressModel from the data store """
-        logger.info("Deleting %s", self.first_name)
+        logger.info("Deleting %s %s", self.address_id)
         db.session.delete(self)
         db.session.commit()
 
@@ -235,7 +239,8 @@ class AddressModel(db.Model):
     def find_by_customer_id(cls, customer_id):
         logger.info("Processing customer_id query for %s ...", customer_id)
         return cls.query.filter(cls.customer_id == customer_id)
-
+    
+    
     @classmethod
     def find_by_name(cls, first_name):
         """Returns all AddressModels with the given first_name
@@ -254,3 +259,42 @@ class AddressModel(db.Model):
         """
         logger.info("Processing customer_id and address_id query for %s %s ...", customer_id, address_id)
         return cls.query.filter(cls.customer_id == customer_id).filter(cls.address_id == address_id)
+    
+
+    @classmethod
+    def find_by_address_id(cls,  address_id):
+        """Get an Address information under address_id
+        Args:
+            address_id(int): address_id of the AddressModels you want to match
+        """
+        logger.info("Processing address_id query for %s ...",  address_id)
+        return cls.query.filter(cls.address_id == address_id)
+    
+    @classmethod
+    def update_address_under_address_id(cls,address_id,new_address):
+        """Update an Address information under address_id
+        
+        Args:
+            address_id(int): address_id of the AddressModels you want to match
+        """
+        logger.info("Processing address update for %s ...",  address_id)
+        
+        address_found=AddressModel.find_by_address_id(address_id)
+        if address_found.count()==0:
+            raise DataValidationError("the address_id dosen't exist")
+        else:
+            address_model=address_found[0]
+            address_model.address=new_address
+            address_model.update()
+        
+        
+
+
+    
+    
+
+    
+
+        
+
+

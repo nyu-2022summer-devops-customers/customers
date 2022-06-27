@@ -38,7 +38,7 @@ class CustomerModel(db.Model):
     app = None
 
     # Table Schema
-    customer_id = db.Column(db.Integer, primary_key=True)
+    customer_id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     password = db.Column(db.String(63), nullable=False)
     first_name = db.Column(db.String(63), nullable=False)
     last_name = db.Column(db.String(63), nullable=False)
@@ -202,7 +202,7 @@ class AddressModel(db.Model):
 
     def delete(self):
         """ Removes a AddressModel from the data store """
-        logger.info("Deleting %s %s", self.address_id)
+        logger.info("Deleting %s", self.address_id)
         db.session.delete(self)
         db.session.commit()
 

@@ -136,7 +136,6 @@ class TestCustomersModel(unittest.TestCase):
         customer = CustomerFactory()
         data = customer.serialize()
         self.assertNotEqual(data, None)
-
         self.assertIn("customer_id", data)
         self.assertEqual(data["customer_id"], customer.customer_id)
         self.assertIn("first_name", data)
@@ -375,3 +374,15 @@ class TestAddressModel(unittest.TestCase):
         logging.debug(address)
         address.address_id = None
         self.assertRaises(DataValidationError, address.update)  
+
+    def test_serialize_an_address(self):
+        """It should serialize a Address"""
+        address = AddressFactory()
+        data = address.serialize()
+        self.assertNotEqual(data, None)
+        self.assertIn("customer_id", data)
+        self.assertEqual(data["customer_id"], customer.customer_id)
+        self.assertIn("address_id", data)
+        self.assertEqual(data["address_id"], customer.customer_id)
+        self.assertIn("address", data)
+        self.assertEqual(data["address"], customer.customer_id)

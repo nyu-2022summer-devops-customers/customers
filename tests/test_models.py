@@ -168,6 +168,15 @@ class TestCustomersModel(unittest.TestCase):
         self.assertEqual(customer.password,data["password"])
         self.assertEqual(customer.birthday,date.fromisoformat(data["birthday"]))
     
+    def test_deserialize_an_address_with_type_error(self):
+        """ Deserialize a Customer with a TypeError """
+        customer = CustomerModel()
+        self.assertRaises(DataValidationError, customer.deserialize, [])
+
+    def test_deserialize_an_address_with_key_error(self):
+        """ Deserialize a Customer with a KeyError """
+        customer = CustomerModel()
+        self.assertRaises(DataValidationError, customer.deserialize, {})
       
 ######################################################################
 #  ADDRESS   M O D E L   T E S T   C A S E S

@@ -278,9 +278,8 @@ class TestAddressModel(unittest.TestCase):
         self.assertEqual(addresses[0].address, "new_address")
 
         
-        
     def test_update_no_address_id(self):
-        """It should not Update a Pet with no id"""
+        """It should not Update a Address  with no address_id"""
         address = AddressFactory()
         logging.debug(address)
         address.address_id = None
@@ -292,8 +291,8 @@ class TestAddressModel(unittest.TestCase):
         with self.assertRaises(DataValidationError):
             AddressModel.update_address_under_address_id(address.address_id,"new_address")
 
+    
 
-        
     
         
 

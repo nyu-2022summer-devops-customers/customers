@@ -131,6 +131,7 @@ class TestCustomersModel(unittest.TestCase):
         customers = CustomerModel.all()
         self.assertEqual(len(customers), 5)
 
+
     def test_delete_a_customer(self):
         """It should Delete a Customer"""
         customers = CustomerModel.all()
@@ -145,6 +146,54 @@ class TestCustomersModel(unittest.TestCase):
         customer.delete()
         customers = CustomerModel.all()
         self.assertEqual(len(customers), 0)
+
+    def test_serialize_a_customer(self):
+        """It should serialize a Customer"""
+        customer = CustomerFactory()
+        data = customer.serialize()
+        self.assertNotEqual(data, None)
+        self.assertIn("customer_id", data)
+        self.assertEqual(data["customer_id"], customer.customer_id)
+        self.assertIn("first_name", data)
+        self.assertEqual(data["first_name"],customer.first_name)
+        self.assertIn("last_name", data)
+        self.assertEqual(data["last_name"], customer.last_name)
+        self.assertIn("nickname", data)
+        self.assertEqual(data["nickname"], customer.nickname)
+        self.assertIn("email", data)
+        self.assertEqual(data["email"], customer.email)
+        self.assertIn("gender", data)
+        self.assertEqual(data["gender"], customer.gender.name)
+        self.assertIn("password", data)
+        self.assertEqual(data["password"], customer.password)
+        self.assertIn("birthday", data)
+        self.assertEqual(date.fromisoformat(data["birthday"]), customer.birthday)
+
+    def test_deserialize_a_customer(self):
+        """It should de-serialize a Customer"""
+        data = CustomerFactory().serialize()
+        customer = CustomerModel()
+        customer.deserialize(data)
+        self.assertNotEqual(customer, None)
+        self.assertEqual(customer.customer_id, None)
+        self.assertEqual(customer.first_name,data["first_name"])
+        self.assertEqual(customer.last_name,data["last_name"])
+        self.assertEqual(customer.nickname,data["nickname"])
+        self.assertEqual(customer.email,data["email"])
+        self.assertEqual(customer.gender.name,data["gender"])
+        self.assertEqual(customer.password,data["password"])
+        self.assertEqual(customer.birthday,date.fromisoformat(data["birthday"]))
+    
+    def test_deserialize_a_customer_with_type_error(self):
+        """ Deserialize a Customer with a TypeError """
+        customer = CustomerModel()
+        self.assertRaises(DataValidationError, customer.deserialize, [])
+
+    def test_deserialize_a_customer_with_key_error(self):
+        """ Deserialize a Customer with a KeyError """
+        customer = CustomerModel()
+        self.assertRaises(DataValidationError, customer.deserialize, {})
+
       
 ######################################################################
 #  ADDRESS   M O D E L   T E S T   C A S E S
@@ -286,8 +335,8 @@ class TestAddressModel(unittest.TestCase):
         self.assertEqual(address.address_id, address_id)
 
         
-    def test_find_by_address_id(self):
-        """It should Find an address by address_id"""
+    def test_find_by_customer_id_and_address_id(self):
+        """It should Find an address by customer_id and address_id"""
         addresses=AddressFactory.create_batch(10)
         for address in addresses:
             address.create()
@@ -307,9 +356,16 @@ class TestAddressModel(unittest.TestCase):
 
     def test_update_an_address(self):
         """It should Update a AddressModel"""
+        customer = CustomerFactory()
+        logging.debug(customer)
+        customer.customer_id = None
+        customer.create()
+
+        customer_id = customer.customer_id
         address = AddressFactory()
         logging.debug(address)
         address.address_id = None
+        address.customer_id=customer_id
         address.create()
         logging.debug(address)
         self.assertIsNotNone(address.address_id)
@@ -327,10 +383,17 @@ class TestAddressModel(unittest.TestCase):
         self.assertEqual(addresses[0].address, "new_address")
 
     def test_update_an_address_by_address_id(self):
-        """It should Update a AddressModel"""
+        """It should Update a AddressModel by address id"""
+        customer = CustomerFactory()
+        logging.debug(customer)
+        customer.customer_id = None
+        customer.create()
+
+        customer_id = customer.customer_id
         address = AddressFactory()
         logging.debug(address)
         address.address_id = None
+        address.customer_id=customer_id
         address.create()
         logging.debug(address)
         self.assertIsNotNone(address.address_id)
@@ -347,7 +410,7 @@ class TestAddressModel(unittest.TestCase):
         self.assertEqual(addresses[0].address, "new_address")
         
     def test_update_no_address_id(self):
-        """It should not Update a Address  with no address_id"""
+        """It should not Update a Address without an address_id"""
         address = AddressFactory()
         logging.debug(address)
         address.address_id = None
@@ -360,8 +423,40 @@ class TestAddressModel(unittest.TestCase):
             AddressModel.update_address_by_address_id(address.address_id,"new_address")
 
     def test_update_by_address_id_no_address_id(self):
-        """It should not Update a Address  with no address_id"""
+        """It should not Update a Address by id without an address_id"""
         address = AddressFactory()
         logging.debug(address)
         address.address_id = None
         self.assertRaises(DataValidationError, address.update)  
+
+    def test_serialize_an_address(self):
+        """It should serialize a Address"""
+        address = AddressFactory()
+        data = address.serialize()
+        self.assertNotEqual(data, None)
+        self.assertIn("customer_id", data)
+        self.assertEqual(data["customer_id"], address.customer_id)
+        self.assertIn("address_id", data)
+        self.assertEqual(data["address_id"], address.address_id)
+        self.assertIn("address", data)
+        self.assertEqual(data["address"], address.address)
+
+    def test_deserialize_an_address(self):
+        """It should de-serialize an Address"""
+        data = AddressFactory().serialize()
+        address = AddressModel()
+        address.deserialize(data)
+        self.assertNotEqual(address, None)
+        self.assertEqual(address.address_id, None)
+        self.assertEqual(address.customer_id,data["customer_id"])
+        self.assertEqual(address.address,data["address"])
+    
+    def test_deserialize_an_address_with_type_error(self):
+        """ Deserialize an Address with a TypeError """
+        address = AddressModel()
+        self.assertRaises(DataValidationError, address.deserialize, [])
+
+    def test_deserialize_an_address_with_key_error(self):
+        """ Deserialize an Address with a KeyError """
+        address = AddressModel()
+        self.assertRaises(DataValidationError, address.deserialize, {})

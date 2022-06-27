@@ -250,7 +250,7 @@ class TestCustomersService(unittest.TestCase):
 
     def test_get_a_customer(self):
         """It should Get a single Customer"""
-        # get the id of a pet
+        # get the id of a customer
         test_customer: CustomerModel = self._create_customers(1)[0]
         response = self.client.get(f"{BASE_URL}/{test_customer.customer_id}")
         self.assertEqual(response.status_code, status.HTTP_200_OK)

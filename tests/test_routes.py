@@ -268,3 +268,5 @@ class TestCustomersService(unittest.TestCase):
         data = response.get_json()
         # There should be only 5 customers, but there are 5 customers created when testing Address. Need to be fixed
         self.assertEqual(len(data), 5)
+
+

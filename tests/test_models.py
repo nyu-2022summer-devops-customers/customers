@@ -356,9 +356,16 @@ class TestAddressModel(unittest.TestCase):
 
     def test_update_an_address(self):
         """It should Update a AddressModel"""
+        customer = CustomerFactory()
+        logging.debug(customer)
+        customer.customer_id = None
+        customer.create()
+
+        customer_id = customer.customer_id
         address = AddressFactory()
         logging.debug(address)
         address.address_id = None
+        address.customer_id=customer_id
         address.create()
         logging.debug(address)
         self.assertIsNotNone(address.address_id)
@@ -376,10 +383,17 @@ class TestAddressModel(unittest.TestCase):
         self.assertEqual(addresses[0].address, "new_address")
 
     def test_update_an_address_by_address_id(self):
-        """It should Update a AddressModel"""
+        """It should Update a AddressModel by address id"""
+        customer = CustomerFactory()
+        logging.debug(customer)
+        customer.customer_id = None
+        customer.create()
+
+        customer_id = customer.customer_id
         address = AddressFactory()
         logging.debug(address)
         address.address_id = None
+        address.customer_id=customer_id
         address.create()
         logging.debug(address)
         self.assertIsNotNone(address.address_id)
@@ -396,7 +410,7 @@ class TestAddressModel(unittest.TestCase):
         self.assertEqual(addresses[0].address, "new_address")
         
     def test_update_no_address_id(self):
-        """It should not Update a Address  with no address_id"""
+        """It should not Update a Address without an address_id"""
         address = AddressFactory()
         logging.debug(address)
         address.address_id = None
@@ -409,7 +423,7 @@ class TestAddressModel(unittest.TestCase):
             AddressModel.update_address_by_address_id(address.address_id,"new_address")
 
     def test_update_by_address_id_no_address_id(self):
-        """It should not Update a Address  with no address_id"""
+        """It should not Update a Address by id without an address_id"""
         address = AddressFactory()
         logging.debug(address)
         address.address_id = None

@@ -202,7 +202,7 @@ class AddressModel(db.Model):
 
     def delete(self):
         """ Removes a AddressModel from the data store """
-        logger.info("Deleting %s %s", self.address_id)
+        logger.info("Deleting %s", self.address_id)
         db.session.delete(self)
         db.session.commit()
 

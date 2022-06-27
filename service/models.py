@@ -38,7 +38,7 @@ class CustomerModel(db.Model):
     app = None
 
     # Table Schema
-    customer_id = db.Column(db.Integer, primary_key=True)
+    customer_id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     password = db.Column(db.String(63), nullable=False)
     first_name = db.Column(db.String(63), nullable=False)
     last_name = db.Column(db.String(63), nullable=False)

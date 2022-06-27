@@ -3,7 +3,6 @@ Test cases for CustomersModel Model
 
 """
 # from audioop import add
-from distutils.sysconfig import customize_compiler
 import os
 import logging
 import unittest
@@ -65,13 +64,13 @@ class TestCustomersModel(unittest.TestCase):
         self.assertEqual(customer.email, "fido@gmail.com")
         self.assertEqual(customer.gender, Gender.MALE)
         self.assertEqual(customer.birthday, date(2018, 1, 1))
-        
+   
         customer = CustomerModel(password="password", first_name="Fido", last_name="Lido", nickname="helloFido", email="fido@gmail.com", gender=Gender.FEMALE, birthday=date(2018, 1, 1))
         self.assertEqual(customer.gender, Gender.FEMALE)
 
         customer = CustomerModel(password="password", first_name="Fido", last_name="Lido", nickname="helloFido", email="fido@gmail.com", gender=Gender.UNKNOWN, birthday=date(2018, 1, 1))
         self.assertEqual(customer.gender, Gender.UNKNOWN)
-    
+
     def test_add_a_customer(self):
         """It should Create a customer and add it to the database"""
         customers = CustomerModel.all()
@@ -184,7 +183,7 @@ class TestCustomersModel(unittest.TestCase):
         self.assertEqual(customer.gender.name,data["gender"])
         self.assertEqual(customer.password,data["password"])
         self.assertEqual(customer.birthday,date.fromisoformat(data["birthday"]))
-    
+ 
     def test_deserialize_bad_data(self):
         """It should not deserialize bad data"""
         data = "this is not a dictionary"
@@ -221,8 +220,7 @@ class TestCustomersModel(unittest.TestCase):
         data["gender"] = "male"
         customer = CustomerModel()
         self.assertRaises(DataValidationError, customer.deserialize, data)
-
-      
+  
 ######################################################################
 #  ADDRESS   M O D E L   T E S T   C A S E S
 ######################################################################
@@ -330,7 +328,7 @@ class TestAddressModel(unittest.TestCase):
             self.assertEqual(address.customer_id, customer_id)
             self.assertEqual(address.address, address_str)
             self.assertIsNotNone(address.address_id)
-            
+           
     def test_get_an_address_of_a_customer(self):
         """It should return an address of a customer"""
         customer = CustomerFactory()
@@ -362,7 +360,7 @@ class TestAddressModel(unittest.TestCase):
         self.assertEqual(address.address, "address9")
         self.assertEqual(address.address_id, address_id)
 
-        
+ 
     def test_find_by_customer_id_and_address_id(self):
         """It should Find an address by customer_id and address_id"""
         addresses=AddressFactory.create_batch(10)
@@ -478,7 +476,7 @@ class TestAddressModel(unittest.TestCase):
         self.assertEqual(address.address_id, None)
         self.assertEqual(address.customer_id,data["customer_id"])
         self.assertEqual(address.address,data["address"])
-    
+   
     def test_deserialize_an_address_with_type_error(self):
         """ Deserialize an Address with a TypeError """
         address = AddressModel()

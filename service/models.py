@@ -155,16 +155,7 @@ class CustomerModel(db.Model):
         logger.info("Processing lookup or 404 for id %s ...", customer_id)
         return cls.query.get_or_404(customer_id)
 
-    @classmethod
-    def find_by_name(cls, first_name):
-        """Returns all CustomerModels with the given first_name
-
-        Args:
-            first_name (string): the first_name of the CustomerModels you want to match
-        """
-        logger.info("Processing first_name query for %s ...", first_name)
-        return cls.query.filter(cls.first_name == first_name)
-        
+    
 class AddressModel(db.Model):
     """
     Class that represents a AddressModel
@@ -202,7 +193,7 @@ class AddressModel(db.Model):
 
     def delete(self):
         """ Removes a AddressModel from the data store """
-        logger.info("Deleting %s %s", self.address_id)
+        logger.info("Deleting %s %s", self.customer_id,self.address_id)
         db.session.delete(self)
         db.session.commit()
 
@@ -262,15 +253,6 @@ class AddressModel(db.Model):
         return cls.query.filter(cls.customer_id == customer_id)
     
     
-    @classmethod
-    def find_by_name(cls, first_name):
-        """Returns all AddressModels with the given first_name
-
-        Args:
-            first_name (string): the first_name of the AddressModels you want to match
-        """
-        logger.info("Processing first_name query for %s ...", first_name)
-        return cls.query.filter(cls.first_name == first_name)
     
     @classmethod
     def find_by_customer_and_address_id(cls, customer_id, address_id):

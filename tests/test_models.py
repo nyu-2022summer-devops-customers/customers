@@ -129,6 +129,7 @@ class TestCustomersModel(unittest.TestCase):
         # See if we get back 5 pets
         customers = CustomerModel.all()
         self.assertEqual(len(customers), 5)
+
       
 ######################################################################
 #  ADDRESS   M O D E L   T E S T   C A S E S

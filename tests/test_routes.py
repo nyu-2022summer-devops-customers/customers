@@ -210,7 +210,7 @@ class TestCustomersService(unittest.TestCase):
     def test_list_addresses(self):
         """It should List all addresses of a Customer"""
         test_customer = CustomerFactory()
-        logging.debug("Test Customer: %s", test_customer.serialize())
+        logging.debug("Test Customer: %s ", test_customer.serialize())
         response = self.client.post(BASE_URL, json=test_customer.serialize())
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
         new_customer = response.get_json()

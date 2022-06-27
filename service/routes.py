@@ -96,6 +96,21 @@ def get_a_customer(customer_id):
     app.logger.info("Returning customer: Id %s, Name %s %s", customer.customer_id, customer.first_name, customer.last_name)
     return jsonify(customer.serialize()), status.HTTP_200_OK
 
+
+######################################################################
+# LIST ALL CUSTOMERS
+######################################################################
+@app.route("/customers", methods=["GET"])
+def list_customers():
+    """Returns all of the Customers"""
+    app.logger.info("Request for customer list")
+    customers = []
+    customers = CustomerModel.all()
+
+    results = [customer.serialize() for customer in customers]
+    app.logger.info("Returning %d customers", len(results))
+    return jsonify(results), status.HTTP_200_OK
+
 ######################################################################
 # CREATE NEW ADDRESS
 # https://flask-sqlalchemy.palletsprojects.com/en/2.x/models/

@@ -485,3 +485,16 @@ class TestAddressModel(unittest.TestCase):
     def test_find_or_404_not_found_address(self):
         """It should return 404 not found"""
         self.assertRaises(NotFound, CustomerModel.find_or_404,0)
+    
+    def test_delete_address(self):
+        """ Delete an Address """
+        customer = CustomerFactory()
+        customer.create()
+        id=customer.customer_id
+        address=AddressFactory()
+        address.customer_id=id
+        address.create()
+        self.assertEqual(len(AddressModel.all()), 1)
+        # delete the address and make sure it isn't in the database
+        address.delete()
+        self.assertEqual(len(AddressModel.all()), 0)

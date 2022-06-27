@@ -265,7 +265,7 @@ class TestAddressModel(unittest.TestCase):
         logging.debug(address)
         self.assertIsNotNone(address.address_id)
         # Change it an save it
-        address.address = "new_address"
+        AddressModel.update_address_under_address_id(address.address_id,"new_address")
         original_id = address.address_id
         address.update()
         self.assertEqual(address.address_id, original_id)
@@ -284,7 +284,13 @@ class TestAddressModel(unittest.TestCase):
         address = AddressFactory()
         logging.debug(address)
         address.address_id = None
-        self.assertRaises(DataValidationError, address.update)    
+        self.assertRaises(DataValidationError, address.update)  
+
+        address = AddressFactory()
+        logging.debug(address)
+        address.address_id = None  
+        with self.assertRaises(DataValidationError):
+            AddressModel.update_address_under_address_id(address.address_id,"new_address")
 
 
         

@@ -8,6 +8,7 @@ from enum import Enum
 from datetime import date
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
+from psycopg2 import DataError
 from sqlalchemy import ForeignKey
 
 logger = logging.getLogger("flask.app")
@@ -279,7 +280,7 @@ class AddressModel(db.Model):
         
         address_found=AddressModel.find_by_address_id(address_id)
         if address_found.count()==0:
-            raise ValueError("the address_id dosen't exist")
+            raise DataValidationError("the address_id dosen't exist")
         else:
             address_model=address_found[0]
             address_model.address=new_address

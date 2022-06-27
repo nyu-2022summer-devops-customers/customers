@@ -190,6 +190,24 @@ def get_an_address_of_a_customer(customer_id, address_id):
     return jsonify(address.serialize()), status.HTTP_200_OK
 
 ######################################################################
+# DELETE A CUSTOMER
+######################################################################
+@app.route(f"{BASE_URL}/<int:customer_id>", methods=["DELETE"])
+def delete_customers(customer_id):
+    """
+    Delete a Customer
+
+    This endpoint will delete a Customer based on the id specified in the path
+    """
+    app.logger.info("Request to delete customer with id: %s", customer_id)
+    customer = CustomerModel.find(customer_id)
+    if customer:
+        customer.delete()
+
+    app.logger.info("Customer with ID [%s] delete complete.", customer_id)
+    return "", status.HTTP_204_NO_CONTENT
+
+######################################################################
 #  U T I L I T Y   F U N C T I O N S
 ######################################################################
 

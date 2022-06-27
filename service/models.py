@@ -78,7 +78,16 @@ class CustomerModel(db.Model):
 
     def serialize(self):
         """ Serializes a CustomerModel into a dictionary """
-        return {"customer_id": self.customer_id, "first_name": self.first_name, "last_name": self.last_name, "nickname": self.nickname, "email": self.email, "gender": self.gender.name, "birthday": self.birthday.isoformat(), "password": self.password}
+        return {
+            "customer_id": self.customer_id, 
+            "first_name": self.first_name, 
+            "last_name": self.last_name, 
+            "nickname": self.nickname, 
+            "email": self.email, 
+            "gender": self.gender.name, 
+            "birthday": self.birthday.isoformat(),
+            "password": self.password
+        }
 
     def deserialize(self, data):
         """
@@ -111,7 +120,7 @@ class CustomerModel(db.Model):
         return self
 
     @classmethod
-    def init_db(cls, app):
+    def init_db(cls, app: Flask):
         """ Initializes the database session """
         logger.info("Initializing database")
         cls.app = app
@@ -131,6 +140,20 @@ class CustomerModel(db.Model):
         """ Finds a CustomerModel by it's customer_id """
         logger.info("Processing lookup for customer_id %s ...", by_id)
         return cls.query.get(by_id)
+    
+    @classmethod
+    def find_or_404(cls, customer_id: int):
+        """Find a Pet by it's id
+
+        :param pet_id: the id of the Pet to find
+        :type pet_id: int
+
+        :return: an instance with the pet_id, or 404_NOT_FOUND if not found
+        :rtype: Pet
+
+        """
+        logger.info("Processing lookup or 404 for id %s ...", customer_id)
+        return cls.query.get_or_404(customer_id)
 
     @classmethod
     def find_by_name(cls, first_name):
@@ -141,9 +164,7 @@ class CustomerModel(db.Model):
         """
         logger.info("Processing first_name query for %s ...", first_name)
         return cls.query.filter(cls.first_name == first_name)
-
-
-
+        
 class AddressModel(db.Model):
     """
     Class that represents a AddressModel

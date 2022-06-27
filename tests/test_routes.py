@@ -9,6 +9,8 @@ from curses.ascii import BS
 import os
 import logging
 import unittest
+
+
 from service import app
 from service.models import CustomerModel, AddressModel, Gender, db
 from service.utils import status
@@ -18,6 +20,7 @@ DATABASE_URI = os.getenv(
     "DATABASE_URI", "postgresql://postgres:postgres@localhost:5432/testdb"
 )
 BASE_URL = "/customers"
+CONTENT_TYPE_JSON = "application/json"
 
 
 ######################################################################
@@ -58,7 +61,8 @@ class TestCustomersService(unittest.TestCase):
         customers = []
         for _ in range(count):
             test_customer = CustomerFactory()
-            response = self.client.post(BASE_URL, json=test_customer.serialize())
+            response = self.client.post(
+                BASE_URL, json=test_customer.serialize(),content_type=CONTENT_TYPE_JSON)
             self.assertEqual(
                 response.status_code, status.HTTP_201_CREATED, "Could not create test customer"
             )
@@ -131,44 +135,15 @@ class TestCustomersService(unittest.TestCase):
         self.assertEqual(new_customer["gender"], test_customer.gender.name)
         self.assertEqual(new_customer["birthday"], test_customer.birthday.isoformat())
     
-    
-    def test_update_a_customer(self):
-        """It should Update an existing Customer"""
-        # create a customer to update
-        test_customer = CustomerFactory()
-        response = self.client.post(BASE_URL, json=test_customer.serialize())
-        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
-
-        # update the customer
-        new_customer = response.get_json()
-        logging.debug(new_customer)
-        new_customer["gender"] = Gender.MALE.name
-        response = self.client.put(f"{BASE_URL}/{new_customer['customer_id']}", json=new_customer)
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
-        updated_customer = response.get_json()
-        self.assertEqual(updated_customer["gender"], Gender.MALE.name)
-    
-    def test_get_a_customer(self):
-        """It should Get a single Customer"""
-        # get the id of a pet
-        test_customer: CustomerModel = self._create_customers(1)[0]
+    def test_delete_customer(self):
+        """It should Delete a Customer"""
+        test_customer = self._create_customers(1)[0]
+        response = self.client.delete(f"{BASE_URL}/{test_customer.customer_id}")
+        self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
+        self.assertEqual(len(response.data), 0)
+        # make sure they are deleted
         response = self.client.get(f"{BASE_URL}/{test_customer.customer_id}")
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
-        data = response.get_json()
-        self.assertEqual(data["customer_id"], test_customer.customer_id)
-        self.assertEqual(data["first_name"], test_customer.first_name)
-        self.assertEqual(data["last_name"], test_customer.last_name)
-        self.assertEqual(data["email"], test_customer.email)
-    
-    def test_get_customer_list(self):
-        """It should Get a list of Customers"""
-        self._create_customers(5)
-        response = self.client.get(BASE_URL)
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
-        data = response.get_json()
-        # There should be only 5 customers, but there are 5 customers created when testing Address. Need to be fixed
-        self.assertEqual(len(data), 5)
-    
+        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
     
     def test_create_address(self):
         """It should Create a new Address for a Customer"""

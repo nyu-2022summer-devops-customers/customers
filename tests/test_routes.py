@@ -268,3 +268,28 @@ class TestCustomersService(unittest.TestCase):
         data = response.get_json()
         # There should be only 5 customers, but there are 5 customers created when testing Address. Need to be fixed
         self.assertEqual(len(data), 5)
+
+    ######################################################################
+    #  T E S T   S A D   P A T H S
+    ######################################################################
+
+    def test_create_customer_no_data(self):
+        """It should not Create a Customer with missing data"""
+        response = self.client.post(BASE_URL, json={})
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+    
+    def test_create_customer_no_content_type(self):
+        """It should not Create a Customer with no content type"""
+        response = self.client.post(BASE_URL)
+        self.assertEqual(response.status_code, status.HTTP_415_UNSUPPORTED_MEDIA_TYPE)
+    
+    def test_create_customer_bad_gender(self):
+        """It should not Create a Customer with bad gender data"""
+        customer = CustomerFactory()
+        logging.debug(customer)
+        # change gender to a bad string
+        test_customer = customer.serialize()
+        test_customer["gender"] = "male"    # wrong case
+        response = self.client.post(BASE_URL, json=test_customer)
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+

@@ -18,3 +18,11 @@ Created for NYU Devops project, Summer 2022. Microservices built for handling cu
 |`POST` | `/customers/{customer_id}/addresses` | Creates a new Address record in the database | Address Object
 |`PUT` | `/customers/{customer_id}/addresses/{address_id}` | Updates/Modify an Address record in the database | AddressModel Object
 |`DELETE` | `/customers/{customer_id}` | Delete the Address with the given address_id number | 204 Status Code
+
+## License
+
+Copyright (c) John Rofrano. All rights reserved.
+
+Licensed under the Apache License. See [LICENSE](LICENSE)
+
+This repository is part of the NYU masters class: **CSCI-GA.2820-001 DevOps and Agile Methodologies** created and taught by *John Rofrano*, Adjunct Instructor, NYU Courant Institute, Graduate Division, Computer Science, and NYU Stern School of Business.

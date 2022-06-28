@@ -1,6 +1,7 @@
 # Customers
 [![License](https://img.shields.io/badge/License-Apache_2.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
 [![Python](https://img.shields.io/badge/Language-Python-blue.svg)](https://python.org/)
+
 Created for NYU Devops project, Summer 2022. Microservices built for handling customer data for an e-commerce site.
 
 ## Contents
@@ -37,12 +38,12 @@ Created for NYU Devops project, Summer 2022. Microservices built for handling cu
 |`GET` | `/` | Get information about the customer service  |None|Json
 | `GET` | `/customers/{customer_id}` | Get customer by Customer_ID |'customer_id': string|CustomerModel Object
 | `GET` | `/customers` | Returns a list of all the Customers |None|CustomerModel Object
-| `POST` | `/customers` | Creates a new Customer record in the database |'customer_id': string, 'first_name': string, ='last_name': string, 'nickname': string, 'email': string, 'gender': 'FEMALE' or 'MALE' or'UNKNOWN', 'birthday': string, 'password': string|CustomerModel Object
+| `POST` | `/customers` | Creates a new Customer record in the database |{'customer_id': string, 'first_name': string, ='last_name': string, 'nickname': string, 'email': string, 'gender': 'FEMALE' or 'MALE' or'UNKNOWN', 'birthday': string, 'password': string}|CustomerModel Object
 | `PUT` | `/customers/{customer_id}` | Updates/Modify a Customer record in the database |'customer_id': string, 'first_name': string, ='last_name': string, 'nickname': string, 'email': string, 'gender': 'FEMALE' or 'MALE' or'UNKNOWN', 'birthday': string, 'password': string|CustomerModel Object
 | `DELETE` | `/customers/{customer_id}` | Delete the Customer with the given id number |'customer_id': string|204 Status Code
 |`GET` | `/customers/{customer_id}/addresses` | Returns a list of all Addresses of a Customer |'customer_id': string, 'address_id': integer|Address Object
 |`GET` | `/customers/{customer_id}/addresses/{address_id}` | Get an Address by address_id |'customer_id': string|Customer Object
-|`POST` | `/customers/{customer_id}/addresses` | Creates a new Address record in the database |'customer_id': string, 'address_id': integer, 'address': string| Address Object
+|`POST` | `/customers/{customer_id}/addresses` | Creates a new Address record in the database |{'customer_id': string, 'address_id': integer, 'address': string}| Address Object
 |`PUT` | `/customers/{customer_id}/addresses/{address_id}` | Updates/Modify an Address record in the database |'customer_id': string, 'address_id': integer, 'address': string|AddressModel Object
 |`DELETE` | `/customers/{customer_id}` | Delete the Address with the given address_id number |'customer_id': string|204 Status Code
 
@@ -67,8 +68,8 @@ You can read more about creating these environments in my article: [Creating Rep
 To bring up the development environment you should clone this repo, change into the repo directory:
 
 ```bash
-$ git clone https://github.com/nyu-devops/lab-flask-tdd.git
-$ cd lab-flask-tdd
+$ git clone git@github.com:nyu-2022summer-devops-customers/customers.git
+$ cd customers
 ```
 
 Depending on which development environment you created, pick from the following:
@@ -164,8 +165,9 @@ $ vagrant destroy
 
     * app/routes.py -- the main Service routes using Python Flask
     * app/models.py -- the data model using SQLAlchemy
-    * tests/test_routes.py -- test cases against the Pet service
-    * tests/test_models.py -- test cases against the Pet model
+    * tests/test_routes.py -- test cases against the Customer service
+    * tests/test_models.py -- test cases against the Customer model
+  
 ## License
 
 Copyright (c) John Rofrano. All rights reserved.

@@ -503,6 +503,7 @@ class TestAddressModel(unittest.TestCase):
         address = AddressModel()
         self.assertRaises(DataValidationError, address.deserialize, {})
         
+
     def test_delete_an_address_of_a_customer(self):
         """It should delete an address of a customer"""
         customer = CustomerFactory()
@@ -532,7 +533,7 @@ class TestAddressModel(unittest.TestCase):
         address = found[0]
         found.delete()
         self.assertEqual(found.count(), 0)
-        
+
     def test_find_or_404_found_address(self):
         """It should Find an address or return 404 not found"""
         test_customer = CustomerFactory()

@@ -223,7 +223,27 @@ class TestCustomersModel(unittest.TestCase):
         data = test_customer.serialize()
         data["gender"] = "male"
         customer = CustomerModel()
-        self.assertRaises(DataValidationError, customer.deserialize, data)
+        self.assertRaises(DataValidationError, customer.deserialize, {})
+
+    def test_find_or_404_found_customer(self):
+        """It should Find a customer or return 404 not found"""
+        customers = CustomerFactory.create_batch(3)
+        for customer in customers:
+            customer.create()
+
+        customer = CustomerModel.find_or_404(customers[1].customer_id)
+        self.assertIsNot(customer, None)
+        self.assertEqual(customer.first_name,customers[1].first_name)
+        self.assertEqual(customer.last_name,customers[1].last_name)
+        self.assertEqual(customer.nickname,customers[1].nickname)
+        self.assertEqual(customer.email,customers[1].email)
+        self.assertEqual(customer.gender,customers[1].gender)
+        self.assertEqual(customer.password,customers[1].password)
+        self.assertEqual(customer.birthday,customers[1].birthday)
+
+    def test_find_or_404_not_found_customer(self):
+        """It should return 404 not found"""
+        self.assertRaises(NotFound, CustomerModel.find_or_404,0)
   
 ######################################################################
 #  ADDRESS   M O D E L   T E S T   C A S E S

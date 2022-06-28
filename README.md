@@ -3,6 +3,33 @@
 [![Python](https://img.shields.io/badge/Language-Python-blue.svg)](https://python.org/)
 Created for NYU Devops project, Summer 2022. Microservices built for handling customer data for an e-commerce site.
 
+## Contents
+
+The project contains the following:
+
+```text
+.gitignore          - this will ignore vagrant and other metadata files
+.flaskenv           - Environment variables to configure Flask
+.gitattributes      - File to gix Windows CRLF issues
+.devcontainers/     - Folder with support for VSCode Remote Containers
+dot-env-example     - copy to .env to use environment variables
+requirements.txt    - list if Python libraries required by your code
+config.py           - configuration parameters
+service/                   - service python package
+├── __init__.py            - package initializer
+├── models.py              - module with business models
+├── routes.py              - module with service routes
+└── utils                  - utility package
+    ├── error_handlers.py  - HTTP error handling code
+    ├── log_handlers.py    - logging setup code
+    └── status.py          - HTTP status constants
+tests/              - test cases package
+├── __init__.py     - package initializer
+├── test_models.py  - test suite for business models
+└── test_routes.py  - test suite for service routes
+```
+Created for NYU Devops project, Summer 2022. Microservices built for handling customer data for an e-commerce site.
+
 ## API Routes Documentation for Customers
 
 | HTTP Method | URL | Description | Return

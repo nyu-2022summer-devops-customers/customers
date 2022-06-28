@@ -240,18 +240,14 @@ class AddressModel(db.Model):
         logger.info("Processing all AddressModels")
         return cls.query.all()
 
-    @classmethod
-    def find(cls, by_id):
-        """ Finds a AddressModel by it's address_id """
-        logger.info("Processing lookup for address_id %s ...", by_id)
-        return cls.query.get(by_id)
+
 
     @classmethod
     def find_by_customer_id(cls, customer_id):
         logger.info("Processing customer_id query for %s ...", customer_id)
         return cls.query.filter(cls.customer_id == customer_id)
     
-    
+
     
     @classmethod
     def find_by_customer_and_address_id(cls, customer_id, address_id):

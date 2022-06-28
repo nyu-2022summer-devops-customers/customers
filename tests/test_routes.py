@@ -231,3 +231,90 @@ class TestCustomersService(unittest.TestCase):
         self.assertEqual(new_address["customer_id"], customer_id)
         self.assertEqual(new_address["address"], address_str)
     
+
+    def test_update_a_customer(self):
+        """It should Update an existing Customer"""
+        # create a customer to update
+        test_customer = CustomerFactory()
+        response = self.client.post(BASE_URL, json=test_customer.serialize())
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+
+        # update the customer
+        new_customer = response.get_json()
+        logging.debug(new_customer)
+        new_customer["gender"] = Gender.MALE.name
+        response = self.client.put(f"{BASE_URL}/{new_customer['customer_id']}", json=new_customer)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        updated_customer = response.get_json()
+        self.assertEqual(updated_customer["gender"], Gender.MALE.name)
+
+    def test_get_a_customer(self):
+        """It should Get a single Customer"""
+        # get the id of a customer
+        test_customer: CustomerModel = self._create_customers(1)[0]
+        response = self.client.get(f"{BASE_URL}/{test_customer.customer_id}")
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        data = response.get_json()
+        self.assertEqual(data["customer_id"], test_customer.customer_id)
+        self.assertEqual(data["first_name"], test_customer.first_name)
+        self.assertEqual(data["last_name"], test_customer.last_name)
+        self.assertEqual(data["email"], test_customer.email)
+
+    def test_get_customer_list(self):
+        """It should Get a list of Customers"""
+        self._create_customers(5)
+        response = self.client.get(BASE_URL)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        data = response.get_json()
+        # There should be only 5 customers, but there are 5 customers created when testing Address. Need to be fixed
+        self.assertEqual(len(data), 5)
+
+    def test_delete_an_address_of_a_customer(self):
+        """It should delete an address of a customer"""
+        test_customer = CustomerFactory()
+        logging.debug("Test Customer: %s", test_customer.serialize())
+        response = self.client.post(BASE_URL, json=test_customer.serialize())
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        new_customer = response.get_json()
+
+        customer_id = new_customer["customer_id"]
+        addresses = self._create_addresses(customer_id=customer_id, count=1)
+        self.assertEqual(len(addresses), 1)
+        address_id = addresses[0].address_id
+        address_str = addresses[0].address
+
+        response = self.client.delete(f"{BASE_URL}/{customer_id}/addresses/{address_id}")
+        self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
+        self.assertEqual(len(response.data), 0)
+        # make sure they are deleted
+        response = self.client.get(f"{BASE_URL}/{customer_id}/addresses/{address_id}")
+        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
+    ######################################################################
+    #  T E S T   S A D   P A T H S
+    ######################################################################
+    
+    def test_delete_not_allowed(self):
+        """It should not Delete /customers"""
+        response = self.client.delete(BASE_URL)
+        self.assertEqual(response.status_code, status.HTTP_405_METHOD_NOT_ALLOWED)
+    
+    def test_create_customer_no_data(self):
+        """It should not Create a Customer with missing data"""
+        response = self.client.post(BASE_URL, json={})
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+    
+    def test_create_customer_no_content_type(self):
+        """It should not Create a Customer with no content type"""
+        response = self.client.post(BASE_URL)
+        self.assertEqual(response.status_code, status.HTTP_415_UNSUPPORTED_MEDIA_TYPE)
+    
+    def test_create_customer_bad_gender(self):
+        """It should not Create a Customer with bad gender data"""
+        customer = CustomerFactory()
+        logging.debug(customer)
+        # change gender to a bad string
+        test_customer = customer.serialize()
+        test_customer["gender"] = "male"    # wrong case
+        response = self.client.post(BASE_URL, json=test_customer)
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+

@@ -3,12 +3,16 @@ Test cases for CustomersModel Model
 
 """
 # from audioop import add
+from http.client import NOT_FOUND
+from werkzeug.exceptions import NotFound
 import os
 import logging
 import unittest
 from datetime import date
+from xml.dom import NotFoundErr
 from service.models import CustomerModel, AddressModel, Gender, DataValidationError, db
 from service import app
+from service.utils.status import HTTP_403_FORBIDDEN, HTTP_404_NOT_FOUND
 from tests.factories import CustomerFactory
 from tests.factories import AddressFactory
 
@@ -123,11 +127,11 @@ class TestCustomersModel(unittest.TestCase):
         """It should List all Customers in the database"""
         customers = CustomerModel.all()
         self.assertEqual(customers, [])
-        # Create 5 Pets
+        # Create 5 Customers
         for i in range(5):
             customer = CustomerFactory()
             customer.create()
-        # See if we get back 5 pets
+        # See if we get back 5 customers
         customers = CustomerModel.all()
         self.assertEqual(len(customers), 5)
 
@@ -142,7 +146,7 @@ class TestCustomersModel(unittest.TestCase):
         customer.create()
         customers = CustomerModel.all()
         self.assertEqual(len(customers), 1)
-        # delete the pet and make sure it isn't in the database
+        # delete the customer and make sure it isn't in the database
         customer.delete()
         customers = CustomerModel.all()
         self.assertEqual(len(customers), 0)
@@ -266,7 +270,6 @@ class TestAddressModel(unittest.TestCase):
         self.assertEqual(address.address, "address")
         self.assertEqual(address.address_id, None)
 
-
     def test_add_an_address(self):
         """It should Create a customer and add it to the database"""
         customers = CustomerModel.all()
@@ -293,6 +296,20 @@ class TestAddressModel(unittest.TestCase):
         self.assertIsNotNone(address.address_id)
         addresses = CustomerModel.all()
         self.assertEqual(len(addresses), 1)
+
+    def test_delete_address(self):
+        """ Delete an Address """
+        customer = CustomerFactory()
+        customer.create()
+        id=customer.customer_id
+        address=AddressFactory()
+        address.customer_id=id
+        address.create()
+        self.assertEqual(len(AddressModel.all()), 1)
+        # delete the address and make sure it isn't in the database
+        address.delete()
+        customer.delete()
+        self.assertEqual(len(AddressModel.all()), 0)
 
     def test_list_addresses(self):
         """It should list all addresses of a customer"""
@@ -360,25 +377,6 @@ class TestAddressModel(unittest.TestCase):
         self.assertEqual(address.address, "address9")
         self.assertEqual(address.address_id, address_id)
 
- 
-    def test_find_by_customer_id_and_address_id(self):
-        """It should Find an address by customer_id and address_id"""
-        addresses=AddressFactory.create_batch(10)
-        for address in addresses:
-            address.create()
-        address_id=addresses[0].address_id
-        found=AddressModel.find_by_address_id(address_id)
-        self.assertEqual(found.count(),1)
-        self.assertEqual(found[0].customer_id,addresses[0].customer_id)
-        self.assertEqual(found[0].address,addresses[0].address)
-
-        #test for address not exist
-        addresses=AddressFactory.create_batch(10)
-        not_exist_address_id=-1
-        for address in addresses:
-            address.create()
-        found=AddressModel.find_by_address_id(not_exist_address_id)
-        self.assertEqual(found.count(),0)
 
     def test_update_an_address(self):
         """It should Update a AddressModel"""
@@ -386,7 +384,6 @@ class TestAddressModel(unittest.TestCase):
         logging.debug(customer)
         customer.customer_id = None
         customer.create()
-
         customer_id = customer.customer_id
         address = AddressFactory()
         logging.debug(address)
@@ -408,13 +405,12 @@ class TestAddressModel(unittest.TestCase):
         self.assertEqual(addresses[0].address_id, original_id)
         self.assertEqual(addresses[0].address, "new_address")
 
-    def test_update_an_address_by_address_id(self):
+    def test_update_an_address_by_customer_and_address_id(self):
         """It should Update a AddressModel by address id"""
         customer = CustomerFactory()
         logging.debug(customer)
         customer.customer_id = None
         customer.create()
-
         customer_id = customer.customer_id
         address = AddressFactory()
         logging.debug(address)
@@ -424,7 +420,7 @@ class TestAddressModel(unittest.TestCase):
         logging.debug(address)
         self.assertIsNotNone(address.address_id)
         # Change it an save it
-        AddressModel.update_address_by_address_id(address.address_id,"new_address")
+        AddressModel.update_address_by_address_and_customer_id(address.customer_id,address.address_id,"new_address")
         original_id = address.address_id
         self.assertEqual(address.address_id, original_id)
         self.assertEqual(address.address, "new_address")
@@ -435,20 +431,19 @@ class TestAddressModel(unittest.TestCase):
         self.assertEqual(addresses[0].address_id, original_id)
         self.assertEqual(addresses[0].address, "new_address")
         
-    def test_update_no_address_id(self):
+    def test_update_by_customer_and_address_no_address_id(self):
         """It should not Update a Address without an address_id"""
         address = AddressFactory()
         logging.debug(address)
         address.address_id = None
         self.assertRaises(DataValidationError, address.update)  
-
         address = AddressFactory()
         logging.debug(address)
         address.address_id = None  
         with self.assertRaises(DataValidationError):
-            AddressModel.update_address_by_address_id(address.address_id,"new_address")
+            AddressModel.update_address_by_address_and_customer_id(address.customer_id,address.address_id,"new_address")
 
-    def test_update_by_address_id_no_address_id(self):
+    def test_update_no_address_id(self):
         """It should not Update a Address by id without an address_id"""
         address = AddressFactory()
         logging.debug(address)
@@ -486,3 +481,61 @@ class TestAddressModel(unittest.TestCase):
         """ Deserialize an Address with a KeyError """
         address = AddressModel()
         self.assertRaises(DataValidationError, address.deserialize, {})
+
+    def test_delete_an_address_of_a_customer(self):
+        """It should delete an address of a customer"""
+        customer = CustomerFactory()
+        logging.debug(customer)
+        customer.customer_id = None
+        customer.create()
+
+        customer_id = customer.customer_id
+        address_id = None
+        address_prefix="address"
+
+        for i in range(0, 10):
+            address_str = f"{address_prefix}{i}"
+            address = AddressModel(customer_id=customer_id, address=address_str)
+            self.assertTrue(address is not None)
+            self.assertEqual(str(address), f"<AddressModel '{address_str}' customer_id=[{customer_id}] address_id=[None]>")
+            self.assertEqual(address.customer_id, customer_id)
+            self.assertEqual(address.address, address_str)
+            self.assertEqual(address.address_id, None)
+            address.create()
+            # Assert that it was assigned an id and shows up in the database
+            self.assertIsNotNone(address.address_id)
+            address_id = address.address_id
+
+        found = AddressModel.find_by_customer_and_address_id(customer_id, address_id)
+        self.assertEqual(found.count(), 1)
+        address = found[0]
+        found.delete()
+        self.assertEqual(found.count(), 0)
+    def test_find_or_404_found_address(self):
+        """It should Find an address or return 404 not found"""
+        addresses = AddressFactory.create_batch(3)
+        for address in addresses:
+            address.create()
+
+        address = AddressModel.find_or_404(addresses[1].address_id)
+        self.assertIsNot(address, None)
+        self.assertEqual(address.customer_id,addresses[1].customer_id)
+        self.assertEqual(address.address,addresses[1].address)
+        self.assertEqual(address.address_id,addresses[1].address_id)
+
+    def test_find_or_404_not_found_address(self):
+        """It should return 404 not found"""
+        self.assertRaises(NotFound, CustomerModel.find_or_404,0)
+    
+    def test_delete_address(self):
+        """ Delete an Address """
+        customer = CustomerFactory()
+        customer.create()
+        id=customer.customer_id
+        address=AddressFactory()
+        address.customer_id=id
+        address.create()
+        self.assertEqual(len(AddressModel.all()), 1)
+        # delete the address and make sure it isn't in the database
+        address.delete()
+        self.assertEqual(len(AddressModel.all()), 0)

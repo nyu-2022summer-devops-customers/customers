@@ -25,7 +25,7 @@ class DataValidationError(Exception):
     pass
 
 class Gender(Enum):
-    """Enumeration of valid Pet Genders"""
+    """Enumeration of valid Customer Genders"""
 
     MALE = 0
     FEMALE = 1
@@ -153,28 +153,18 @@ class CustomerModel(db.Model):
     
     @classmethod
     def find_or_404(cls, customer_id: int):
-        """Find a Pet by it's id
+        """Find a Customer by it's id
 
-        :param pet_id: the id of the Pet to find
-        :type pet_id: int
+        :param customer_id: the id of the Customer to find
+        :type customer_id: int
 
-        :return: an instance with the pet_id, or 404_NOT_FOUND if not found
-        :rtype: Pet
+        :return: an instance with the customer_id, or 404_NOT_FOUND if not found
+        :rtype: Customer
 
         """
         logger.info("Processing lookup or 404 for id %s ...", customer_id)
         return cls.query.get_or_404(customer_id)
 
-    @classmethod
-    def find_by_name(cls, first_name):
-        """Returns all CustomerModels with the given first_name
-
-        Args:
-            first_name (string): the first_name of the CustomerModels you want to match
-        """
-        logger.info("Processing first_name query for %s ...", first_name)
-        return cls.query.filter(cls.first_name == first_name)
-        
 class AddressModel(db.Model):
     """
     Class that represents a AddressModel
@@ -212,7 +202,7 @@ class AddressModel(db.Model):
 
     def delete(self):
         """ Removes a AddressModel from the data store """
-        logger.info("Deleting %s", self.address_id)
+        logger.info("Deleting %s %s", self.customer_id,self.address_id)
         db.session.delete(self)
         db.session.commit()
 
@@ -260,27 +250,14 @@ class AddressModel(db.Model):
         logger.info("Processing all AddressModels")
         return cls.query.all()
 
-    @classmethod
-    def find(cls, by_id):
-        """ Finds a AddressModel by it's address_id """
-        logger.info("Processing lookup for address_id %s ...", by_id)
-        return cls.query.get(by_id)
+
 
     @classmethod
     def find_by_customer_id(cls, customer_id):
         logger.info("Processing customer_id query for %s ...", customer_id)
         return cls.query.filter(cls.customer_id == customer_id)
     
-    
-    @classmethod
-    def find_by_name(cls, first_name):
-        """Returns all AddressModels with the given first_name
 
-        Args:
-            first_name (string): the first_name of the AddressModels you want to match
-        """
-        logger.info("Processing first_name query for %s ...", first_name)
-        return cls.query.filter(cls.first_name == first_name)
     
     @classmethod
     def find_by_customer_and_address_id(cls, customer_id, address_id):
@@ -291,18 +268,9 @@ class AddressModel(db.Model):
         logger.info("Processing customer_id and address_id query for %s %s ...", customer_id, address_id)
         return cls.query.filter(cls.customer_id == customer_id).filter(cls.address_id == address_id)
     
-
-    @classmethod
-    def find_by_address_id(cls,  address_id):
-        """Get an Address information under address_id
-        Args:
-            address_id(int): address_id of the AddressModels you want to match
-        """
-        logger.info("Processing address_id query for %s ...",  address_id)
-        return cls.query.filter(cls.address_id == address_id)
     
     @classmethod
-    def update_address_by_address_id(cls,address_id,new_address):
+    def update_address_by_address_and_customer_id(cls,address_id,customer_id,new_address):
         """Update an Address information under address_id
         
         Args:
@@ -310,13 +278,28 @@ class AddressModel(db.Model):
         """
         logger.info("Processing address update for %s ...",  address_id)
         
-        address_found=AddressModel.find_by_address_id(address_id)
+        address_found=AddressModel.find_by_customer_and_address_id(address_id,customer_id)
         if address_found.count()==0:
             raise DataValidationError("the address_id dosen't exist")
         else:
             address_model=address_found[0]
             address_model.address=new_address
             address_model.update()
+
+
+    @classmethod
+    def find_or_404(cls, address_id: int):
+        """Find an Address by it's id
+
+        :param address_id: the id of the Customer to find
+        :type address_id: int
+
+        :return: an instance with the address_id, or 404_NOT_FOUND if not found
+        :rtype: Address
+
+        """
+        logger.info("Processing lookup or 404 for id %s ...", address_id)
+        return cls.query.get_or_404(address_id)
         
         
 

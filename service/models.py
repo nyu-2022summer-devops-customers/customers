@@ -3,6 +3,7 @@ Models for CustomerModel
 
 All of the models are stored in this module
 """
+import errno
 import logging
 from enum import Enum
 from datetime import date
@@ -10,6 +11,7 @@ from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from psycopg2 import DataError
 from sqlalchemy import ForeignKey
+import re
 
 logger = logging.getLogger("flask.app")
 
@@ -53,6 +55,14 @@ class CustomerModel(db.Model):
 
     def __repr__(self):
         return "<CustomerModel %r customer_id=[%s]>" % (self.first_name, self.customer_id)
+    
+    def _email_validator(self, email):
+        pattern = r'^[a-zA-Z0-9_-]+(\.[a-zA-Z0-9_-]+){0,4}@[a-zA-Z0-9_-]+(\.[a-zA-Z0-9_-]+){0,4}$'
+        if not re.match(pattern, email):
+            raise DataValidationError(
+                "Invalid email address format"
+            )
+        return email
 
     def create(self):
         """
@@ -83,7 +93,7 @@ class CustomerModel(db.Model):
             "first_name": self.first_name, 
             "last_name": self.last_name, 
             "nickname": self.nickname, 
-            "email": self.email, 
+            "email": self._email_validator(self.email), 
             "gender": self.gender.name, 
             "birthday": self.birthday.isoformat(),
             "password": self.password
@@ -100,7 +110,7 @@ class CustomerModel(db.Model):
             self.first_name = data["first_name"]
             self.last_name = data["last_name"]
             self.nickname = data["nickname"]
-            self.email = data["email"]
+            self.email = self._email_validator(data["email"])
             self.password = data["password"]
             # create enum from string
             self.gender = getattr(Gender, data["gender"])  
@@ -146,6 +156,7 @@ class CustomerModel(db.Model):
         """Find a Customer by it's id
 
         :param customer_id: the id of the Customer to find
+        :type customer_id: int
 
         :return: an instance with the customer_id, or 404_NOT_FOUND if not found
         :rtype: Customer

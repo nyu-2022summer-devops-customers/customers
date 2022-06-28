@@ -208,6 +208,27 @@ def delete_customers(customer_id):
     return "", status.HTTP_204_NO_CONTENT
 
 ######################################################################
+# DELETE AN ADDRESS OF A CUSTOMER
+######################################################################
+@app.route(f"{BASE_URL}/<int:customer_id>/addresses/<int:address_id>", methods=["DELETE"])
+def delete_an_address_of_a_customer(customer_id, address_id):
+    """
+    Delete an Address of a Customer
+    This endpoint will delete an Address based on the data in the body that is posted
+    """
+    app.logger.info("Delete an Address of a Customer")
+    found = AddressModel.find_by_customer_and_address_id(customer_id=customer_id, address_id=address_id)
+
+    if found.count() == 1:
+        address = found[0]
+        address.delete()
+        
+
+    app.logger.info(f"Address '{address_id}' with customer id '{customer_id}' delete complete.", address.address_id)
+
+    return "", status.HTTP_204_NO_CONTENT
+       
+######################################################################
 #  U T I L I T Y   F U N C T I O N S
 ######################################################################
 

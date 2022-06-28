@@ -146,6 +146,7 @@ class CustomerModel(db.Model):
         """Find a Customer by it's id
 
         :param customer_id: the id of the Customer to find
+        :type customer_id: int
 
         :return: an instance with the customer_id, or 404_NOT_FOUND if not found
         :rtype: Customer

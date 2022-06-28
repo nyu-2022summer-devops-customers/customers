@@ -1,5 +1,6 @@
 # Customers
-
+[![License](https://img.shields.io/badge/License-Apache_2.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
+[![Python](https://img.shields.io/badge/Language-Python-blue.svg)](https://python.org/)
 Created for NYU Devops project, Summer 2022. Microservices built for handling customer data for an e-commerce site.
 
 ## API Routes Documentation for Customers

@@ -15,6 +15,7 @@ from service import app
 from service.utils.status import HTTP_403_FORBIDDEN, HTTP_404_NOT_FOUND
 from tests.factories import CustomerFactory
 from tests.factories import AddressFactory
+from werkzeug.exceptions import NotFound
 
 DATABASE_URI = os.getenv(
     "DATABASE_URI", "postgresql://postgres:postgres@localhost:5432/testdb"
@@ -502,6 +503,27 @@ class TestAddressModel(unittest.TestCase):
         address = AddressModel()
         self.assertRaises(DataValidationError, address.deserialize, {})
 
+    def test_find_or_404_found(self):
+        """It should Find or return 404 not found"""
+        customers = CustomerFactory.create_batch(3)
+        for customer in customers:
+            customer.create()
+
+        customer = CustomerModel.find_or_404(customers[1].customer_id)
+
+        self.assertTrue(customer is not None)
+        self.assertEqual(customer.customer_id,customers[1].customer_id)
+        self.assertEqual(customer.password, customers[1].password)
+        self.assertEqual(customer.first_name, customers[1].first_name)
+        self.assertEqual(customer.last_name, customers[1].last_name)
+        self.assertEqual(customer.nickname, customers[1].nickname)
+        self.assertEqual(customer.email, customers[1].email)
+        self.assertEqual(customer.gender, customers[1].gender)
+        self.assertEqual(customer.birthday, customers[1].birthday)
+        
+    def test_find_or_404_not_found(self):
+        """It should return 404 not found"""
+        self.assertRaises(NotFound, CustomerModel.find_or_404, 0)
     def test_delete_an_address_of_a_customer(self):
         """It should delete an address of a customer"""
         customer = CustomerFactory()
@@ -545,7 +567,7 @@ class TestAddressModel(unittest.TestCase):
 
     def test_find_or_404_not_found_address(self):
         """It should return 404 not found"""
-        self.assertRaises(NotFound, CustomerModel.find_or_404,0)
+        self.assertRaises(NotFound, AddressModel.find_or_404,0)
     
     def test_delete_address(self):
         """ Delete an Address """

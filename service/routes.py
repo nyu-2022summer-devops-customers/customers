@@ -31,19 +31,23 @@ def index():
     #     "Reminder: return some useful information in json format about the service here",
     #     status.HTTP_200_OK,
     # )
-    return jsonify(
-        message="This is the customers service",
-        create_customers=f"POST {BASE_URL}",
-        get_a_customer=f"GET {BASE_URL}/<int:customer_id>",
-        list_customers=f"GET {BASE_URL}",
-        update_a_customer=f"PUT {BASE_URL}/<int:customer_id>",
-        delete_a_customer=f"DELETE {BASE_URL}/<int:customer_id>",
-        create_address=f"POST {BASE_URL}/<int:customer_id>/addresses",
-        get_an_address_of_a_customer=f"GET {BASE_URL}/<int:customer_id>/addresses/<int:address_id>",
-        list_addresses=f"GET {BASE_URL}/<int:customer_id>/addresses",
-        update_an_address_of_a_customer=f"PUT {BASE_URL}/<int:customer_id>/addresses/<int:address_id>",
-        delete_an_address_of_a_customer=f"DELETE {BASE_URL}/<int:customer_id>/addresses/<int:address_id>",
-        status=status.HTTP_200_OK
+    return (
+        jsonify(
+            title="Customer REST Service",
+            description="This is the customers service",
+            version="1.0.0",
+            list_customers=url_for("list_customers", _external=True),
+            create_customers=f"POST {BASE_URL}",
+            get_a_customer=f"GET {BASE_URL}/<int:customer_id>",
+            update_a_customer=f"PUT {BASE_URL}/<int:customer_id>",
+            delete_a_customer=f"DELETE {BASE_URL}/<int:customer_id>",
+            create_address=f"POST {BASE_URL}/<int:customer_id>/addresses",
+            get_an_address_of_a_customer=f"GET {BASE_URL}/<int:customer_id>/addresses/<int:address_id>",
+            list_addresses=f"GET {BASE_URL}/<int:customer_id>/addresses",
+            update_an_address_of_a_customer=f"PUT {BASE_URL}/<int:customer_id>/addresses/<int:address_id>",
+            delete_an_address_of_a_customer=f"DELETE {BASE_URL}/<int:customer_id>/addresses/<int:address_id>",
+        ),
+        status.HTTP_200_OK
     )
 
 

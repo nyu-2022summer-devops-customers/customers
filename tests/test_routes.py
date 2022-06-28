@@ -268,3 +268,8 @@ class TestCustomersService(unittest.TestCase):
         data = response.get_json()
         # There should be only 5 customers, but there are 5 customers created when testing Address. Need to be fixed
         self.assertEqual(len(data), 5)
+
+    def test_create_customer_no_content_type(self):
+        """Create a Customer with no content type"""
+        resp = self.client.post(BASE_URL)
+        self.assertEqual(resp.status_code, status.HTTP_415_UNSUPPORTED_MEDIA_TYPE)

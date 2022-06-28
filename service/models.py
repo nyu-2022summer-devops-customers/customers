@@ -176,7 +176,7 @@ class AddressModel(db.Model):
     # Table Schema
     customer_id = db.Column(db.Integer, ForeignKey("customer.customer_id"),nullable=False)
     address_id = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    address = db.Column(db.String(63),nullable=False)
+    address = db.Column(db.String(255),nullable=False)
 
     def __repr__(self):
         return "<AddressModel %r customer_id=[%s] address_id=[%s]>" % (self.address, self.customer_id, self.address_id)

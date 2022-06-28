@@ -535,9 +535,11 @@ class TestAddressModel(unittest.TestCase):
         
     def test_find_or_404_found_address(self):
         """It should Find an address or return 404 not found"""
+        test_customer = CustomerFactory()
+        test_customer.create()
         addresses = AddressFactory.create_batch(3)
         for address in addresses:
-            address.customer_id = 1
+            address.customer_id = test_customer.customer_id
             address.create()
 
         address = AddressModel.find_or_404(addresses[1].address_id)

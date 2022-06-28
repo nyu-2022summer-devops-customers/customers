@@ -272,7 +272,12 @@ class TestCustomersService(unittest.TestCase):
     ######################################################################
     #  T E S T   S A D   P A T H S
     ######################################################################
-
+    
+    def test_delete_not_allowed(self):
+        """It should not Delete /customers"""
+        response = self.client.delete(BASE_URL)
+        self.assertEqual(response.status_code, status.HTTP_405_METHOD_NOT_ALLOWED)
+    
     def test_create_customer_no_data(self):
         """It should not Create a Customer with missing data"""
         response = self.client.post(BASE_URL, json={})

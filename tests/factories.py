@@ -34,7 +34,7 @@ class CustomerFactory(factory.Factory):
     first_name = factory.Faker("first_name")
     last_name = factory.Faker("last_name")
     nickname = factory.Faker("name")
-    email = factory.LazyAttributeSequence(lambda o, n: '%s@s%d.example.com' % (o.nickname, n))
+    email = factory.Faker("email")
     gender = FuzzyChoice(choices=[Gender.MALE, Gender.FEMALE, Gender.UNKNOWN])
     birthday = FuzzyDate(date(2008, 1, 1))
 

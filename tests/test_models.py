@@ -3,12 +3,16 @@ Test cases for CustomersModel Model
 
 """
 # from audioop import add
+from http.client import NOT_FOUND
+from werkzeug.exceptions import NotFound
 import os
 import logging
 import unittest
 from datetime import date
+from xml.dom import NotFoundErr
 from service.models import CustomerModel, AddressModel, Gender, DataValidationError, db
 from service import app
+from service.utils.status import HTTP_403_FORBIDDEN, HTTP_404_NOT_FOUND
 from tests.factories import CustomerFactory
 from tests.factories import AddressFactory
 
@@ -194,7 +198,26 @@ class TestCustomersModel(unittest.TestCase):
         customer = CustomerModel()
         self.assertRaises(DataValidationError, customer.deserialize, {})
 
-      
+    def test_find_or_404_found_customer(self):
+        """It should Find a customer or return 404 not found"""
+        customers = CustomerFactory.create_batch(3)
+        for customer in customers:
+            customer.create()
+
+        customer = CustomerModel.find_or_404(customers[1].customer_id)
+        self.assertIsNot(customer, None)
+        self.assertEqual(customer.first_name,customers[1].first_name)
+        self.assertEqual(customer.last_name,customers[1].last_name)
+        self.assertEqual(customer.nickname,customers[1].nickname)
+        self.assertEqual(customer.email,customers[1].email)
+        self.assertEqual(customer.gender,customers[1].gender)
+        self.assertEqual(customer.password,customers[1].password)
+        self.assertEqual(customer.birthday,customers[1].birthday)
+
+    def test_find_or_404_not_found_customer(self):
+        """It should return 404 not found"""
+        self.assertRaises(NotFound, CustomerModel.find_or_404,0)
+
 ######################################################################
 #  ADDRESS   M O D E L   T E S T   C A S E S
 ######################################################################
@@ -451,3 +474,32 @@ class TestAddressModel(unittest.TestCase):
         """ Deserialize an Address with a KeyError """
         address = AddressModel()
         self.assertRaises(DataValidationError, address.deserialize, {})
+
+    def test_find_or_404_found_address(self):
+        """It should Find an address or return 404 not found"""
+        addresses = AddressFactory.create_batch(3)
+        for address in addresses:
+            address.create()
+
+        address = AddressModel.find_or_404(addresses[1].address_id)
+        self.assertIsNot(address, None)
+        self.assertEqual(address.customer_id,addresses[1].customer_id)
+        self.assertEqual(address.address,addresses[1].address)
+        self.assertEqual(address.address_id,addresses[1].address_id)
+
+    def test_find_or_404_not_found_address(self):
+        """It should return 404 not found"""
+        self.assertRaises(NotFound, CustomerModel.find_or_404,0)
+    
+    def test_delete_address(self):
+        """ Delete an Address """
+        customer = CustomerFactory()
+        customer.create()
+        id=customer.customer_id
+        address=AddressFactory()
+        address.customer_id=id
+        address.create()
+        self.assertEqual(len(AddressModel.all()), 1)
+        # delete the address and make sure it isn't in the database
+        address.delete()
+        self.assertEqual(len(AddressModel.all()), 0)

@@ -146,7 +146,6 @@ class CustomerModel(db.Model):
         """Find a Customer by it's id
 
         :param customer_id: the id of the Customer to find
-        :type customers_id: int
 
         :return: an instance with the customer_id, or 404_NOT_FOUND if not found
         :rtype: Customer
@@ -155,7 +154,6 @@ class CustomerModel(db.Model):
         logger.info("Processing lookup or 404 for id %s ...", customer_id)
         return cls.query.get_or_404(customer_id)
 
-    
 class AddressModel(db.Model):
     """
     Class that represents a AddressModel
@@ -241,18 +239,14 @@ class AddressModel(db.Model):
         logger.info("Processing all AddressModels")
         return cls.query.all()
 
-    @classmethod
-    def find(cls, by_id):
-        """ Finds a AddressModel by it's address_id """
-        logger.info("Processing lookup for address_id %s ...", by_id)
-        return cls.query.get(by_id)
+
 
     @classmethod
     def find_by_customer_id(cls, customer_id):
         logger.info("Processing customer_id query for %s ...", customer_id)
         return cls.query.filter(cls.customer_id == customer_id)
     
-    
+
     
     @classmethod
     def find_by_customer_and_address_id(cls, customer_id, address_id):
@@ -280,6 +274,21 @@ class AddressModel(db.Model):
             address_model=address_found[0]
             address_model.address=new_address
             address_model.update()
+
+
+    @classmethod
+    def find_or_404(cls, address_id: int):
+        """Find an Address by it's id
+
+        :param address_id: the id of the Customer to find
+        :type address_id: int
+
+        :return: an instance with the address_id, or 404_NOT_FOUND if not found
+        :rtype: Address
+
+        """
+        logger.info("Processing lookup or 404 for id %s ...", address_id)
+        return cls.query.get_or_404(address_id)
         
         
 

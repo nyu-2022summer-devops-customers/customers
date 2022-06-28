@@ -123,11 +123,11 @@ class TestCustomersModel(unittest.TestCase):
         """It should List all Customers in the database"""
         customers = CustomerModel.all()
         self.assertEqual(customers, [])
-        # Create 5 Pets
+        # Create 5 Customers
         for i in range(5):
             customer = CustomerFactory()
             customer.create()
-        # See if we get back 5 pets
+        # See if we get back 5 customers
         customers = CustomerModel.all()
         self.assertEqual(len(customers), 5)
 
@@ -142,7 +142,7 @@ class TestCustomersModel(unittest.TestCase):
         customer.create()
         customers = CustomerModel.all()
         self.assertEqual(len(customers), 1)
-        # delete the pet and make sure it isn't in the database
+        # delete the customer and make sure it isn't in the database
         customer.delete()
         customers = CustomerModel.all()
         self.assertEqual(len(customers), 0)
@@ -266,6 +266,20 @@ class TestAddressModel(unittest.TestCase):
         self.assertIsNotNone(address.address_id)
         addresses = CustomerModel.all()
         self.assertEqual(len(addresses), 1)
+
+    def test_delete_address(self):
+        """ Delete an Address """
+        customer = CustomerFactory()
+        customer.create()
+        id=customer.customer_id
+        address=AddressFactory()
+        address.customer_id=id
+        address.create()
+        self.assertEqual(len(AddressModel.all()), 1)
+        # delete the address and make sure it isn't in the database
+        address.delete()
+        customer.delete()
+        self.assertEqual(len(AddressModel.all()), 0)
 
     def test_list_addresses(self):
         """It should list all addresses of a customer"""

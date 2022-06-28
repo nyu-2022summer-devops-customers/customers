@@ -289,3 +289,32 @@ class TestCustomersService(unittest.TestCase):
         # make sure they are deleted
         response = self.client.get(f"{BASE_URL}/{customer_id}/addresses/{address_id}")
         self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
+    ######################################################################
+    #  T E S T   S A D   P A T H S
+    ######################################################################
+    
+    def test_delete_not_allowed(self):
+        """It should not Delete /customers"""
+        response = self.client.delete(BASE_URL)
+        self.assertEqual(response.status_code, status.HTTP_405_METHOD_NOT_ALLOWED)
+    
+    def test_create_customer_no_data(self):
+        """It should not Create a Customer with missing data"""
+        response = self.client.post(BASE_URL, json={})
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+    
+    def test_create_customer_no_content_type(self):
+        """It should not Create a Customer with no content type"""
+        response = self.client.post(BASE_URL)
+        self.assertEqual(response.status_code, status.HTTP_415_UNSUPPORTED_MEDIA_TYPE)
+    
+    def test_create_customer_bad_gender(self):
+        """It should not Create a Customer with bad gender data"""
+        customer = CustomerFactory()
+        logging.debug(customer)
+        # change gender to a bad string
+        test_customer = customer.serialize()
+        test_customer["gender"] = "male"    # wrong case
+        response = self.client.post(BASE_URL, json=test_customer)
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+

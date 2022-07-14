@@ -47,7 +47,6 @@ def index():
     )
 
 
-
 ######################################################################
 # CREATE NEW CUSTOMER
 ######################################################################
@@ -64,9 +63,10 @@ def create_customers():
     customer.create()
     message = customer.serialize()
     location_url = url_for("create_customers", customer_id=customer.customer_id, _external=True)
-    app.logger.info("Customer with ID [%s] created.", customer.customer_id)    
+    app.logger.info("Customer with ID [%s] created.", customer.customer_id)
 
     return jsonify(message), status.HTTP_201_CREATED, {"Location": location_url}
+
 
 ######################################################################
 # UPDATE A CUSTOMER
@@ -92,10 +92,10 @@ def update_a_customer(customer_id):
     app.logger.info("Customer with ID [%s] updated.", customer.customer_id)
     return jsonify(customer.serialize()), status.HTTP_200_OK
 
+
 ######################################################################
 # READ A CUSTOMER BY CUSTOMER_ID
 ######################################################################
-
 @app.route(f"{BASE_URL}/<int:customer_id>", methods=["GET"])
 def get_a_customer(customer_id):
     """
@@ -125,6 +125,7 @@ def list_customers():
     results = [customer.serialize() for customer in customers]
     app.logger.info("Returning %d customers", len(results))
     return jsonify(results), status.HTTP_200_OK
+
 
 ######################################################################
 # CREATE NEW ADDRESS
@@ -161,7 +162,7 @@ def list_addresses(customer_id):
     addresses = AddressModel.find_by_customer_id(customer_id=customer_id)
     if addresses.count() == 0:
         abort(status.HTTP_404_NOT_FOUND, f"Addresses with id '{customer_id}' was not found.")
-    
+
     app.logger.info("All address under customer ID [%s].", customer_id)
 
     res = []
@@ -181,13 +182,14 @@ def get_an_address_of_a_customer(customer_id, address_id):
     """
     app.logger.info("Get an Address of a Customer")
     found = AddressModel.find_by_customer_and_address_id(customer_id=customer_id, address_id=address_id)
-    
+
     if found.count() == 0:
         abort(status.HTTP_404_NOT_FOUND, f"Address '{address_id}' with customer id '{customer_id}' was not found.")
     address = found[0]
     app.logger.info("Address with ID [%s] created.", address.address_id)
 
     return jsonify(address.serialize()), status.HTTP_200_OK
+
 
 ######################################################################
 # DELETE A CUSTOMER
@@ -207,6 +209,7 @@ def delete_customers(customer_id):
     app.logger.info("Customer with ID [%s] delete complete.", customer_id)
     return "", status.HTTP_204_NO_CONTENT
 
+
 ######################################################################
 # DELETE AN ADDRESS OF A CUSTOMER
 ######################################################################
@@ -222,17 +225,15 @@ def delete_an_address_of_a_customer(customer_id, address_id):
     if found.count() == 1:
         address = found[0]
         address.delete()
-        
 
     app.logger.info(f"Address '{address_id}' with customer id '{customer_id}' delete complete.", address.address_id)
 
     return "", status.HTTP_204_NO_CONTENT
-       
+
+     
 ######################################################################
 #  U T I L I T Y   F U N C T I O N S
 ######################################################################
-
-
 def init_db():
     """ Initializes the SQLAlchemy app """
     global app

@@ -15,7 +15,6 @@ from service import app
 from service.utils.status import HTTP_403_FORBIDDEN, HTTP_404_NOT_FOUND
 from tests.factories import CustomerFactory
 from tests.factories import AddressFactory
-from werkzeug.exceptions import NotFound
 
 DATABASE_URI = os.getenv(
     "DATABASE_URI", "postgresql://postgres:postgres@localhost:5432/testdb"

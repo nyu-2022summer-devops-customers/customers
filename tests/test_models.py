@@ -55,7 +55,7 @@ class TestCustomersModel(unittest.TestCase):
 
     def test_create_a_customer(self):
         """It should Create a customer and assert that it exists"""
-        customer = CustomerModel(password="password", first_name="Fido", last_name="Lido", nickname="helloFido", 
+        customer = CustomerModel(password="password", first_name="Fido", last_name="Lido", nickname="helloFido",
                                  email="fido@gmail.com", gender=Gender.MALE, birthday=date(2018, 1, 1))
         self.assertEqual(str(customer), "<CustomerModel 'Fido' customer_id=[None]>")
         self.assertTrue(customer is not None)
@@ -68,18 +68,20 @@ class TestCustomersModel(unittest.TestCase):
         self.assertEqual(customer.gender, Gender.MALE)
         self.assertEqual(customer.birthday, date(2018, 1, 1))
 
-        customer = CustomerModel(password="password", first_name="Fido", last_name="Lido", 
-                                 nickname="helloFido", email="fido@gmail.com", gender=Gender.FEMALE, birthday=date(2018, 1, 1))
+        customer = CustomerModel(password="password", first_name="Fido", last_name="Lido", nickname="helloFido",
+                                 email="fido@gmail.com", gender=Gender.FEMALE, birthday=date(2018, 1, 1))
         self.assertEqual(customer.gender, Gender.FEMALE)
 
-        customer = CustomerModel(password="password", first_name="Fido", last_name="Lido", nickname="helloFido", email="fido@gmail.com", gender=Gender.UNKNOWN, birthday=date(2018, 1, 1))
+        customer = CustomerModel(password="password", first_name="Fido", last_name="Lido", nickname="helloFido",
+                                 email="fido@gmail.com", gender=Gender.UNKNOWN, birthday=date(2018, 1, 1))
         self.assertEqual(customer.gender, Gender.UNKNOWN)
 
     def test_add_a_customer(self):
         """It should Create a customer and add it to the database"""
         customers = CustomerModel.all()
         self.assertEqual(customers, [])
-        customer = CustomerModel(password="password", first_name="Fido", last_name="Lido", nickname="helloFido", email="fido@gmail.com", gender=Gender.FEMALE, birthday=date(2018, 1, 1))
+        customer = CustomerModel(password="password", first_name="Fido", last_name="Lido", nickname="helloFido",
+                                 email="fido@gmail.com", gender=Gender.FEMALE, birthday=date(2018, 1, 1))
         self.assertTrue(customer is not None)
         self.assertEqual(customer.customer_id, None)
         customer.create()
@@ -135,12 +137,12 @@ class TestCustomersModel(unittest.TestCase):
         customers = CustomerModel.all()
         self.assertEqual(len(customers), 5)
 
-
     def test_delete_a_customer(self):
         """It should Delete a Customer"""
         customers = CustomerModel.all()
         self.assertEqual(customers, [])
-        customer = CustomerModel(password="password", first_name="Fido", last_name="Lido", nickname="helloFido", email="fido@gmail.com", gender=Gender.FEMALE, birthday=date(2018, 1, 1))
+        customer = CustomerModel(password="password", first_name="Fido", last_name="Lido", nickname="helloFido",
+                                 email="fido@gmail.com", gender=Gender.FEMALE, birthday=date(2018, 1, 1))
         self.assertTrue(customer is not None)
         self.assertEqual(customer.customer_id, None)
         customer.create()
@@ -159,7 +161,7 @@ class TestCustomersModel(unittest.TestCase):
         self.assertIn("customer_id", data)
         self.assertEqual(data["customer_id"], customer.customer_id)
         self.assertIn("first_name", data)
-        self.assertEqual(data["first_name"],customer.first_name)
+        self.assertEqual(data["first_name"], customer.first_name)
         self.assertIn("last_name", data)
         self.assertEqual(data["last_name"], customer.last_name)
         self.assertIn("nickname", data)
@@ -180,14 +182,14 @@ class TestCustomersModel(unittest.TestCase):
         customer.deserialize(data)
         self.assertNotEqual(customer, None)
         self.assertEqual(customer.customer_id, None)
-        self.assertEqual(customer.first_name,data["first_name"])
-        self.assertEqual(customer.last_name,data["last_name"])
-        self.assertEqual(customer.nickname,data["nickname"])
-        self.assertEqual(customer.email,data["email"])
-        self.assertEqual(customer.gender.name,data["gender"])
-        self.assertEqual(customer.password,data["password"])
-        self.assertEqual(customer.birthday,date.fromisoformat(data["birthday"]))
- 
+        self.assertEqual(customer.first_name, data["first_name"])
+        self.assertEqual(customer.last_name, data["last_name"])
+        self.assertEqual(customer.nickname, data["nickname"])
+        self.assertEqual(customer.email, data["email"])
+        self.assertEqual(customer.gender.name, data["gender"])
+        self.assertEqual(customer.password, data["password"])
+        self.assertEqual(customer.birthday, date.fromisoformat(data["birthday"]))
+
     def test_deserialize_bad_data(self):
         """It should not deserialize bad data"""
         data = "this is not a dictionary"
@@ -203,7 +205,7 @@ class TestCustomersModel(unittest.TestCase):
         """ Deserialize a Customer with a KeyError """
         test_customer = CustomerModel()
         self.assertRaises(DataValidationError, test_customer.deserialize, {})
-    
+
     def test_deserialize_missing_data(self):
         """It should not deserialize a Customer with missing data"""
         data = {"customer_id": 1, "first_name": "Kitty", "last_name": "cat"}
@@ -233,18 +235,19 @@ class TestCustomersModel(unittest.TestCase):
 
         customer = CustomerModel.find_or_404(customers[1].customer_id)
         self.assertIsNot(customer, None)
-        self.assertEqual(customer.first_name,customers[1].first_name)
-        self.assertEqual(customer.last_name,customers[1].last_name)
-        self.assertEqual(customer.nickname,customers[1].nickname)
-        self.assertEqual(customer.email,customers[1].email)
-        self.assertEqual(customer.gender,customers[1].gender)
-        self.assertEqual(customer.password,customers[1].password)
-        self.assertEqual(customer.birthday,customers[1].birthday)
+        self.assertEqual(customer.first_name, customers[1].first_name)
+        self.assertEqual(customer.last_name, customers[1].last_name)
+        self.assertEqual(customer.nickname, customers[1].nickname)
+        self.assertEqual(customer.email, customers[1].email)
+        self.assertEqual(customer.gender, customers[1].gender)
+        self.assertEqual(customer.password, customers[1].password)
+        self.assertEqual(customer.birthday, customers[1].birthday)
 
     def test_find_or_404_not_found_customer(self):
         """It should return 404 not found for a Customer"""
         self.assertRaises(NotFound, CustomerModel.find_or_404,0)
-  
+
+
 ######################################################################
 #  ADDRESS   M O D E L   T E S T   C A S E S
 ######################################################################
@@ -294,7 +297,8 @@ class TestAddressModel(unittest.TestCase):
         """It should Create a customer and add it to the database"""
         customers = CustomerModel.all()
         self.assertEqual(customers, [])
-        customer = CustomerModel(password="password", first_name="Fido", last_name="Lido", nickname="helloFido", email="fido@gmail.com", gender=Gender.FEMALE, birthday=date(2018, 1, 1))
+        customer = CustomerModel(password="password", first_name="Fido", last_name="Lido", nickname="helloFido",
+                                 email="fido@gmail.com", gender=Gender.FEMALE, birthday=date(2018, 1, 1))
         self.assertTrue(customer is not None)
         self.assertEqual(customer.customer_id, None)
         customer.create()

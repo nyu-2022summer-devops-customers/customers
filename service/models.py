@@ -294,15 +294,3 @@ class AddressModel(db.Model):
         """
         logger.info("Processing lookup or 404 for id %s ...", address_id)
         return cls.query.get_or_404(address_id)
-        
-        
-
-
-    
-    
-
-    
-
-        
-
-

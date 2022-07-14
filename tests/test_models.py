@@ -12,11 +12,11 @@ from service.models import CustomerModel, AddressModel, Gender, DataValidationEr
 from service import app
 from tests.factories import CustomerFactory
 from tests.factories import AddressFactory
-from werkzeug.exceptions import NotFound
 
 DATABASE_URI = os.getenv(
     "DATABASE_URI", "postgresql://postgres:postgres@localhost:5432/testdb"
 )
+
 
 ######################################################################
 #  CUSTOMER   M O D E L   T E S T   C A S E S
@@ -55,7 +55,8 @@ class TestCustomersModel(unittest.TestCase):
 
     def test_create_a_customer(self):
         """It should Create a customer and assert that it exists"""
-        customer = CustomerModel(password="password", first_name="Fido", last_name="Lido", nickname="helloFido", email="fido@gmail.com", gender=Gender.MALE, birthday=date(2018, 1, 1))
+        customer = CustomerModel(password="password", first_name="Fido", last_name="Lido", nickname="helloFido", 
+                                 email="fido@gmail.com", gender=Gender.MALE, birthday=date(2018, 1, 1))
         self.assertEqual(str(customer), "<CustomerModel 'Fido' customer_id=[None]>")
         self.assertTrue(customer is not None)
         self.assertEqual(customer.customer_id, None)

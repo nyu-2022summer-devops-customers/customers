@@ -3,13 +3,11 @@ Models for CustomerModel
 
 All of the models are stored in this module
 """
-import errno
 import logging
 from enum import Enum
 from datetime import date
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
-from psycopg2 import DataError
 from sqlalchemy import ForeignKey
 import re
 

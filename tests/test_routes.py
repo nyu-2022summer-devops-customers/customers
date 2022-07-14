@@ -317,4 +317,10 @@ class TestCustomersService(unittest.TestCase):
         test_customer["gender"] = "male"    # wrong case
         response = self.client.post(BASE_URL, json=test_customer)
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+    
+    def test_internal_error(self):
+        """It should raise an internal error"""
+        date = {'customer_id': 0, 'first_name': 'Clayton', 'last_name': 'Proctor', 'nickname': 'Jessica Osborn', 'email': 'xxx@dddd.com', 'gender': 'male', 'birthday': '2011-08-21', 'password': 'v_Wa#vFNep)5K(0tuGNGs56rh3FMz!E!^$Ocpjoln403Ftc$EtC$gifm%zQr+Sm'}
+        response = self.client.post(BASE_URL, json=date)
+        self.assertEqual(response.status_code, status.HTTP_500_INTERNAL_SERVER_ERROR)
 

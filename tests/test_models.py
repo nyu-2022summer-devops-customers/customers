@@ -17,6 +17,7 @@ DATABASE_URI = os.getenv(
     "DATABASE_URI", "postgresql://postgres:postgres@localhost:5432/testdb"
 )
 
+
 ######################################################################
 #  CUSTOMER   M O D E L   T E S T   C A S E S
 ######################################################################
@@ -54,7 +55,8 @@ class TestCustomersModel(unittest.TestCase):
 
     def test_create_a_customer(self):
         """It should Create a customer and assert that it exists"""
-        customer = CustomerModel(password="password", first_name="Fido", last_name="Lido", nickname="helloFido", email="fido@gmail.com", gender=Gender.MALE, birthday=date(2018, 1, 1))
+        customer = CustomerModel(password="password", first_name="Fido", last_name="Lido", nickname="helloFido", 
+                                 email="fido@gmail.com", gender=Gender.MALE, birthday=date(2018, 1, 1))
         self.assertEqual(str(customer), "<CustomerModel 'Fido' customer_id=[None]>")
         self.assertTrue(customer is not None)
         self.assertEqual(customer.customer_id, None)
@@ -65,8 +67,9 @@ class TestCustomersModel(unittest.TestCase):
         self.assertEqual(customer.email, "fido@gmail.com")
         self.assertEqual(customer.gender, Gender.MALE)
         self.assertEqual(customer.birthday, date(2018, 1, 1))
-   
-        customer = CustomerModel(password="password", first_name="Fido", last_name="Lido", nickname="helloFido", email="fido@gmail.com", gender=Gender.FEMALE, birthday=date(2018, 1, 1))
+
+        customer = CustomerModel(password="password", first_name="Fido", last_name="Lido", 
+                                 nickname="helloFido", email="fido@gmail.com", gender=Gender.FEMALE, birthday=date(2018, 1, 1))
         self.assertEqual(customer.gender, Gender.FEMALE)
 
         customer = CustomerModel(password="password", first_name="Fido", last_name="Lido", nickname="helloFido", email="fido@gmail.com", gender=Gender.UNKNOWN, birthday=date(2018, 1, 1))

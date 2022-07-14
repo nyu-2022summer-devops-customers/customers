@@ -26,7 +26,6 @@ import logging
 def init_logging(app, logger_name: str):
     """Set up logging for production"""
 
-
     app.logger.propagate = False
     gunicorn_logger = logging.getLogger(logger_name)
     app.logger.handlers = gunicorn_logger.handlers

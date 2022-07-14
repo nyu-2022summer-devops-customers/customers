@@ -230,7 +230,7 @@ def delete_an_address_of_a_customer(customer_id, address_id):
 
     return "", status.HTTP_204_NO_CONTENT
 
-     
+
 ######################################################################
 #  U T I L I T Y   F U N C T I O N S
 ######################################################################

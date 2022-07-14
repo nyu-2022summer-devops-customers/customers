@@ -3,16 +3,13 @@ Test cases for CustomersModel Model
 
 """
 # from audioop import add
-from http.client import NOT_FOUND
 from werkzeug.exceptions import NotFound
 import os
 import logging
 import unittest
 from datetime import date
-from xml.dom import NotFoundErr
 from service.models import CustomerModel, AddressModel, Gender, DataValidationError, db
 from service import app
-from service.utils.status import HTTP_403_FORBIDDEN, HTTP_404_NOT_FOUND
 from tests.factories import CustomerFactory
 from tests.factories import AddressFactory
 from werkzeug.exceptions import NotFound

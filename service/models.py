@@ -87,7 +87,7 @@ class CustomerModel(db.Model):
 
     def serialize(self):
         """ Serializes a CustomerModel into a dictionary """
-        return {
+        customer = {
             "customer_id": self.customer_id,
             "first_name": self.first_name,
             "last_name": self.last_name,
@@ -95,8 +95,12 @@ class CustomerModel(db.Model):
             "email": self._email_validator(self.email),
             "gender": self.gender.name,
             "birthday": self.birthday.isoformat(),
-            "password": self.password
+            "password": self.password,
+            "addresses": [],
         }
+        for address in self.addresses:
+            customer["addresses"].append(address.serialize())
+        return customer
 
     def deserialize(self, data):
         """
@@ -114,6 +118,11 @@ class CustomerModel(db.Model):
             # create enum from string
             self.gender = getattr(Gender, data["gender"])
             self.birthday = date.fromisoformat(data["birthday"])
+            addresses_list = data.get("addresses")
+            for json_address in addresses_list:
+                address = AddressModel()
+                address.deserialize(json_address)
+                self.addresses.append(address)
         except AttributeError as error:
             raise DataValidationError(
                 "Invalid attribute: " + error.args[0]
@@ -174,7 +183,7 @@ class AddressModel(db.Model):
     app = None
 
     # Table Schema
-    customer_id = db.Column(db.Integer, ForeignKey("customer.customer_id"), nullable=False)
+    customer_id = db.Column(db.Integer, db.ForeignKey("customer.customer_id"), nullable=False)
     address_id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     address = db.Column(db.String(255), nullable=False)
 

@@ -38,6 +38,14 @@ class CustomerFactory(factory.Factory):
     gender = FuzzyChoice(choices=[Gender.MALE, Gender.FEMALE, Gender.UNKNOWN])
     birthday = FuzzyDate(date(2008, 1, 1))
 
+    @factory.post_generation
+    def addresses(self, create, extracted, **kwargs):
+        """Creates the addresses list"""
+        if not create:
+            return
+        if extracted:
+            self.addresses = extracted
+
 
 class AddressFactory(factory.Factory):
     """Creates an address"""

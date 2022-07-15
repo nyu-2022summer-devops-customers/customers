@@ -50,8 +50,7 @@ class CustomerModel(db.Model):
         db.Enum(Gender), nullable=False, server_default=(Gender.UNKNOWN.name)
     )
     birthday = db.Column(db.Date(), nullable=False, default=date.today())
-
-    address = db.relationship("AddressModel", backref="customer", lazy=True)
+    addresses = db.relationship("AddressModel", cascade="all, delete-orphan")
 
     def __repr__(self):
         return "<CustomerModel %r customer_id=[%s]>" % (self.first_name, self.customer_id)

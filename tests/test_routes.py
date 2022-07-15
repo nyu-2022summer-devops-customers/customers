@@ -329,7 +329,7 @@ class TestCustomersService(unittest.TestCase):
         test_address.customer_id = customer_id
         logging.debug("Test Address: %s", test_address.serialize())
         response = self.client.post(f"{BASE_URL}/{customer_id}/addresses", json=test_address.serialize())
-        self.assertEqual(response.status_code, status.HTTP_500_INTERNAL_SERVER_ERROR)
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
 
     def test_delete_address_for_nonexisting_customer(self):
         """It shouldn't Delete the Address for an non-existing Customer"""
@@ -343,7 +343,7 @@ class TestCustomersService(unittest.TestCase):
         test_address.customer_id = customer_id
         logging.debug("Test Address: %s", test_address.serialize())
         response = self.client.delete(f"{BASE_URL}/{customer_id}/addresses/{test_address.address_id}")
-        self.assertEqual(response.status_code, status.HTTP_500_INTERNAL_SERVER_ERROR)
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
 
     def test_read_address_for_nonexisting_customer(self):
         """It shouldn't Read the Address for an non-existing Customer"""
@@ -357,7 +357,7 @@ class TestCustomersService(unittest.TestCase):
         test_address.customer_id = customer_id
         logging.debug("Test Address: %s", test_address.serialize())
         response = self.client.get(f"{BASE_URL}/{customer_id}/addresses/{test_address.address_id}")
-        self.assertEqual(response.status_code, status.HTTP_500_INTERNAL_SERVER_ERROR)
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
     
     def test_update_address_for_nonexisting_customer(self):
         """It shouldn't Modify the Address for an non-existing Customer"""
@@ -371,4 +371,4 @@ class TestCustomersService(unittest.TestCase):
         test_address.customer_id = customer_id
         logging.debug("Test Address: %s", test_address.serialize())
         response = self.client.put(f"{BASE_URL}/{customer_id}/addresses/{test_address.address_id}", json=test_address.serialize())
-        self.assertEqual(response.status_code, status.HTTP_500_INTERNAL_SERVER_ERROR)
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)

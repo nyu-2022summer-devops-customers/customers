@@ -8,7 +8,6 @@ from enum import Enum
 from datetime import date
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
-from sqlalchemy import ForeignKey
 import re
 
 logger = logging.getLogger("flask.app")

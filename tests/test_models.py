@@ -178,7 +178,7 @@ class TestCustomersModel(unittest.TestCase):
         customers = CustomerModel.all()
         self.assertEqual(len(customers), 1)
         self.assertNotEqual(customer.customer_id, None)
-        addresses = AddressModel.find_by_customer_id(customer_id = customer.customer_id)
+        addresses = AddressModel.find_by_customer_id(customer_id=customer.customer_id)
         self.assertEqual(addresses.count(), 1)
 
         # delete the customer and make sure all addresses related to the record are not in the database

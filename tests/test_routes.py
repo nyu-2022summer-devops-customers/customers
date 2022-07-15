@@ -5,13 +5,9 @@ Test cases can be run with the following:
   nosetests -v --with-spec --spec-color
   coverage report -m
 """
-from audioop import add
 import os
 import logging
 import unittest
-
-from flask import jsonify
-
 
 from service import app
 from service.models import CustomerModel, AddressModel, Gender, db
@@ -306,7 +302,6 @@ class TestCustomersService(unittest.TestCase):
         location = response.headers.get("Location", None)
         self.assertIsNotNone(location)
         logging.debug("Location: %s", location)
-        
         # update this address
         response = self.client.get(location)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
@@ -316,20 +311,21 @@ class TestCustomersService(unittest.TestCase):
         self.assertNotEqual(address.address, new_address_str)
         address.address = new_address_str
 
-        response = self.client.put(f"{BASE_URL}/{address.customer_id}/addresses/{address.address_id}", json=address.serialize())
+        response = self.client.put(
+            f"{BASE_URL}/{address.customer_id}/addresses/{address.address_id}",
+            json=address.serialize()
+        )
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        
         # check is the data correct
         response = self.client.get(location)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         address = AddressModel()
         address.deserialize(response.get_json())
         self.assertEqual(address.address, new_address_str)
-        
+
     ######################################################################
     #  T E S T   S A D   P A T H S
     ######################################################################
-
     def test_delete_not_allowed(self):
         """It should not Delete /customers"""
         response = self.client.delete(BASE_URL)

@@ -230,6 +230,7 @@ def delete_an_address_of_a_customer(customer_id, address_id):
 
     return "", status.HTTP_204_NO_CONTENT
 
+
 ######################################################################
 # UPDATE AN ADDRESS OF A CUSTOMER
 ######################################################################
@@ -257,6 +258,7 @@ def update_an_address_of_a_customer(customer_id, address_id):
 
     app.logger.info("Address with ID [%s] updated.", address.customer_id)
     return jsonify(address.serialize()), status.HTTP_200_OK
+
 
 ######################################################################
 #  U T I L I T Y   F U N C T I O N S

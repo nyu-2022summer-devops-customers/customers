@@ -218,6 +218,7 @@ class AddressModel(db.Model):
         """
         try:
             self.address = data["address"]
+            self.address_id = data["address_id"]
             self.customer_id = data["customer_id"]
         except AttributeError as error:
             raise DataValidationError(

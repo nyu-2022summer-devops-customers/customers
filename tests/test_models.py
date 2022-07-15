@@ -158,7 +158,8 @@ class TestCustomersModel(unittest.TestCase):
         # create a customer
         customers = CustomerModel.all()
         self.assertEqual(customers, [])
-        customer = CustomerModel(password="password", first_name="Fido", last_name="Lido", nickname="helloFido", email="fido@gmail.com", gender=Gender.FEMALE, birthday=date(2018, 1, 1))
+        customer = CustomerModel(password="password", first_name="Fido", last_name="Lido", nickname="helloFido",
+                                 email="fido@gmail.com", gender=Gender.FEMALE, birthday=date(2018, 1, 1))
         self.assertTrue(customer is not None)
         self.assertEqual(customer.customer_id, None)
         customer.create()
@@ -179,7 +180,6 @@ class TestCustomersModel(unittest.TestCase):
         addresses = AddressModel.all()
         self.assertEqual(len(customers), 0)
         self.assertEqual(len(addresses), 0)
-
 
     def test_serialize_a_customer(self):
         """It should serialize a Customer"""

@@ -50,6 +50,3 @@ class AddressFactory(factory.Factory):
     customer_id = None
     address_id = factory.Sequence(lambda n: n)
     address = factory.Faker("address")
-    
-    
-

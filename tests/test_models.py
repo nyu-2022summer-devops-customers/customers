@@ -3,23 +3,20 @@ Test cases for CustomersModel Model
 
 """
 # from audioop import add
-from http.client import NOT_FOUND
 from werkzeug.exceptions import NotFound
 import os
 import logging
 import unittest
 from datetime import date
-from xml.dom import NotFoundErr
 from service.models import CustomerModel, AddressModel, Gender, DataValidationError, db
 from service import app
-from service.utils.status import HTTP_403_FORBIDDEN, HTTP_404_NOT_FOUND
 from tests.factories import CustomerFactory
 from tests.factories import AddressFactory
-from werkzeug.exceptions import NotFound
 
 DATABASE_URI = os.getenv(
     "DATABASE_URI", "postgresql://postgres:postgres@localhost:5432/testdb"
 )
+
 
 ######################################################################
 #  CUSTOMER   M O D E L   T E S T   C A S E S
@@ -58,7 +55,8 @@ class TestCustomersModel(unittest.TestCase):
 
     def test_create_a_customer(self):
         """It should Create a customer and assert that it exists"""
-        customer = CustomerModel(password="password", first_name="Fido", last_name="Lido", nickname="helloFido", email="fido@gmail.com", gender=Gender.MALE, birthday=date(2018, 1, 1))
+        customer = CustomerModel(password="password", first_name="Fido", last_name="Lido", nickname="helloFido",
+                                 email="fido@gmail.com", gender=Gender.MALE, birthday=date(2018, 1, 1))
         self.assertEqual(str(customer), "<CustomerModel 'Fido' customer_id=[None]>")
         self.assertTrue(customer is not None)
         self.assertEqual(customer.customer_id, None)
@@ -69,18 +67,21 @@ class TestCustomersModel(unittest.TestCase):
         self.assertEqual(customer.email, "fido@gmail.com")
         self.assertEqual(customer.gender, Gender.MALE)
         self.assertEqual(customer.birthday, date(2018, 1, 1))
-   
-        customer = CustomerModel(password="password", first_name="Fido", last_name="Lido", nickname="helloFido", email="fido@gmail.com", gender=Gender.FEMALE, birthday=date(2018, 1, 1))
+
+        customer = CustomerModel(password="password", first_name="Fido", last_name="Lido", nickname="helloFido",
+                                 email="fido@gmail.com", gender=Gender.FEMALE, birthday=date(2018, 1, 1))
         self.assertEqual(customer.gender, Gender.FEMALE)
 
-        customer = CustomerModel(password="password", first_name="Fido", last_name="Lido", nickname="helloFido", email="fido@gmail.com", gender=Gender.UNKNOWN, birthday=date(2018, 1, 1))
+        customer = CustomerModel(password="password", first_name="Fido", last_name="Lido", nickname="helloFido",
+                                 email="fido@gmail.com", gender=Gender.UNKNOWN, birthday=date(2018, 1, 1))
         self.assertEqual(customer.gender, Gender.UNKNOWN)
 
     def test_add_a_customer(self):
         """It should Create a customer and add it to the database"""
         customers = CustomerModel.all()
         self.assertEqual(customers, [])
-        customer = CustomerModel(password="password", first_name="Fido", last_name="Lido", nickname="helloFido", email="fido@gmail.com", gender=Gender.FEMALE, birthday=date(2018, 1, 1))
+        customer = CustomerModel(password="password", first_name="Fido", last_name="Lido", nickname="helloFido",
+                                 email="fido@gmail.com", gender=Gender.FEMALE, birthday=date(2018, 1, 1))
         self.assertTrue(customer is not None)
         self.assertEqual(customer.customer_id, None)
         customer.create()
@@ -136,12 +137,12 @@ class TestCustomersModel(unittest.TestCase):
         customers = CustomerModel.all()
         self.assertEqual(len(customers), 5)
 
-
     def test_delete_a_customer(self):
         """It should Delete a Customer"""
         customers = CustomerModel.all()
         self.assertEqual(customers, [])
-        customer = CustomerModel(password="password", first_name="Fido", last_name="Lido", nickname="helloFido", email="fido@gmail.com", gender=Gender.FEMALE, birthday=date(2018, 1, 1))
+        customer = CustomerModel(password="password", first_name="Fido", last_name="Lido", nickname="helloFido",
+                                 email="fido@gmail.com", gender=Gender.FEMALE, birthday=date(2018, 1, 1))
         self.assertTrue(customer is not None)
         self.assertEqual(customer.customer_id, None)
         customer.create()
@@ -160,7 +161,7 @@ class TestCustomersModel(unittest.TestCase):
         self.assertIn("customer_id", data)
         self.assertEqual(data["customer_id"], customer.customer_id)
         self.assertIn("first_name", data)
-        self.assertEqual(data["first_name"],customer.first_name)
+        self.assertEqual(data["first_name"], customer.first_name)
         self.assertIn("last_name", data)
         self.assertEqual(data["last_name"], customer.last_name)
         self.assertIn("nickname", data)
@@ -181,14 +182,14 @@ class TestCustomersModel(unittest.TestCase):
         customer.deserialize(data)
         self.assertNotEqual(customer, None)
         self.assertEqual(customer.customer_id, None)
-        self.assertEqual(customer.first_name,data["first_name"])
-        self.assertEqual(customer.last_name,data["last_name"])
-        self.assertEqual(customer.nickname,data["nickname"])
-        self.assertEqual(customer.email,data["email"])
-        self.assertEqual(customer.gender.name,data["gender"])
-        self.assertEqual(customer.password,data["password"])
-        self.assertEqual(customer.birthday,date.fromisoformat(data["birthday"]))
- 
+        self.assertEqual(customer.first_name, data["first_name"])
+        self.assertEqual(customer.last_name, data["last_name"])
+        self.assertEqual(customer.nickname, data["nickname"])
+        self.assertEqual(customer.email, data["email"])
+        self.assertEqual(customer.gender.name, data["gender"])
+        self.assertEqual(customer.password, data["password"])
+        self.assertEqual(customer.birthday, date.fromisoformat(data["birthday"]))
+
     def test_deserialize_bad_data(self):
         """It should not deserialize bad data"""
         data = "this is not a dictionary"
@@ -204,7 +205,7 @@ class TestCustomersModel(unittest.TestCase):
         """ Deserialize a Customer with a KeyError """
         test_customer = CustomerModel()
         self.assertRaises(DataValidationError, test_customer.deserialize, {})
-    
+
     def test_deserialize_missing_data(self):
         """It should not deserialize a Customer with missing data"""
         data = {"customer_id": 1, "first_name": "Kitty", "last_name": "cat"}
@@ -234,18 +235,19 @@ class TestCustomersModel(unittest.TestCase):
 
         customer = CustomerModel.find_or_404(customers[1].customer_id)
         self.assertIsNot(customer, None)
-        self.assertEqual(customer.first_name,customers[1].first_name)
-        self.assertEqual(customer.last_name,customers[1].last_name)
-        self.assertEqual(customer.nickname,customers[1].nickname)
-        self.assertEqual(customer.email,customers[1].email)
-        self.assertEqual(customer.gender,customers[1].gender)
-        self.assertEqual(customer.password,customers[1].password)
-        self.assertEqual(customer.birthday,customers[1].birthday)
+        self.assertEqual(customer.first_name, customers[1].first_name)
+        self.assertEqual(customer.last_name, customers[1].last_name)
+        self.assertEqual(customer.nickname, customers[1].nickname)
+        self.assertEqual(customer.email, customers[1].email)
+        self.assertEqual(customer.gender, customers[1].gender)
+        self.assertEqual(customer.password, customers[1].password)
+        self.assertEqual(customer.birthday, customers[1].birthday)
 
     def test_find_or_404_not_found_customer(self):
         """It should return 404 not found for a Customer"""
-        self.assertRaises(NotFound, CustomerModel.find_or_404,0)
-  
+        self.assertRaises(NotFound, CustomerModel.find_or_404, 0)
+
+
 ######################################################################
 #  ADDRESS   M O D E L   T E S T   C A S E S
 ######################################################################
@@ -295,7 +297,8 @@ class TestAddressModel(unittest.TestCase):
         """It should Create a customer and add it to the database"""
         customers = CustomerModel.all()
         self.assertEqual(customers, [])
-        customer = CustomerModel(password="password", first_name="Fido", last_name="Lido", nickname="helloFido", email="fido@gmail.com", gender=Gender.FEMALE, birthday=date(2018, 1, 1))
+        customer = CustomerModel(password="password", first_name="Fido", last_name="Lido", nickname="helloFido",
+                                 email="fido@gmail.com", gender=Gender.FEMALE, birthday=date(2018, 1, 1))
         self.assertTrue(customer is not None)
         self.assertEqual(customer.customer_id, None)
         customer.create()
@@ -322,9 +325,9 @@ class TestAddressModel(unittest.TestCase):
         """ Delete an Address """
         customer = CustomerFactory()
         customer.create()
-        id=customer.customer_id
-        address=AddressFactory()
-        address.customer_id=id
+        id = customer.customer_id
+        address = AddressFactory()
+        address.customer_id = id
         address.create()
         self.assertEqual(len(AddressModel.all()), 1)
         # delete the address and make sure it isn't in the database
@@ -340,7 +343,7 @@ class TestAddressModel(unittest.TestCase):
         customer.create()
 
         customer_id = customer.customer_id
-        address="address"
+        address = "address"
         addresses = AddressModel.find_by_customer_id(customer_id)
         self.assertEqual(addresses.count(), 0)
 
@@ -366,7 +369,7 @@ class TestAddressModel(unittest.TestCase):
             self.assertEqual(address.customer_id, customer_id)
             self.assertEqual(address.address, address_str)
             self.assertIsNotNone(address.address_id)
-           
+
     def test_get_an_address_of_a_customer(self):
         """It should return an address of a customer"""
         customer = CustomerFactory()
@@ -376,7 +379,7 @@ class TestAddressModel(unittest.TestCase):
 
         customer_id = customer.customer_id
         address_id = None
-        address_prefix="address"
+        address_prefix = "address"
 
         for i in range(0, 10):
             address_str = f"{address_prefix}{i}"
@@ -398,7 +401,6 @@ class TestAddressModel(unittest.TestCase):
         self.assertEqual(address.address, "address9")
         self.assertEqual(address.address_id, address_id)
 
-
     def test_update_an_address(self):
         """It should Update a AddressModel"""
         customer = CustomerFactory()
@@ -409,12 +411,12 @@ class TestAddressModel(unittest.TestCase):
         address = AddressFactory()
         logging.debug(address)
         address.address_id = None
-        address.customer_id=customer_id
+        address.customer_id = customer_id
         address.create()
         logging.debug(address)
         self.assertIsNotNone(address.address_id)
         # Change it an save it
-        address.address="new_address"
+        address.address = "new_address"
         original_id = address.address_id
         address.update()
         self.assertEqual(address.address_id, original_id)
@@ -436,12 +438,12 @@ class TestAddressModel(unittest.TestCase):
         address = AddressFactory()
         logging.debug(address)
         address.address_id = None
-        address.customer_id=customer_id
+        address.customer_id = customer_id
         address.create()
         logging.debug(address)
         self.assertIsNotNone(address.address_id)
         # Change it an save it
-        AddressModel.update_address_by_address_and_customer_id(address.customer_id,address.address_id,"new_address")
+        AddressModel.update_address_by_address_and_customer_id(address.customer_id, address.address_id, "new_address")
         original_id = address.address_id
         self.assertEqual(address.address_id, original_id)
         self.assertEqual(address.address, "new_address")
@@ -451,25 +453,25 @@ class TestAddressModel(unittest.TestCase):
         self.assertEqual(len(addresses), 1)
         self.assertEqual(addresses[0].address_id, original_id)
         self.assertEqual(addresses[0].address, "new_address")
-        
+
     def test_update_by_customer_and_address_no_address_id(self):
         """It should not Update a Address without an address_id"""
         address = AddressFactory()
         logging.debug(address)
         address.address_id = None
-        self.assertRaises(DataValidationError, address.update)  
+        self.assertRaises(DataValidationError, address.update)
         address = AddressFactory()
         logging.debug(address)
-        address.address_id = None  
+        address.address_id = None
         with self.assertRaises(DataValidationError):
-            AddressModel.update_address_by_address_and_customer_id(address.customer_id,address.address_id,"new_address")
+            AddressModel.update_address_by_address_and_customer_id(address.customer_id, address.address_id, "new_address")
 
     def test_update_no_address_id(self):
         """It should not Update a Address by id without an address_id"""
         address = AddressFactory()
         logging.debug(address)
         address.address_id = None
-        self.assertRaises(DataValidationError, address.update)  
+        self.assertRaises(DataValidationError, address.update)
 
     def test_serialize_an_address(self):
         """It should serialize a Address"""
@@ -490,9 +492,9 @@ class TestAddressModel(unittest.TestCase):
         address.deserialize(data)
         self.assertNotEqual(address, None)
         self.assertEqual(address.address_id, None)
-        self.assertEqual(address.customer_id,data["customer_id"])
-        self.assertEqual(address.address,data["address"])
-   
+        self.assertEqual(address.customer_id, data["customer_id"])
+        self.assertEqual(address.address, data["address"])
+
     def test_deserialize_an_address_with_type_error(self):
         """ Deserialize an Address with a TypeError """
         address = AddressModel()
@@ -502,7 +504,6 @@ class TestAddressModel(unittest.TestCase):
         """ Deserialize an Address with a KeyError """
         address = AddressModel()
         self.assertRaises(DataValidationError, address.deserialize, {})
-        
 
     def test_delete_an_address_of_a_customer(self):
         """It should delete an address of a customer"""
@@ -513,7 +514,7 @@ class TestAddressModel(unittest.TestCase):
 
         customer_id = customer.customer_id
         address_id = None
-        address_prefix="address"
+        address_prefix = "address"
 
         for i in range(0, 10):
             address_str = f"{address_prefix}{i}"
@@ -545,23 +546,23 @@ class TestAddressModel(unittest.TestCase):
 
         address = AddressModel.find_or_404(addresses[1].address_id)
         self.assertIsNot(address, None)
-        self.assertEqual(address.customer_id,addresses[1].customer_id)
-        self.assertEqual(address.address,addresses[1].address)
-        self.assertEqual(address.address_id,addresses[1].address_id)
+        self.assertEqual(address.customer_id, addresses[1].customer_id)
+        self.assertEqual(address.address, addresses[1].address)
+        self.assertEqual(address.address_id, addresses[1].address_id)
 
     def test_find_or_404_not_found_address(self):
         """It should return 404 not found for an Address"""
-        self.assertRaises(NotFound, AddressModel.find_or_404,0)
-    
-    def test_delete_address(self):
-        """ Delete an Address """
-        customer = CustomerFactory()
-        customer.create()
-        id=customer.customer_id
-        address=AddressFactory()
-        address.customer_id=id
-        address.create()
-        self.assertEqual(len(AddressModel.all()), 1)
-        # delete the address and make sure it isn't in the database
-        address.delete()
-        self.assertEqual(len(AddressModel.all()), 0)
+        self.assertRaises(NotFound, AddressModel.find_or_404, 0)
+
+    # def test_delete_address(self):
+    #     """ Delete an Address """
+    #     customer = CustomerFactory()
+    #     customer.create()
+    #     id=customer.customer_id
+    #     address=AddressFactory()
+    #     address.customer_id=id
+    #     address.create()
+    #     self.assertEqual(len(AddressModel.all()), 1)
+    #     # delete the address and make sure it isn't in the database
+    #     address.delete()
+    #     self.assertEqual(len(AddressModel.all()), 0)

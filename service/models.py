@@ -3,13 +3,11 @@ Models for CustomerModel
 
 All of the models are stored in this module
 """
-import errno
 import logging
 from enum import Enum
 from datetime import date
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
-from psycopg2 import DataError
 from sqlalchemy import ForeignKey
 import re
 
@@ -24,12 +22,14 @@ class DataValidationError(Exception):
 
     pass
 
+
 class Gender(Enum):
     """Enumeration of valid Customer Genders"""
 
     MALE = 0
     FEMALE = 1
     UNKNOWN = 3
+
 
 class CustomerModel(db.Model):
     """
@@ -55,7 +55,7 @@ class CustomerModel(db.Model):
 
     def __repr__(self):
         return "<CustomerModel %r customer_id=[%s]>" % (self.first_name, self.customer_id)
-    
+
     def _email_validator(self, email):
         pattern = r'^[a-zA-Z0-9_-]+(\.[a-zA-Z0-9_-]+){0,4}@[a-zA-Z0-9_-]+(\.[a-zA-Z0-9_-]+){0,4}$'
         if not re.match(pattern, email):
@@ -89,12 +89,12 @@ class CustomerModel(db.Model):
     def serialize(self):
         """ Serializes a CustomerModel into a dictionary """
         return {
-            "customer_id": self.customer_id, 
-            "first_name": self.first_name, 
-            "last_name": self.last_name, 
-            "nickname": self.nickname, 
-            "email": self._email_validator(self.email), 
-            "gender": self.gender.name, 
+            "customer_id": self.customer_id,
+            "first_name": self.first_name,
+            "last_name": self.last_name,
+            "nickname": self.nickname,
+            "email": self._email_validator(self.email),
+            "gender": self.gender.name,
             "birthday": self.birthday.isoformat(),
             "password": self.password
         }
@@ -113,7 +113,7 @@ class CustomerModel(db.Model):
             self.email = self._email_validator(data["email"])
             self.password = data["password"]
             # create enum from string
-            self.gender = getattr(Gender, data["gender"])  
+            self.gender = getattr(Gender, data["gender"])
             self.birthday = date.fromisoformat(data["birthday"])
         except AttributeError as error:
             raise DataValidationError(
@@ -150,7 +150,7 @@ class CustomerModel(db.Model):
         """ Finds a CustomerModel by it's customer_id """
         logger.info("Processing lookup for customer_id %s ...", by_id)
         return cls.query.get(by_id)
-    
+
     @classmethod
     def find_or_404(cls, customer_id: int):
         """Find a Customer by it's id
@@ -165,6 +165,7 @@ class CustomerModel(db.Model):
         logger.info("Processing lookup or 404 for id %s ...", customer_id)
         return cls.query.get_or_404(customer_id)
 
+
 class AddressModel(db.Model):
     """
     Class that represents a AddressModel
@@ -174,13 +175,12 @@ class AddressModel(db.Model):
     app = None
 
     # Table Schema
-    customer_id = db.Column(db.Integer, ForeignKey("customer.customer_id"),nullable=False)
+    customer_id = db.Column(db.Integer, ForeignKey("customer.customer_id"), nullable=False)
     address_id = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    address = db.Column(db.String(255),nullable=False)
+    address = db.Column(db.String(255), nullable=False)
 
     def __repr__(self):
         return "<AddressModel %r customer_id=[%s] address_id=[%s]>" % (self.address, self.customer_id, self.address_id)
-
 
     def create(self):
         """
@@ -202,7 +202,7 @@ class AddressModel(db.Model):
 
     def delete(self):
         """ Removes a AddressModel from the data store """
-        logger.info("Deleting %s %s", self.customer_id,self.address_id)
+        logger.info("Deleting %s %s", self.customer_id, self.address_id)
         db.session.delete(self)
         db.session.commit()
 
@@ -250,15 +250,11 @@ class AddressModel(db.Model):
         logger.info("Processing all AddressModels")
         return cls.query.all()
 
-
-
     @classmethod
     def find_by_customer_id(cls, customer_id):
         logger.info("Processing customer_id query for %s ...", customer_id)
         return cls.query.filter(cls.customer_id == customer_id)
-    
 
-    
     @classmethod
     def find_by_customer_and_address_id(cls, customer_id, address_id):
         """Get an Address of a Customer
@@ -267,25 +263,23 @@ class AddressModel(db.Model):
         """
         logger.info("Processing customer_id and address_id query for %s %s ...", customer_id, address_id)
         return cls.query.filter(cls.customer_id == customer_id).filter(cls.address_id == address_id)
-    
-    
+
     @classmethod
-    def update_address_by_address_and_customer_id(cls,address_id,customer_id,new_address):
+    def update_address_by_address_and_customer_id(cls, address_id, customer_id, new_address):
         """Update an Address information under address_id
-        
+
         Args:
             address_id(int): address_id of the AddressModels you want to match
         """
         logger.info("Processing address update for %s ...",  address_id)
-        
-        address_found=AddressModel.find_by_customer_and_address_id(address_id,customer_id)
-        if address_found.count()==0:
+
+        address_found = AddressModel.find_by_customer_and_address_id(address_id, customer_id)
+        if address_found.count() == 0:
             raise DataValidationError("the address_id dosen't exist")
         else:
-            address_model=address_found[0]
-            address_model.address=new_address
+            address_model = address_found[0]
+            address_model.address = new_address
             address_model.update()
-
 
     @classmethod
     def find_or_404(cls, address_id: int):
@@ -300,15 +294,3 @@ class AddressModel(db.Model):
         """
         logger.info("Processing lookup or 404 for id %s ...", address_id)
         return cls.query.get_or_404(address_id)
-        
-        
-
-
-    
-    
-
-    
-
-        
-
-

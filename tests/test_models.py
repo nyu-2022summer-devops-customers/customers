@@ -152,6 +152,34 @@ class TestCustomersModel(unittest.TestCase):
         customers = CustomerModel.all()
         self.assertEqual(len(customers), 0)
 
+    def test_delete_a_customer_with_addresses(self):
+        """It should Delete a Customer and All Addresses Related to This Customer"""
+        # create a customer
+        customers = CustomerModel.all()
+        self.assertEqual(customers, [])
+        customer = CustomerModel(password="password", first_name="Fido", last_name="Lido", nickname="helloFido", email="fido@gmail.com", gender=Gender.FEMALE, birthday=date(2018, 1, 1))
+        self.assertTrue(customer is not None)
+        self.assertEqual(customer.customer_id, None)
+        customer.create()
+        customers = CustomerModel.all()
+        self.assertEqual(len(customers), 1)
+        self.assertNotEqual(customer.customer_id, None)
+
+        # create addresses for this customer
+        address = AddressFactory()
+        address.customer_id = customer.customer_id
+        address.create()
+        addresses = AddressModel.all()
+        self.assertEqual(len(addresses), 1)
+
+        # delete the customer and make sure all addresses related to the record are not in the database
+        customer.delete()
+        customers = CustomerModel.all()
+        addresses = AddressModel.all()
+        self.assertEqual(len(customers), 0)
+        self.assertEqual(len(addresses), 0)
+
+
     def test_serialize_a_customer(self):
         """It should serialize a Customer"""
         customer = CustomerFactory()
@@ -552,16 +580,3 @@ class TestAddressModel(unittest.TestCase):
     def test_find_or_404_not_found_address(self):
         """It should return 404 not found for an Address"""
         self.assertRaises(NotFound, AddressModel.find_or_404,0)
-    
-    def test_delete_address(self):
-        """ Delete an Address """
-        customer = CustomerFactory()
-        customer.create()
-        id=customer.customer_id
-        address=AddressFactory()
-        address.customer_id=id
-        address.create()
-        self.assertEqual(len(AddressModel.all()), 1)
-        # delete the address and make sure it isn't in the database
-        address.delete()
-        self.assertEqual(len(AddressModel.all()), 0)

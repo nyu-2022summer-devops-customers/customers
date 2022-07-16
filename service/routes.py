@@ -16,6 +16,7 @@ from . import app
 
 BASE_URL = "/customers"
 
+
 def abort_when_customer_not_exist(customer_id):
     customer = CustomerModel.find(customer_id)
     if customer is None:

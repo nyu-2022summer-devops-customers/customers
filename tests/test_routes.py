@@ -177,7 +177,7 @@ class TestCustomersService(unittest.TestCase):
         location = response.headers.get("Location", None)
         self.assertIsNotNone(location)
         logging.debug("Location: %s", location)
-    
+
     def test_list_addresses(self):
         """It should List all addresses of a Customer"""
         test_customer = CustomerFactory()
@@ -392,7 +392,7 @@ class TestCustomersService(unittest.TestCase):
         logging.debug("Test Address: %s", test_address.serialize())
         response = self.client.get(f"{BASE_URL}/{customer_id}/addresses/{test_address.address_id}")
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
-    
+
     def test_update_address_for_nonexisting_customer(self):
         """It shouldn't Modify the Address for an non-existing Customer"""
         customer_id = 0
@@ -404,5 +404,8 @@ class TestCustomersService(unittest.TestCase):
         test_address = AddressFactory()
         test_address.customer_id = customer_id
         logging.debug("Test Address: %s", test_address.serialize())
-        response = self.client.put(f"{BASE_URL}/{customer_id}/addresses/{test_address.address_id}", json=test_address.serialize())
+        response = self.client.put(
+            f"{BASE_URL}/{customer_id}/addresses/{test_address.address_id}",
+            json=test_address.serialize()
+        )
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)

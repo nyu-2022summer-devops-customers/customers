@@ -9,7 +9,6 @@ import os
 import logging
 import unittest
 
-
 from service import app
 from service.models import CustomerModel, AddressModel, Gender, db
 from service.utils import status
@@ -285,10 +284,48 @@ class TestCustomersService(unittest.TestCase):
         # make sure they are deleted
         response = self.client.get(f"{BASE_URL}/{customer_id}/addresses/{address_id}")
         self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
+
+    def test_update_an_address_of_a_customer(self):
+        """It should update an address of a customer"""
+        # create customer with an address
+        test_customer = CustomerFactory()
+        logging.debug("Test Customer: %s", test_customer.serialize())
+        response = self.client.post(BASE_URL, json=test_customer.serialize())
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        new_customer = response.get_json()
+
+        test_address = AddressFactory()
+        test_address.customer_id = new_customer["customer_id"]
+        logging.debug("Test Address: %s", test_address.serialize())
+        response = self.client.post(f"{BASE_URL}/{test_address.customer_id}/addresses", json=test_address.serialize())
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        location = response.headers.get("Location", None)
+        self.assertIsNotNone(location)
+        logging.debug("Location: %s", location)
+        # update this address
+        response = self.client.get(location)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        address = AddressModel()
+        address.deserialize(response.get_json())
+        new_address_str = "New Address"
+        self.assertNotEqual(address.address, new_address_str)
+        address.address = new_address_str
+
+        response = self.client.put(
+            f"{BASE_URL}/{address.customer_id}/addresses/{address.address_id}",
+            json=address.serialize()
+        )
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        # check is the data correct
+        response = self.client.get(location)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        address = AddressModel()
+        address.deserialize(response.get_json())
+        self.assertEqual(address.address, new_address_str)
+
     ######################################################################
     #  T E S T   S A D   P A T H S
     ######################################################################
-
     def test_delete_not_allowed(self):
         """It should not Delete /customers"""
         response = self.client.delete(BASE_URL)

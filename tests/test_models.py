@@ -529,7 +529,7 @@ class TestAddressModel(unittest.TestCase):
         address = AddressModel()
         address.deserialize(data)
         self.assertNotEqual(address, None)
-        self.assertEqual(address.address_id, None)
+        self.assertEqual(address.address_id, data["address_id"])
         self.assertEqual(address.customer_id, data["customer_id"])
         self.assertEqual(address.address, data["address"])
 

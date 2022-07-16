@@ -17,6 +17,12 @@ from . import app
 BASE_URL = "/customers"
 
 
+def abort_when_customer_not_exist(customer_id):
+    customer = CustomerModel.find(customer_id)
+    if customer is None:
+        abort(status.HTTP_400_BAD_REQUEST, f"Addresses with id '{customer_id}' was not found.")
+
+
 ######################################################################
 # GET INDEX
 ######################################################################
@@ -139,6 +145,7 @@ def create_address(customer_id):
     """
     app.logger.info("Request to create an address")
     check_content_type("application/json")
+    abort_when_customer_not_exist(customer_id=customer_id)
     address = AddressModel()
     address.deserialize(request.get_json())
     address.create()
@@ -159,6 +166,7 @@ def list_addresses(customer_id):
     This endpoint will create an Address based the data in the body that is posted
     """
     app.logger.info("Request for addresses with customer id: %s", customer_id)
+    abort_when_customer_not_exist(customer_id=customer_id)
     addresses = AddressModel.find_by_customer_id(customer_id=customer_id)
     if addresses.count() == 0:
         abort(status.HTTP_404_NOT_FOUND, f"Addresses with id '{customer_id}' was not found.")
@@ -181,6 +189,7 @@ def get_an_address_of_a_customer(customer_id, address_id):
     This endpoint will create an Address based the data in the body that is posted
     """
     app.logger.info("Get an Address of a Customer")
+    abort_when_customer_not_exist(customer_id=customer_id)
     found = AddressModel.find_by_customer_and_address_id(customer_id=customer_id, address_id=address_id)
 
     if found.count() == 0:
@@ -202,6 +211,7 @@ def delete_customers(customer_id):
     This endpoint will delete a Customer based on the id specified in the path
     """
     app.logger.info("Request to delete customer with id: %s", customer_id)
+    abort_when_customer_not_exist(customer_id=customer_id)
     customer = CustomerModel.find(customer_id)
     if customer:
         customer.delete()
@@ -220,6 +230,7 @@ def delete_an_address_of_a_customer(customer_id, address_id):
     This endpoint will delete an Address based on the data in the body that is posted
     """
     app.logger.info("Delete an Address of a Customer")
+    abort_when_customer_not_exist(customer_id=customer_id)
     found = AddressModel.find_by_customer_and_address_id(customer_id=customer_id, address_id=address_id)
 
     if found.count() == 1:
@@ -242,11 +253,10 @@ def update_an_address_of_a_customer(customer_id, address_id):
     """
     app.logger.info("Update an Address of a Customer")
     check_content_type("application/json")
+    abort_when_customer_not_exist(customer_id=customer_id)
     address = AddressModel()
     address.deserialize(request.get_json())
     address.update()
-
-    check_content_type("application/json")
 
     found = AddressModel.find_by_customer_and_address_id(customer_id, address_id)
     if found.count() == 0:

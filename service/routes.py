@@ -43,6 +43,7 @@ def index():
             get_a_customer=f"GET {BASE_URL}/<int:customer_id>",
             update_a_customer=f"PUT {BASE_URL}/<int:customer_id>",
             delete_a_customer=f"DELETE {BASE_URL}/<int:customer_id>",
+            activate_a_customer=f"PUT{BASE_URL}/<int:customer_id>/activate",
             create_address=f"POST {BASE_URL}/<int:customer_id>/addresses",
             get_an_address_of_a_customer=f"GET {BASE_URL}/<int:customer_id>/addresses/<int:address_id>",
             list_addresses=f"GET {BASE_URL}/<int:customer_id>/addresses",

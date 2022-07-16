@@ -14,7 +14,7 @@ from tests.factories import CustomerFactory
 from tests.factories import AddressFactory
 
 DATABASE_URI = os.getenv(
-    "DATABASE_URI", "postgresql://postgres:postgres@localhost:5432/testdb"
+    "DATABASE_URI", "postgresql://postgres:postgres@localhost:5432/postgres"
 )
 
 
@@ -56,7 +56,7 @@ class TestCustomersModel(unittest.TestCase):
     def test_create_a_customer(self):
         """It should Create a customer and assert that it exists"""
         customer = CustomerModel(password="password", first_name="Fido", last_name="Lido", nickname="helloFido",
-                                 email="fido@gmail.com", gender=Gender.MALE, birthday=date(2018, 1, 1))
+                                 email="fido@gmail.com", gender=Gender.MALE, birthday=date(2018, 1, 1), is_active=True)
         self.assertEqual(str(customer), "<CustomerModel 'Fido' customer_id=[None]>")
         self.assertTrue(customer is not None)
         self.assertEqual(customer.customer_id, None)
@@ -67,6 +67,7 @@ class TestCustomersModel(unittest.TestCase):
         self.assertEqual(customer.email, "fido@gmail.com")
         self.assertEqual(customer.gender, Gender.MALE)
         self.assertEqual(customer.birthday, date(2018, 1, 1))
+        self.assertEqual(customer.is_active, True)
 
         customer = CustomerModel(password="password", first_name="Fido", last_name="Lido", nickname="helloFido",
                                  email="fido@gmail.com", gender=Gender.FEMALE, birthday=date(2018, 1, 1))
@@ -81,7 +82,7 @@ class TestCustomersModel(unittest.TestCase):
         customers = CustomerModel.all()
         self.assertEqual(customers, [])
         customer = CustomerModel(password="password", first_name="Fido", last_name="Lido", nickname="helloFido",
-                                 email="fido@gmail.com", gender=Gender.FEMALE, birthday=date(2018, 1, 1))
+                                 email="fido@gmail.com", gender=Gender.FEMALE, birthday=date(2018, 1, 1), is_active=True)
         self.assertTrue(customer is not None)
         self.assertEqual(customer.customer_id, None)
         customer.create()
@@ -124,6 +125,8 @@ class TestCustomersModel(unittest.TestCase):
         self.assertEqual(found_customer.first_name, customer.first_name)
         self.assertEqual(found_customer.last_name, customer.last_name)
         self.assertEqual(found_customer.email, customer.email)
+        self.assertEqual(found_customer.is_active, customer.is_active)
+        self.assertEqual(found_customer.is_active, True)
 
     def test_list_all_customers(self):
         """It should List all Customers in the database"""
@@ -202,6 +205,8 @@ class TestCustomersModel(unittest.TestCase):
         self.assertEqual(data["password"], customer.password)
         self.assertIn("birthday", data)
         self.assertEqual(date.fromisoformat(data["birthday"]), customer.birthday)
+        self.assertIn("is_active", data)
+        self.assertEqual(data["is_active"], customer.is_active)
 
     def test_deserialize_a_customer(self):
         """It should de-serialize a Customer"""
@@ -217,6 +222,7 @@ class TestCustomersModel(unittest.TestCase):
         self.assertEqual(customer.gender.name, data["gender"])
         self.assertEqual(customer.password, data["password"])
         self.assertEqual(customer.birthday, date.fromisoformat(data["birthday"]))
+        self.assertEqual(customer.is_active, data["is_active"])
 
     def test_deserialize_bad_data(self):
         """It should not deserialize bad data"""

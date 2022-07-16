@@ -37,6 +37,7 @@ class CustomerFactory(factory.Factory):
     email = factory.Faker("email")
     gender = FuzzyChoice(choices=[Gender.MALE, Gender.FEMALE, Gender.UNKNOWN])
     birthday = FuzzyDate(date(2008, 1, 1))
+    is_active = True
 
 
 class AddressFactory(factory.Factory):

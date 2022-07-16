@@ -15,7 +15,7 @@ from service.utils import status
 from tests.factories import AddressFactory, CustomerFactory  # HTTP Status Codes
 
 DATABASE_URI = os.getenv(
-    "DATABASE_URI", "postgresql://postgres:postgres@localhost:5432/testdb"
+    "DATABASE_URI", "postgresql://postgres:postgres@localhost:5432/postgres"
 )
 BASE_URL = "/customers"
 CONTENT_TYPE_JSON = "application/json"

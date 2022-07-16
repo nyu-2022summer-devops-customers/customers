@@ -49,6 +49,7 @@ class CustomerModel(db.Model):
         db.Enum(Gender), nullable=False, server_default=(Gender.UNKNOWN.name)
     )
     birthday = db.Column(db.Date(), nullable=False, default=date.today())
+    is_active = db.Column(db.Boolean(), nullable=False, default=True)
     addresses = db.relationship("AddressModel", cascade="all, delete-orphan")
 
     def __repr__(self):
@@ -96,6 +97,7 @@ class CustomerModel(db.Model):
             "birthday": self.birthday.isoformat(),
             "password": self.password,
             "addresses": [],
+            "is_active": self.is_active
         }
         for address in self.addresses:
             customer["addresses"].append(address.serialize())
@@ -122,6 +124,7 @@ class CustomerModel(db.Model):
                 address = AddressModel()
                 address.deserialize(json_address)
                 self.addresses.append(address)
+            self.is_active = data["is_active"]
         except AttributeError as error:
             raise DataValidationError(
                 "Invalid attribute: " + error.args[0]

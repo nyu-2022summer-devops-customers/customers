@@ -257,8 +257,6 @@ def update_an_address_of_a_customer(customer_id, address_id):
     address.deserialize(request.get_json())
     address.update()
 
-    check_content_type("application/json")
-
     found = AddressModel.find_by_customer_and_address_id(customer_id, address_id)
     if found.count() == 0:
         abort(status.HTTP_404_NOT_FOUND, f"Address with id '{address_id}' was not found.")

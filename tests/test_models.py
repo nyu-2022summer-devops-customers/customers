@@ -161,28 +161,35 @@ class TestCustomersModel(unittest.TestCase):
         # create a customer
         customers = CustomerModel.all()
         self.assertEqual(customers, [])
-        customer = CustomerModel(password="password", first_name="Fido", last_name="Lido", nickname="helloFido",
-                                 email="fido@gmail.com", gender=Gender.FEMALE, birthday=date(2018, 1, 1))
+        customer = CustomerModel(
+            password="password",
+            first_name="Fido",
+            last_name="Lido",
+            nickname="helloFido",
+            email="fido@gmail.com",
+            gender=Gender.FEMALE,
+            birthday=date(2018, 1, 1)
+        )
         self.assertTrue(customer is not None)
         self.assertEqual(customer.customer_id, None)
-        customer.create()
-        customers = CustomerModel.all()
-        self.assertEqual(len(customers), 1)
-        self.assertNotEqual(customer.customer_id, None)
 
         # create addresses for this customer
         address = AddressFactory()
-        address.customer_id = customer.customer_id
-        address.create()
-        addresses = AddressModel.all()
-        self.assertEqual(len(addresses), 1)
+        customer.addresses.append(address)
+        customer.create()
+
+        customers = CustomerModel.all()
+        self.assertEqual(len(customers), 1)
+        self.assertNotEqual(customer.customer_id, None)
+        addresses = AddressModel.find_by_customer_id(customer_id=customer.customer_id)
+        self.assertEqual(addresses.count(), 1)
 
         # delete the customer and make sure all addresses related to the record are not in the database
         customer.delete()
         customers = CustomerModel.all()
-        addresses = AddressModel.all()
+        addresses = AddressModel.find_by_customer_id(customer_id=customer.customer_id)
         self.assertEqual(len(customers), 0)
-        self.assertEqual(len(addresses), 0)
+        self.assertEqual(addresses.count(), 0)
 
     def test_serialize_a_customer(self):
         """It should serialize a Customer"""
@@ -210,7 +217,10 @@ class TestCustomersModel(unittest.TestCase):
 
     def test_deserialize_a_customer(self):
         """It should de-serialize a Customer"""
-        data = CustomerFactory().serialize()
+        test_customer = CustomerFactory()
+        test_address = AddressFactory()
+        test_customer.addresses.append(test_address)
+        data = test_customer.serialize()
         customer = CustomerModel()
         customer.deserialize(data)
         self.assertNotEqual(customer, None)

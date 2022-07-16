@@ -39,6 +39,14 @@ class CustomerFactory(factory.Factory):
     birthday = FuzzyDate(date(2008, 1, 1))
     is_active = True
 
+    @factory.post_generation
+    def addresses(self, create, extracted, **kwargs):
+        """Creates the addresses list"""
+        if not create:
+            return
+        if extracted:
+            self.addresses = extracted
+
 
 class AddressFactory(factory.Factory):
     """Creates an address"""

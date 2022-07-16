@@ -50,6 +50,7 @@ class CustomerModel(db.Model):
         db.Enum(Gender), nullable=False, server_default=(Gender.UNKNOWN.name)
     )
     birthday = db.Column(db.Date(), nullable=False, default=date.today())
+    is_active = db.Column(db.Boolean(), nullable=False, default=True)
     addresses = db.relationship("AddressModel", cascade="all, delete-orphan")
 
     def __repr__(self):
@@ -95,7 +96,8 @@ class CustomerModel(db.Model):
             "email": self._email_validator(self.email),
             "gender": self.gender.name,
             "birthday": self.birthday.isoformat(),
-            "password": self.password
+            "password": self.password,
+            "is_active": self.is_active
         }
 
     def deserialize(self, data):
@@ -114,6 +116,7 @@ class CustomerModel(db.Model):
             # create enum from string
             self.gender = getattr(Gender, data["gender"])
             self.birthday = date.fromisoformat(data["birthday"])
+            self.is_active = data["is_active"]
         except AttributeError as error:
             raise DataValidationError(
                 "Invalid attribute: " + error.args[0]

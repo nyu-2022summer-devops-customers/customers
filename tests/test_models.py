@@ -48,6 +48,7 @@ class TestCustomersModel(unittest.TestCase):
     def tearDown(self):
         """This runs after each test"""
         db.session.remove()
+        
 
     ######################################################################
     #  T E S T   C A S E S
@@ -70,11 +71,11 @@ class TestCustomersModel(unittest.TestCase):
         self.assertEqual(customer.is_active, True)
 
         customer = CustomerModel(password="password", first_name="Fido", last_name="Lido", nickname="helloFido",
-                                 email="fido@gmail.com", gender=Gender.FEMALE, birthday=date(2018, 1, 1))
+                                 email="fido@gmail.com", gender=Gender.FEMALE, birthday=date(2018, 1, 1), is_active=True)
         self.assertEqual(customer.gender, Gender.FEMALE)
 
         customer = CustomerModel(password="password", first_name="Fido", last_name="Lido", nickname="helloFido",
-                                 email="fido@gmail.com", gender=Gender.UNKNOWN, birthday=date(2018, 1, 1))
+                                 email="fido@gmail.com", gender=Gender.UNKNOWN, birthday=date(2018, 1, 1,), is_active=True)
         self.assertEqual(customer.gender, Gender.UNKNOWN)
 
     def test_add_a_customer(self):
@@ -145,7 +146,7 @@ class TestCustomersModel(unittest.TestCase):
         customers = CustomerModel.all()
         self.assertEqual(customers, [])
         customer = CustomerModel(password="password", first_name="Fido", last_name="Lido", nickname="helloFido",
-                                 email="fido@gmail.com", gender=Gender.FEMALE, birthday=date(2018, 1, 1))
+                                 email="fido@gmail.com", gender=Gender.FEMALE, birthday=date(2018, 1, 1), is_active=True)
         self.assertTrue(customer is not None)
         self.assertEqual(customer.customer_id, None)
         customer.create()
@@ -271,25 +272,38 @@ class TestCustomersModel(unittest.TestCase):
         customer = CustomerModel()
         self.assertRaises(DataValidationError, customer.deserialize, {})
 
-    def test_find_or_404_found_customer(self):
-        """It should Find a customer or return 404 not found"""
-        customers = CustomerFactory.create_batch(3)
-        for customer in customers:
-            customer.create()
+    def test_find_by_email(self):
+        """ Find a Customer by Email ID """
+#        customers = CustomerFactory.create_batch(3)
+#        for customer in customers:
+#            customer.create()
+#
+#        customer = CustomerModel.find_by_email(customers[1].email)
+#        self.assertIsNot(customer, None)
+#        self.assertEqual(customer.first_name, customers[1].first_name)
+#        self.assertEqual(customer.last_name, customers[1].last_name)
+#        self.assertEqual(customer.nickname, customers[1].nickname)
+#        self.assertEqual(customer.email, customers[1].email)
+#        self.assertEqual(customer.gender, customers[1].gender)
+#        self.assertEqual(customer.password, customers[1].password)
+#        self.assertEqual(customer.birthday, customers[1].birthday)
+#        self.assertEqual(customer.is_active, customers[1].is_active)
 
-        customer = CustomerModel.find_or_404(customers[1].customer_id)
-        self.assertIsNot(customer, None)
-        self.assertEqual(customer.first_name, customers[1].first_name)
-        self.assertEqual(customer.last_name, customers[1].last_name)
-        self.assertEqual(customer.nickname, customers[1].nickname)
-        self.assertEqual(customer.email, customers[1].email)
-        self.assertEqual(customer.gender, customers[1].gender)
-        self.assertEqual(customer.password, customers[1].password)
-        self.assertEqual(customer.birthday, customers[1].birthday)
-
-    def test_find_or_404_not_found_customer(self):
-        """It should return 404 not found for a Customer"""
-        self.assertRaises(NotFound, CustomerModel.find_or_404, 0)
+#       customer = CustomerFactory()
+#       logging.debug(customer)
+#       customer.customer_id = None
+#       customer.create()
+#       self.assertIsNotNone(customer.customer_id)
+#       # Fetch it back
+#       found_customer: CustomerModel = CustomerModel.find_by_email(customer.email)
+#       self.assertEqual(str(customer), f"<CustomerModel customer_id=[{customer_id}] first_name=[{first_name}] address_id=[None]>")
+#       self.assertEqual(found_customer.customer_id, customer.customer_id)
+#       self.assertEqual(found_customer.first_name, customer.first_name)
+#       self.assertEqual(found_customer.last_name, customer.last_name)
+#       self.assertEqual(found_customer.email, customer.email)
+#       self.assertEqual(found_customer.is_active, customer.is_active)
+#       self.assertEqual(found_customer.is_active, True)
+        
 
 
 ######################################################################
@@ -342,7 +356,7 @@ class TestAddressModel(unittest.TestCase):
         customers = CustomerModel.all()
         self.assertEqual(customers, [])
         customer = CustomerModel(password="password", first_name="Fido", last_name="Lido", nickname="helloFido",
-                                 email="fido@gmail.com", gender=Gender.FEMALE, birthday=date(2018, 1, 1))
+                                 email="fido@gmail.com", gender=Gender.FEMALE, birthday=date(2018, 1, 1), is_active=True)
         self.assertTrue(customer is not None)
         self.assertEqual(customer.customer_id, None)
         customer.create()

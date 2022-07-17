@@ -48,7 +48,7 @@ class TestCustomersModel(unittest.TestCase):
     def tearDown(self):
         """This runs after each test"""
         db.session.remove()
-      
+
     ######################################################################
     #  T E S T   C A S E S
     ######################################################################

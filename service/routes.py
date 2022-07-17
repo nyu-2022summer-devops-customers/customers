@@ -48,6 +48,7 @@ def index():
             list_addresses=f"GET {BASE_URL}/<int:customer_id>/addresses",
             update_an_address_of_a_customer=f"PUT {BASE_URL}/<int:customer_id>/addresses/<int:address_id>",
             delete_an_address_of_a_customer=f"DELETE {BASE_URL}/<int:customer_id>/addresses/<int:address_id>",
+            get_customer_list_by_nickname=f"GET {BASE_URL}?nickname=<string:nickname>"
         ),
         status.HTTP_200_OK
     )
@@ -123,14 +124,36 @@ def get_a_customer(customer_id):
 ######################################################################
 @app.route("/customers", methods=["GET"])
 def list_customers():
-    """Returns all of the Customers"""
-    app.logger.info("Request for customer list")
-    customers = []
-    customers = CustomerModel.all()
+    """List customers"""
+    def list_all_customers():
+        """Returns all of the Customers"""
+        app.logger.info("Request for customer list")
+        customers = []
+        customers = CustomerModel.all()
 
-    results = [customer.serialize() for customer in customers]
-    app.logger.info("Returning %d customers", len(results))
-    return jsonify(results), status.HTTP_200_OK
+        results = [customer.serialize() for customer in customers]
+        app.logger.info("Returning %d customers", len(results))
+        return jsonify(results), status.HTTP_200_OK
+
+    def list_all_customers_by_nickname(nickname):
+        """
+        Retrieve a Customer list
+        """
+        app.logger.info("Request for customer with nickname: %s", nickname)
+        customers = CustomerModel.find_by_nickname(nickname=nickname)
+        if customers.count() == 0:
+            abort(status.HTTP_404_NOT_FOUND, f"Customer with nickname '{nickname}' was not found.")
+        res = []
+        for customer in customers:
+            res.append(customer.serialize())
+        return jsonify(res), status.HTTP_200_OK
+
+    args = request.args
+    nickname = args.get("nickname")
+    if nickname is None:
+        return list_all_customers()
+    else:
+        return list_all_customers_by_nickname(nickname=nickname)
 
 
 ######################################################################

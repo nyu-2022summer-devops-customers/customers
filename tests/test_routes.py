@@ -262,7 +262,7 @@ class TestCustomersService(unittest.TestCase):
         response = self.client.post(BASE_URL, json=test_customer.serialize())
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
 
-        # uactivate the customer
+        # unacivate the customer
         new_customer = response.get_json()
         logging.debug(new_customer)
         new_customer["is_active"] = False

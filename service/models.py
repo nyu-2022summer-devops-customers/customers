@@ -182,7 +182,7 @@ class CustomerModel(db.Model):
         """Find customers by it's nickname"""
         logger.info("Processing lookup for nickname %s ...", nickname)
         return cls.query.filter(CustomerModel.nickname == nickname)
-        
+      
     @classmethod
     def find_by_email(cls, email):
         """Returns all Customers with the given Email"""

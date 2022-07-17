@@ -48,11 +48,11 @@ class TestCustomersModel(unittest.TestCase):
     def tearDown(self):
         """This runs after each test"""
         db.session.remove()
-      
+           
 
-######################################################################
-  #  T E S T   C A S E S
-######################################################################
+    ######################################################################
+    #  T E S T   C A S E S
+    ######################################################################
     def test_create_a_customer(self):
         """It should Create a customer and assert that it exists"""
         customer = CustomerModel(password="password", first_name="Fido", last_name="Lido", nickname="helloFido",
@@ -280,7 +280,7 @@ class TestCustomersModel(unittest.TestCase):
         self.assertIsNot(customer_list.count(), 0)
         for customer in customer_list:
             self.assertEqual(customer.email, customers[0].email)
-        
+
 
     def test_find_customer_by_nickname(self):
         """It should return a customer list found by nickname"""

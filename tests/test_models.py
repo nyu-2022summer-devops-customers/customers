@@ -291,6 +291,16 @@ class TestCustomersModel(unittest.TestCase):
         """It should return 404 not found for a Customer"""
         self.assertRaises(NotFound, CustomerModel.find_or_404, 0)
 
+    def test_find_customer_by_nickname(self):
+        """It should return a customer list found by nickname"""
+        customers = CustomerFactory.create_batch(3)
+        for customer in customers:
+            customer.create()
+        customer_list = CustomerModel.find_by_nickname(nickname=customers[0].nickname)
+        self.assertIsNot(customer_list.count(), 0)
+        for customer in customer_list:
+            self.assertEqual(customer.nickname, customers[0].nickname)
+
 
 ######################################################################
 #  ADDRESS   M O D E L   T E S T   C A S E S

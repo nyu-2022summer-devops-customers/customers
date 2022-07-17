@@ -182,12 +182,13 @@ class CustomerModel(db.Model):
         """Find customers by it's nickname"""
         logger.info("Processing lookup for nickname %s ...", nickname)
         return cls.query.filter(CustomerModel.nickname == nickname)
-    
+        
     @classmethod
     def find_by_email(cls, email):
         """Returns all Customers with the given Email"""
         logger.info("Processing email query for %s  ...", email)
         return cls.query.filter(cls.email == email)
+
 
 class AddressModel(db.Model):
     """
@@ -278,7 +279,6 @@ class AddressModel(db.Model):
     def find_by_customer_id(cls, customer_id):
         logger.info("Processing customer_id query for %s ...", customer_id)
         return cls.query.filter(cls.customer_id == customer_id)
-
 
     @classmethod
     def find_by_customer_and_address_id(cls, customer_id, address_id):

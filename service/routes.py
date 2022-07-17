@@ -161,7 +161,6 @@ def list_customers():
             res.append(customer.serialize())
         return jsonify(res), status.HTTP_200_OK
 
-
     args = request.args
     nickname = args.get("nickname")
     email = args.get("email")
@@ -172,9 +171,6 @@ def list_customers():
         return list_all_customers_by_email(email=email)
     else:
         return list_all_customers()
-
-       
-    
 
 
 ######################################################################

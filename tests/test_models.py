@@ -291,6 +291,10 @@ class TestCustomersModel(unittest.TestCase):
         for customer in customer_list:
             self.assertEqual(customer.nickname, customers[0].nickname)
 
+    def test_find_or_404_not_found(self):
+        """ Find or return 404 NOT found """
+        self.assertRaises(NotFound, CustomerModel.find_or_404, 0)
+
 
 ######################################################################
 #  ADDRESS   M O D E L   T E S T   C A S E S

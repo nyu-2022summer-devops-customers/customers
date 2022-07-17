@@ -303,6 +303,13 @@ class TestCustomersModel(unittest.TestCase):
 #       self.assertEqual(found_customer.email, customer.email)
 #       self.assertEqual(found_customer.is_active, customer.is_active)
 #       self.assertEqual(found_customer.is_active, True)
+        customers = CustomerFactory.create_batch(3)
+        for customer in customers:
+            customer.create()
+        customer_list = CustomerModel.find_by_email(email=customers[0].email)
+        self.assertIsNot(customer_list.count(), 0)
+        for customer in customer_list:
+            self.assertEqual(customer.email, customers[0].email)
         
 
     def test_find_customer_by_nickname(self):

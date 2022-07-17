@@ -162,15 +162,6 @@ class CustomerModel(db.Model):
         """ Finds a CustomerModel by it's customer_id """
         logger.info("Processing lookup for customer_id %s ...", by_id)
         return cls.query.get(by_id)
-        
-    @classmethod
-    def find_by_email(cls, email):
-        """Returns all Customers with the given Email
-        Args:
-            name (string): the name of the Customers you want to match
-        """
-        logger.info("Processing email query for %s  ...", email)
-        return cls.query.filter(cls.email == email and cls.active).all()
 
     @classmethod
     def find_or_404(cls, customer_id: int):
@@ -191,7 +182,12 @@ class CustomerModel(db.Model):
         """Find customers by it's nickname"""
         logger.info("Processing lookup for nickname %s ...", nickname)
         return cls.query.filter(CustomerModel.nickname == nickname)
-
+    
+    @classmethod
+    def find_by_email(cls, email):
+        """Returns all Customers with the given Email"""
+        logger.info("Processing email query for %s  ...", email)
+        return cls.query.filter(cls.email == email)
 
 class AddressModel(db.Model):
     """

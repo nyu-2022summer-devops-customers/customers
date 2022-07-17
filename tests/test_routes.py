@@ -271,6 +271,22 @@ class TestCustomersService(unittest.TestCase):
         updated_customer = response.get_json()
         self.assertEqual(updated_customer["is_active"], True)
 
+    def test_deactivate_a_customer(self):
+        """It should deactivate a customer"""
+        # create a customer to activate
+        test_customer = CustomerFactory()
+        response = self.client.post(BASE_URL, json=test_customer.serialize())
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+
+        # deactivate the customer
+        new_customer = response.get_json()
+        logging.debug(new_customer)
+        new_customer["is_active"] = True
+        response = self.client.delete(f"{BASE_URL}/{new_customer['customer_id']}/activate", json=new_customer)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        updated_customer = response.get_json()
+        self.assertEqual(updated_customer["is_active"], False)
+
     def test_get_customer_list(self):
         """It should Get a list of Customers"""
         self._create_customers(5)

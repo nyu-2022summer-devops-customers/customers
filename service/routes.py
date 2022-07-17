@@ -17,6 +17,12 @@ from . import app
 BASE_URL = "/customers"
 
 
+def abort_when_customer_not_exist(customer_id):
+    customer = CustomerModel.find(customer_id)
+    if customer is None:
+        abort(status.HTTP_400_BAD_REQUEST, f"Addresses with id '{customer_id}' was not found.")
+
+
 ######################################################################
 # GET INDEX
 ######################################################################
@@ -42,6 +48,7 @@ def index():
             list_addresses=f"GET {BASE_URL}/<int:customer_id>/addresses",
             update_an_address_of_a_customer=f"PUT {BASE_URL}/<int:customer_id>/addresses/<int:address_id>",
             delete_an_address_of_a_customer=f"DELETE {BASE_URL}/<int:customer_id>/addresses/<int:address_id>",
+            get_customer_list_by_nickname=f"GET {BASE_URL}?nickname=<string:nickname>"
         ),
         status.HTTP_200_OK
     )
@@ -117,14 +124,36 @@ def get_a_customer(customer_id):
 ######################################################################
 @app.route("/customers", methods=["GET"])
 def list_customers():
-    """Returns all of the Customers"""
-    app.logger.info("Request for customer list")
-    customers = []
-    customers = CustomerModel.all()
+    """List customers"""
+    def list_all_customers():
+        """Returns all of the Customers"""
+        app.logger.info("Request for customer list")
+        customers = []
+        customers = CustomerModel.all()
 
-    results = [customer.serialize() for customer in customers]
-    app.logger.info("Returning %d customers", len(results))
-    return jsonify(results), status.HTTP_200_OK
+        results = [customer.serialize() for customer in customers]
+        app.logger.info("Returning %d customers", len(results))
+        return jsonify(results), status.HTTP_200_OK
+
+    def list_all_customers_by_nickname(nickname):
+        """
+        Retrieve a Customer list
+        """
+        app.logger.info("Request for customer with nickname: %s", nickname)
+        customers = CustomerModel.find_by_nickname(nickname=nickname)
+        if customers.count() == 0:
+            abort(status.HTTP_404_NOT_FOUND, f"Customer with nickname '{nickname}' was not found.")
+        res = []
+        for customer in customers:
+            res.append(customer.serialize())
+        return jsonify(res), status.HTTP_200_OK
+
+    args = request.args
+    nickname = args.get("nickname")
+    if nickname is None:
+        return list_all_customers()
+    else:
+        return list_all_customers_by_nickname(nickname=nickname)
 
 
 ######################################################################
@@ -139,6 +168,7 @@ def create_address(customer_id):
     """
     app.logger.info("Request to create an address")
     check_content_type("application/json")
+    abort_when_customer_not_exist(customer_id=customer_id)
     address = AddressModel()
     address.deserialize(request.get_json())
     address.create()
@@ -159,6 +189,7 @@ def list_addresses(customer_id):
     This endpoint will create an Address based the data in the body that is posted
     """
     app.logger.info("Request for addresses with customer id: %s", customer_id)
+    abort_when_customer_not_exist(customer_id=customer_id)
     addresses = AddressModel.find_by_customer_id(customer_id=customer_id)
     if addresses.count() == 0:
         abort(status.HTTP_404_NOT_FOUND, f"Addresses with id '{customer_id}' was not found.")
@@ -181,6 +212,7 @@ def get_an_address_of_a_customer(customer_id, address_id):
     This endpoint will create an Address based the data in the body that is posted
     """
     app.logger.info("Get an Address of a Customer")
+    abort_when_customer_not_exist(customer_id=customer_id)
     found = AddressModel.find_by_customer_and_address_id(customer_id=customer_id, address_id=address_id)
 
     if found.count() == 0:
@@ -202,6 +234,7 @@ def delete_customers(customer_id):
     This endpoint will delete a Customer based on the id specified in the path
     """
     app.logger.info("Request to delete customer with id: %s", customer_id)
+    abort_when_customer_not_exist(customer_id=customer_id)
     customer = CustomerModel.find(customer_id)
     if customer:
         customer.delete()
@@ -220,6 +253,7 @@ def delete_an_address_of_a_customer(customer_id, address_id):
     This endpoint will delete an Address based on the data in the body that is posted
     """
     app.logger.info("Delete an Address of a Customer")
+    abort_when_customer_not_exist(customer_id=customer_id)
     found = AddressModel.find_by_customer_and_address_id(customer_id=customer_id, address_id=address_id)
 
     if found.count() == 1:
@@ -242,11 +276,10 @@ def update_an_address_of_a_customer(customer_id, address_id):
     """
     app.logger.info("Update an Address of a Customer")
     check_content_type("application/json")
+    abort_when_customer_not_exist(customer_id=customer_id)
     address = AddressModel()
     address.deserialize(request.get_json())
     address.update()
-
-    check_content_type("application/json")
 
     found = AddressModel.find_by_customer_and_address_id(customer_id, address_id)
     if found.count() == 0:

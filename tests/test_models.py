@@ -305,6 +305,16 @@ class TestCustomersModel(unittest.TestCase):
 #       self.assertEqual(found_customer.is_active, True)
         
 
+    def test_find_customer_by_nickname(self):
+        """It should return a customer list found by nickname"""
+        customers = CustomerFactory.create_batch(3)
+        for customer in customers:
+            customer.create()
+        customer_list = CustomerModel.find_by_nickname(nickname=customers[0].nickname)
+        self.assertIsNot(customer_list.count(), 0)
+        for customer in customer_list:
+            self.assertEqual(customer.nickname, customers[0].nickname)
+
 
 ######################################################################
 #  ADDRESS   M O D E L   T E S T   C A S E S

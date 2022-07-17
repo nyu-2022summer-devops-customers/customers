@@ -10,6 +10,8 @@ from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 import re
 
+from tomlkit import string
+
 logger = logging.getLogger("flask.app")
 
 # Create the SQLAlchemy object to be initialized later in init_db()
@@ -183,6 +185,12 @@ class CustomerModel(db.Model):
         """
         logger.info("Processing lookup or 404 for id %s ...", customer_id)
         return cls.query.get_or_404(customer_id)
+
+    @classmethod
+    def find_by_nickname(cls, nickname: string):
+        """Find customers by it's nickname"""
+        logger.info("Processing lookup for nickname %s ...", nickname)
+        return cls.query.filter(CustomerModel.nickname == nickname)
 
 
 class AddressModel(db.Model):

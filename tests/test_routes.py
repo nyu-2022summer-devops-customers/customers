@@ -323,6 +323,21 @@ class TestCustomersService(unittest.TestCase):
         address.deserialize(response.get_json())
         self.assertEqual(address.address, new_address_str)
 
+    def test_get_customer_list_by_nickname(self):
+        """It should get customer list by nickname"""
+        customers = CustomerFactory.create_batch(3)
+        for test_customer in customers:
+            logging.debug("Test Customer: %s", test_customer.serialize())
+            response = self.client.post(BASE_URL, json=test_customer.serialize())
+            self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+
+        response = self.client.get(f"{BASE_URL}?nickname={customers[0].nickname}")
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        for customer_json in response.get_json():
+            customer = CustomerModel()
+            customer.deserialize(customer_json)
+            self.assertEqual(customer.nickname, customers[0].nickname)
+
     ######################################################################
     #  T E S T   S A D   P A T H S
     ######################################################################
@@ -349,4 +364,63 @@ class TestCustomersService(unittest.TestCase):
         test_customer = customer.serialize()
         test_customer["gender"] = "male"    # wrong case
         response = self.client.post(BASE_URL, json=test_customer)
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+
+    def test_create_address_for_nonexisting_customer(self):
+        """It shouldn't Create a new Address for an non-existing Customer"""
+        customer_id = 0
+        # Check if 0 exists
+        response = self.client.get(f"{BASE_URL}/{customer_id}")
+        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
+
+        # Create Address for this non-existing customer
+        test_address = AddressFactory()
+        test_address.customer_id = customer_id
+        logging.debug("Test Address: %s", test_address.serialize())
+        response = self.client.post(f"{BASE_URL}/{customer_id}/addresses", json=test_address.serialize())
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+
+    def test_delete_address_for_nonexisting_customer(self):
+        """It shouldn't Delete the Address for an non-existing Customer"""
+        customer_id = 0
+        # Check if 0 exists
+        response = self.client.get(f"{BASE_URL}/{customer_id}")
+        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
+
+        # Delete Address for this non-existing customer
+        test_address = AddressFactory()
+        test_address.customer_id = customer_id
+        logging.debug("Test Address: %s", test_address.serialize())
+        response = self.client.delete(f"{BASE_URL}/{customer_id}/addresses/{test_address.address_id}")
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+
+    def test_read_address_for_nonexisting_customer(self):
+        """It shouldn't Read the Address for an non-existing Customer"""
+        customer_id = 0
+        # Check if 0 exists
+        response = self.client.get(f"{BASE_URL}/{customer_id}")
+        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
+
+        # Read Address for this non-existing customer
+        test_address = AddressFactory()
+        test_address.customer_id = customer_id
+        logging.debug("Test Address: %s", test_address.serialize())
+        response = self.client.get(f"{BASE_URL}/{customer_id}/addresses/{test_address.address_id}")
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+
+    def test_update_address_for_nonexisting_customer(self):
+        """It shouldn't Modify the Address for an non-existing Customer"""
+        customer_id = 0
+        # Check if 0 exists
+        response = self.client.get(f"{BASE_URL}/{customer_id}")
+        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
+
+        # Create Address for this non-existing customer
+        test_address = AddressFactory()
+        test_address.customer_id = customer_id
+        logging.debug("Test Address: %s", test_address.serialize())
+        response = self.client.put(
+            f"{BASE_URL}/{customer_id}/addresses/{test_address.address_id}",
+            json=test_address.serialize()
+        )
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)

@@ -51,6 +51,7 @@ def index():
             update_an_address_of_a_customer=f"PUT {BASE_URL}/<int:customer_id>/addresses/<int:address_id>",
             delete_an_address_of_a_customer=f"DELETE {BASE_URL}/<int:customer_id>/addresses/<int:address_id>",
             get_customer_list_by_nickname=f"GET {BASE_URL}?nickname=<string:nickname>",
+            get_customer_list_by_email=f"GET {BASE_URL}?nickname=<string:email>",
             get_customer_list_by_name=f"GET {BASE_URL}?firstname=<string:firstname>&lastname=<string:lastname>"
         ),
         status.HTTP_200_OK

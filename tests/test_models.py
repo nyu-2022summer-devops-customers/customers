@@ -70,11 +70,11 @@ class TestCustomersModel(unittest.TestCase):
         self.assertEqual(customer.is_active, True)
 
         customer = CustomerModel(password="password", first_name="Fido", last_name="Lido", nickname="helloFido",
-                                 email="fido@gmail.com", gender=Gender.FEMALE, birthday=date(2018, 1, 1))
+                                 email="fido@gmail.com", gender=Gender.FEMALE, birthday=date(2018, 1, 1), is_active=True)
         self.assertEqual(customer.gender, Gender.FEMALE)
 
         customer = CustomerModel(password="password", first_name="Fido", last_name="Lido", nickname="helloFido",
-                                 email="fido@gmail.com", gender=Gender.UNKNOWN, birthday=date(2018, 1, 1))
+                                 email="fido@gmail.com", gender=Gender.UNKNOWN, birthday=date(2018, 1, 1,), is_active=True)
         self.assertEqual(customer.gender, Gender.UNKNOWN)
 
     def test_add_a_customer(self):
@@ -145,7 +145,7 @@ class TestCustomersModel(unittest.TestCase):
         customers = CustomerModel.all()
         self.assertEqual(customers, [])
         customer = CustomerModel(password="password", first_name="Fido", last_name="Lido", nickname="helloFido",
-                                 email="fido@gmail.com", gender=Gender.FEMALE, birthday=date(2018, 1, 1))
+                                 email="fido@gmail.com", gender=Gender.FEMALE, birthday=date(2018, 1, 1), is_active=True)
         self.assertTrue(customer is not None)
         self.assertEqual(customer.customer_id, None)
         customer.create()
@@ -271,25 +271,15 @@ class TestCustomersModel(unittest.TestCase):
         customer = CustomerModel()
         self.assertRaises(DataValidationError, customer.deserialize, {})
 
-    def test_find_or_404_found_customer(self):
-        """It should Find a customer or return 404 not found"""
+    def test_find_by_email(self):
+        """ Find a Customer by Email ID """
         customers = CustomerFactory.create_batch(3)
         for customer in customers:
             customer.create()
-
-        customer = CustomerModel.find_or_404(customers[1].customer_id)
-        self.assertIsNot(customer, None)
-        self.assertEqual(customer.first_name, customers[1].first_name)
-        self.assertEqual(customer.last_name, customers[1].last_name)
-        self.assertEqual(customer.nickname, customers[1].nickname)
-        self.assertEqual(customer.email, customers[1].email)
-        self.assertEqual(customer.gender, customers[1].gender)
-        self.assertEqual(customer.password, customers[1].password)
-        self.assertEqual(customer.birthday, customers[1].birthday)
-
-    def test_find_or_404_not_found_customer(self):
-        """It should return 404 not found for a Customer"""
-        self.assertRaises(NotFound, CustomerModel.find_or_404, 0)
+        customer_list = CustomerModel.find_by_email(email=customers[0].email)
+        self.assertIsNot(customer_list.count(), 0)
+        for customer in customer_list:
+            self.assertEqual(customer.email, customers[0].email)
 
     def test_find_customer_by_nickname(self):
         """It should return a customer list found by nickname"""
@@ -352,7 +342,7 @@ class TestAddressModel(unittest.TestCase):
         customers = CustomerModel.all()
         self.assertEqual(customers, [])
         customer = CustomerModel(password="password", first_name="Fido", last_name="Lido", nickname="helloFido",
-                                 email="fido@gmail.com", gender=Gender.FEMALE, birthday=date(2018, 1, 1))
+                                 email="fido@gmail.com", gender=Gender.FEMALE, birthday=date(2018, 1, 1), is_active=True)
         self.assertTrue(customer is not None)
         self.assertEqual(customer.customer_id, None)
         customer.create()

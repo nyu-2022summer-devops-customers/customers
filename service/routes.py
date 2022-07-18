@@ -150,12 +150,29 @@ def list_customers():
             res.append(customer.serialize())
         return jsonify(res), status.HTTP_200_OK
 
+    def list_all_customers_by_email(email):
+        """
+        Retrieve a Customer list
+        """
+        app.logger.info("Request for customer with email: %s", email)
+        customers = CustomerModel.find_by_email(email=email)
+        if customers.count() == 0:
+            abort(status.HTTP_404_NOT_FOUND, f"Customer with email '{email}' was not found.")
+        res = []
+        for customer in customers:
+            res.append(customer.serialize())
+        return jsonify(res), status.HTTP_200_OK
+
     args = request.args
     nickname = args.get("nickname")
-    if nickname is None:
-        return list_all_customers()
-    else:
+    email = args.get("email")
+
+    if args.get('nickname'):
         return list_all_customers_by_nickname(nickname=nickname)
+    elif args.get('email'):
+        return list_all_customers_by_email(email=email)
+    else:
+        return list_all_customers()
 
 
 ######################################################################

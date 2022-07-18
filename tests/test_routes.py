@@ -416,10 +416,10 @@ class TestCustomersService(unittest.TestCase):
             customer.deserialize(customer_json)
             self.assertEqual(customer.birthday, customers[0].birthday)
 
-
     ######################################################################
     #  T E S T   S A D   P A T H S
     ######################################################################
+    
     def test_delete_not_allowed(self):
         """It should not Delete /customers"""
         response = self.client.delete(BASE_URL)

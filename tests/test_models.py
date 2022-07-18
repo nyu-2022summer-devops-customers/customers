@@ -304,10 +304,22 @@ class TestCustomersModel(unittest.TestCase):
             self.assertEqual(customer.first_name, customers[0].first_name)
             self.assertEqual(customer.last_name, customers[0].last_name)
 
+    def test_find_customer_by_birthday(self):
+        """It should return a customer list found by birthday"""
+        customers = CustomerFactory.create_batch(3)
+        for customer in customers:
+            customer.create()
+        birthday = customers[0].birthday
+        customer_list = CustomerModel.find_by_birthday(birthday)
+        self.assertIsNot(customer_list.count(), 0)
+        for customer in customer_list:
+            self.assertEqual(customer.birthday, customers[0].birthday)
+
     def test_find_or_404_not_found(self):
         """ Find or return 404 NOT found """
         self.assertRaises(NotFound, CustomerModel.find_or_404, 0)
 
+    
 
 ######################################################################
 #  ADDRESS   M O D E L   T E S T   C A S E S

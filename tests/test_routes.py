@@ -401,6 +401,22 @@ class TestCustomersService(unittest.TestCase):
             self.assertEqual(customer.first_name, customers[0].first_name)
             self.assertEqual(customer.last_name, customers[0].last_name)
 
+    def test_get_customer_list_by_birthday(self):
+        """It should get customer list by birthday"""
+        customers = CustomerFactory.create_batch(3)
+        for test_customer in customers:
+            logging.debug("Test Customer: %s", test_customer.serialize())
+            response = self.client.post(BASE_URL, json=test_customer.serialize())
+            self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+
+        response = self.client.get(f"{BASE_URL}?birthday={customers[0].birthday}")
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        for customer_json in response.get_json():
+            customer = CustomerModel()
+            customer.deserialize(customer_json)
+            self.assertEqual(customer.birthday, customers[0].birthday)
+
+
     ######################################################################
     #  T E S T   S A D   P A T H S
     ######################################################################

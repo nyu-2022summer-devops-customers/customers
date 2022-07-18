@@ -126,7 +126,7 @@ def get_a_customer(customer_id):
 # LIST ALL CUSTOMERS
 ######################################################################
 @app.route("/customers", methods=["GET"])
-def list_customers():
+def list_customers():  # noqa: C901
     """List customers"""
     def list_all_customers():
         """Returns all of the Customers"""

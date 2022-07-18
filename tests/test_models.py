@@ -290,7 +290,7 @@ class TestCustomersModel(unittest.TestCase):
         self.assertIsNot(customer_list.count(), 0)
         for customer in customer_list:
             self.assertEqual(customer.nickname, customers[0].nickname)
-    
+
     def test_find_customer_by_name(self):
         """It should return a customer list found by name"""
         customers = CustomerFactory.create_batch(3)

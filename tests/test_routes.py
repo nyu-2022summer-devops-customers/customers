@@ -384,7 +384,7 @@ class TestCustomersService(unittest.TestCase):
             customer = CustomerModel()
             customer.deserialize(customer_json)
             self.assertEqual(customer.email, customers[0].email)
-    
+
     def test_get_customer_list_by_name(self):
         """It should get customer list by name"""
         customers = CustomerFactory.create_batch(3)

@@ -322,6 +322,8 @@ class TestCustomersModel(unittest.TestCase):
 #  ADDRESS   M O D E L   T E S T   C A S E S
 ######################################################################
 # pylint: disable=too-many-public-methods
+
+
 class TestAddressModel(unittest.TestCase):
     """ Test Cases for AddressModel Model """
 

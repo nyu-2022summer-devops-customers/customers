@@ -50,7 +50,8 @@ def index():
             list_addresses=f"GET {BASE_URL}/<int:customer_id>/addresses",
             update_an_address_of_a_customer=f"PUT {BASE_URL}/<int:customer_id>/addresses/<int:address_id>",
             delete_an_address_of_a_customer=f"DELETE {BASE_URL}/<int:customer_id>/addresses/<int:address_id>",
-            get_customer_list_by_nickname=f"GET {BASE_URL}?nickname=<string:nickname>"
+            get_customer_list_by_nickname=f"GET {BASE_URL}?nickname=<string:nickname>",
+            get_customer_list_by_name=f"GET {BASE_URL}?firstname=<string:firstname>&lastname=<string:lastname>"
         ),
         status.HTTP_200_OK
     )
@@ -125,7 +126,7 @@ def get_a_customer(customer_id):
 # LIST ALL CUSTOMERS
 ######################################################################
 @app.route("/customers", methods=["GET"])
-def list_customers():
+def list_customers():  # noqa: C901
     """List customers"""
     def list_all_customers():
         """Returns all of the Customers"""
@@ -139,7 +140,7 @@ def list_customers():
 
     def list_all_customers_by_nickname(nickname):
         """
-        Retrieve a Customer list
+        Retrieve a Customer list by nickname
         """
         app.logger.info("Request for customer with nickname: %s", nickname)
         customers = CustomerModel.find_by_nickname(nickname=nickname)
@@ -152,7 +153,7 @@ def list_customers():
 
     def list_all_customers_by_email(email):
         """
-        Retrieve a Customer list
+        Retrieve a Customer list by email
         """
         app.logger.info("Request for customer with email: %s", email)
         customers = CustomerModel.find_by_email(email=email)
@@ -163,14 +164,31 @@ def list_customers():
             res.append(customer.serialize())
         return jsonify(res), status.HTTP_200_OK
 
+    def list_all_customers_by_name(firstname, lastname):
+        """
+        Retrieve a Customer list by name
+        """
+        app.logger.info("Request for customer with name: %s %s", firstname, lastname)
+        customers = CustomerModel.find_by_name(firstname, lastname)
+        if customers.count() == 0:
+            abort(status.HTTP_404_NOT_FOUND, f"Customer with name '{firstname, lastname}' was not found.")
+        res = []
+        for customer in customers:
+            res.append(customer.serialize())
+        return jsonify(res), status.HTTP_200_OK
+
     args = request.args
     nickname = args.get("nickname")
     email = args.get("email")
+    firstname = args.get('firstname')
+    lastname = args.get('lastname')
 
     if args.get('nickname'):
         return list_all_customers_by_nickname(nickname=nickname)
     elif args.get('email'):
         return list_all_customers_by_email(email=email)
+    elif firstname and lastname:
+        return list_all_customers_by_name(firstname, lastname)
     else:
         return list_all_customers()
 

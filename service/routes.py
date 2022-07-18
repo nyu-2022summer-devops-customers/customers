@@ -197,7 +197,7 @@ def list_customers():  # noqa: C901
     email = args.get("email")
     firstname = args.get('firstname')
     lastname = args.get('lastname')
-    birthday=args.get('birthday')
+    birthday = args.get('birthday')
 
     if args.get('nickname'):
         return list_all_customers_by_nickname(nickname=nickname)

@@ -189,6 +189,12 @@ class CustomerModel(db.Model):
         logger.info("Processing email query for %s  ...", email)
         return cls.query.filter(cls.email == email)
 
+    @classmethod
+    def find_by_name(cls, firstname, lastname):
+        """Returns all Customers by given name(first name and last name)"""
+        logger.info("Processing name query for %s %s  ...", firstname, lastname)
+        return cls.query.filter(cls.first_name == firstname and cls.last_name == lastname)
+
 
 class AddressModel(db.Model):
     """

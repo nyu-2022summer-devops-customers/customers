@@ -163,7 +163,7 @@ def list_customers():
         for customer in customers:
             res.append(customer.serialize())
         return jsonify(res), status.HTTP_200_OK
-    
+
     def list_all_customers_by_name(firstname, lastname):
         """
         Retrieve a Customer list by name

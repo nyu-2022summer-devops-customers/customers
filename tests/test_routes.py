@@ -418,6 +418,7 @@ class TestCustomersService(unittest.TestCase):
     ######################################################################
     #  T E S T   S A D   P A T H S
     ######################################################################
+    
     def test_delete_not_allowed(self):
         """It should not Delete /customers"""
         response = self.client.delete(BASE_URL)

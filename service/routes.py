@@ -44,6 +44,7 @@ def index():
             update_a_customer=f"PUT {BASE_URL}/<int:customer_id>",
             delete_a_customer=f"DELETE {BASE_URL}/<int:customer_id>",
             activate_a_customer=f"PUT{BASE_URL}/<int:customer_id>/activate",
+            deactivate_a_customer=f"DELETE{BASE_URL}/<int:customer_id>/activate",
             create_address=f"POST {BASE_URL}/<int:customer_id>/addresses",
             get_an_address_of_a_customer=f"GET {BASE_URL}/<int:customer_id>/addresses/<int:address_id>",
             list_addresses=f"GET {BASE_URL}/<int:customer_id>/addresses",
@@ -173,6 +174,28 @@ def activate_a_customers(customer_id):
     customer.deserialize(request.get_json())
     customer.customer_id = customer_id
     customer.is_active = True
+    customer.update()
+
+    app.logger.info("Customer with ID [%s] updated.", customer.customer_id)
+    return jsonify(customer.serialize()), status.HTTP_200_OK
+
+
+######################################################################
+# DEACTIVATE A CUSTOMER
+######################################################################
+@app.route(f"{BASE_URL}/<int:customer_id>/activate", methods=["DELETE"])
+def deactivate_a_customer(customer_id):
+    """Activate a customer"""
+    app.logger.info("Request to deactivate customer with id: %s', customer_id")
+    check_content_type("application/json")
+
+    customer = CustomerModel.find(customer_id)
+    if not customer:
+        abort(status.HTTP_404_NOT_FOUND, f"Customer with id '{customer_id}' was not found.")
+
+    customer.deserialize(request.get_json())
+    customer.customer_id = customer_id
+    customer.is_active = False
     customer.update()
 
     app.logger.info("Customer with ID [%s] updated.", customer.customer_id)

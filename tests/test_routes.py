@@ -370,6 +370,21 @@ class TestCustomersService(unittest.TestCase):
             customer.deserialize(customer_json)
             self.assertEqual(customer.nickname, customers[0].nickname)
 
+    def test_get_customer_list_by_email(self):
+        """It should get customer list by email"""
+        customers = CustomerFactory.create_batch(3)
+        for test_customer in customers:
+            logging.debug("Test Customer: %s", test_customer.serialize())
+            response = self.client.post(BASE_URL, json=test_customer.serialize())
+            self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+
+        response = self.client.get(f"{BASE_URL}?email={customers[0].email}")
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        for customer_json in response.get_json():
+            customer = CustomerModel()
+            customer.deserialize(customer_json)
+            self.assertEqual(customer.email, customers[0].email)
+
     ######################################################################
     #  T E S T   S A D   P A T H S
     ######################################################################

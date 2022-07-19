@@ -547,6 +547,6 @@ class TestCustomersService(unittest.TestCase):
             response = self.client.post(BASE_URL, json=test_customer.serialize())
             self.assertEqual(response.status_code, status.HTTP_201_CREATED)
 
-        response = self.client.get(f"{BASE_URL}?birthday={customers[0].birthday}")
+        response = self.client.get(f"{BASE_URL}?birthday=9999-09-09")
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.get_json(), [])

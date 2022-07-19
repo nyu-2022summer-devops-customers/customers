@@ -52,7 +52,8 @@ def index():
             delete_an_address_of_a_customer=f"DELETE {BASE_URL}/<int:customer_id>/addresses/<int:address_id>",
             get_customer_list_by_nickname=f"GET {BASE_URL}?nickname=<string:nickname>",
             get_customer_list_by_email=f"GET {BASE_URL}?nickname=<string:email>",
-            get_customer_list_by_name=f"GET {BASE_URL}?firstname=<string:firstname>&lastname=<string:lastname>"
+            get_customer_list_by_name=f"GET {BASE_URL}?firstname=<string:firstname>&lastname=<string:lastname>",
+            get_customer_list_by_birthday=f"GET {BASE_URL}?birthday=<string:birthday>"
         ),
         status.HTTP_200_OK
     )
@@ -178,16 +179,32 @@ def list_customers():  # noqa: C901
             res.append(customer.serialize())
         return jsonify(res), status.HTTP_200_OK
 
+    def list_all_customers_by_birthday(birthday):
+        """
+        Retrieve a Customer list by birthday
+        """
+        app.logger.info("Request for customer with birthday: %s %s", birthday)
+        customers = CustomerModel.find_by_birthday(birthday)
+        if customers.count() == 0:
+            abort(status.HTTP_404_NOT_FOUND, f"Customer with birthday '{birthday}' was not found.")
+        res = []
+        for customer in customers:
+            res.append(customer.serialize())
+        return jsonify(res), status.HTTP_200_OK
+
     args = request.args
     nickname = args.get("nickname")
     email = args.get("email")
     firstname = args.get('firstname')
     lastname = args.get('lastname')
+    birthday = args.get('birthday')
 
     if args.get('nickname'):
         return list_all_customers_by_nickname(nickname=nickname)
     elif args.get('email'):
         return list_all_customers_by_email(email=email)
+    elif args.get('birthday'):
+        return list_all_customers_by_birthday(birthday=birthday)
     elif firstname and lastname:
         return list_all_customers_by_name(firstname, lastname)
     else:

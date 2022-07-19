@@ -195,6 +195,12 @@ class CustomerModel(db.Model):
         logger.info("Processing name query for %s %s  ...", firstname, lastname)
         return cls.query.filter(cls.first_name == firstname and cls.last_name == lastname)
 
+    @classmethod
+    def find_by_birthday(cls, birthday):
+        """Returns all Customers by given birthday"""
+        logger.info("Processing birthday query for %s  ...", birthday)
+        return cls.query.filter(cls.birthday == birthday)
+
 
 class AddressModel(db.Model):
     """

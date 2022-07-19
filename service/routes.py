@@ -229,9 +229,9 @@ def activate_a_customers(customer_id):
 ######################################################################
 # DEACTIVATE A CUSTOMER
 ######################################################################
-@app.route(f"{BASE_URL}/<int:customer_id>/activate", methods=["DELETE"])
+@app.route(f"{BASE_URL}/<int:customer_id>/deactivate", methods=["DELETE"])
 def deactivate_a_customer(customer_id):
-    """Activate a customer"""
+    """Deactivate a customer"""
     app.logger.info("Request to deactivate customer with id: %s', customer_id")
     # check_content_type("application/json")
 

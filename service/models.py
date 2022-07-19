@@ -122,10 +122,11 @@ class CustomerModel(db.Model):
             self.gender = getattr(Gender, data["gender"])
             self.birthday = date.fromisoformat(data["birthday"])
             addresses_list = data.get("addresses")
-            for json_address in addresses_list:
-                address = AddressModel()
-                address.deserialize(json_address)
-                self.addresses.append(address)
+            if addresses_list is not None:
+                for json_address in addresses_list:
+                    address = AddressModel()
+                    address.deserialize(json_address)
+                    self.addresses.append(address)
             self.is_active = data["is_active"]
         except AttributeError as error:
             raise DataValidationError(

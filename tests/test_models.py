@@ -272,7 +272,7 @@ class TestCustomersModel(unittest.TestCase):
         self.assertRaises(DataValidationError, customer.deserialize, {})
 
     def test_find_by_email(self):
-        """ Find a Customer by Email ID """
+        """It should return a customer list found by email"""
         customers = CustomerFactory.create_batch(3)
         for customer in customers:
             customer.create()
@@ -280,6 +280,14 @@ class TestCustomersModel(unittest.TestCase):
         self.assertIsNot(customer_list.count(), 0)
         for customer in customer_list:
             self.assertEqual(customer.email, customers[0].email)
+
+    def test_find_by_non_existing_email(self):
+        """It should return an empty customer list found by non-existing email"""
+        customers = CustomerFactory.create_batch(3)
+        for customer in customers:
+            customer.create()
+        customer_list = CustomerModel.find_by_email("not-exist@nyu.edu")
+        self.assertEqual(customer_list.count(), 0)
 
     def test_find_customer_by_nickname(self):
         """It should return a customer list found by nickname"""
@@ -290,6 +298,14 @@ class TestCustomersModel(unittest.TestCase):
         self.assertIsNot(customer_list.count(), 0)
         for customer in customer_list:
             self.assertEqual(customer.nickname, customers[0].nickname)
+    
+    def test_find_customer_by_non_existing_nickname(self):
+        """It should return an empty customer list found by nickname"""
+        customers = CustomerFactory.create_batch(3)
+        for customer in customers:
+            customer.create()
+        customer_list = CustomerModel.find_by_nickname("not-exist")
+        self.assertEqual(customer_list.count(), 0)
 
     def test_find_customer_by_name(self):
         """It should return a customer list found by name"""
@@ -303,6 +319,14 @@ class TestCustomersModel(unittest.TestCase):
         for customer in customer_list:
             self.assertEqual(customer.first_name, customers[0].first_name)
             self.assertEqual(customer.last_name, customers[0].last_name)
+    
+    def test_find_customer_by_non_existing_name(self):
+        """It should return an empty customer list found by name"""
+        customers = CustomerFactory.create_batch(3)
+        for customer in customers:
+            customer.create()
+        customer_list = CustomerModel.find_by_name("firstname", "lastname")
+        self.assertEqual(customer_list.count(), 0)
 
     def test_find_customer_by_birthday(self):
         """It should return a customer list found by birthday"""
@@ -314,6 +338,14 @@ class TestCustomersModel(unittest.TestCase):
         self.assertIsNot(customer_list.count(), 0)
         for customer in customer_list:
             self.assertEqual(customer.birthday, customers[0].birthday)
+
+    def test_find_customer_by_non_existing_birthday(self):
+        """It should return an empty customer list found by birthday"""
+        customers = CustomerFactory.create_batch(3)
+        for customer in customers:
+            customer.create()
+        customer_list = CustomerModel.find_by_birthday("9999-09-09")
+        self.assertEqual(customer_list.count(), 0)
 
     def test_find_or_404_not_found(self):
         """ Find or return 404 NOT found """

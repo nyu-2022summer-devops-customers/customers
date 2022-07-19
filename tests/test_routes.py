@@ -266,7 +266,7 @@ class TestCustomersService(unittest.TestCase):
         new_customer = response.get_json()
         logging.debug(new_customer)
         new_customer["is_active"] = False
-        response = self.client.put(f"{BASE_URL}/{new_customer['customer_id']}/activate", json=new_customer)
+        response = self.client.put(f"{BASE_URL}/{new_customer['customer_id']}/activate")
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         updated_customer = response.get_json()
         self.assertEqual(updated_customer["is_active"], True)

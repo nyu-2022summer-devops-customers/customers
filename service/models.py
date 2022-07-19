@@ -113,6 +113,7 @@ class CustomerModel(db.Model):
             data (dict): A dictionary containing the resource data
         """
         try:
+            self.customer_id = data.get("customer_id")
             self.first_name = data["first_name"]
             self.last_name = data["last_name"]
             self.nickname = data["nickname"]
@@ -255,8 +256,8 @@ class AddressModel(db.Model):
             data (dict): A dictionary containing the resource data
         """
         try:
+            self.address_id = data.get("address_id")
             self.address = data["address"]
-            self.address_id = data["address_id"]
             self.customer_id = data["customer_id"]
         except AttributeError as error:
             raise DataValidationError(

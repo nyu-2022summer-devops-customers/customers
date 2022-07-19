@@ -224,6 +224,26 @@ class TestCustomersModel(unittest.TestCase):
         customer = CustomerModel()
         customer.deserialize(data)
         self.assertNotEqual(customer, None)
+        self.assertEqual(customer.customer_id, data["customer_id"])
+        self.assertEqual(customer.first_name, data["first_name"])
+        self.assertEqual(customer.last_name, data["last_name"])
+        self.assertEqual(customer.nickname, data["nickname"])
+        self.assertEqual(customer.email, data["email"])
+        self.assertEqual(customer.gender.name, data["gender"])
+        self.assertEqual(customer.password, data["password"])
+        self.assertEqual(customer.birthday, date.fromisoformat(data["birthday"]))
+        self.assertEqual(customer.is_active, data["is_active"])
+
+    def test_deserialize_a_customer_without_customer_id(self):
+        """It should de-serialize a Customer without customer_id"""
+        test_customer = CustomerFactory()
+        test_address = AddressFactory()
+        test_customer.addresses.append(test_address)
+        data = test_customer.serialize()
+        data.pop("customer_id")
+        customer = CustomerModel()
+        customer.deserialize(data)
+        self.assertNotEqual(customer, None)
         self.assertEqual(customer.customer_id, None)
         self.assertEqual(customer.first_name, data["first_name"])
         self.assertEqual(customer.last_name, data["last_name"])
@@ -596,6 +616,17 @@ class TestAddressModel(unittest.TestCase):
         address.deserialize(data)
         self.assertNotEqual(address, None)
         self.assertEqual(address.address_id, data["address_id"])
+        self.assertEqual(address.customer_id, data["customer_id"])
+        self.assertEqual(address.address, data["address"])
+
+    def test_deserialize_an_address_without_address_id(self):
+        """It should de-serialize an Address without address id"""
+        data = AddressFactory().serialize()
+        data.pop("address_id")
+        address = AddressModel()
+        address.deserialize(data)
+        self.assertNotEqual(address, None)
+        self.assertEqual(address.address_id, None)
         self.assertEqual(address.customer_id, data["customer_id"])
         self.assertEqual(address.address, data["address"])
 

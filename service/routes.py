@@ -146,8 +146,6 @@ def list_customers():  # noqa: C901
         """
         app.logger.info("Request for customer with nickname: %s", nickname)
         customers = CustomerModel.find_by_nickname(nickname=nickname)
-        if customers.count() == 0:
-            abort(status.HTTP_404_NOT_FOUND, f"Customer with nickname '{nickname}' was not found.")
         res = []
         for customer in customers:
             res.append(customer.serialize())
@@ -159,8 +157,6 @@ def list_customers():  # noqa: C901
         """
         app.logger.info("Request for customer with email: %s", email)
         customers = CustomerModel.find_by_email(email=email)
-        if customers.count() == 0:
-            abort(status.HTTP_404_NOT_FOUND, f"Customer with email '{email}' was not found.")
         res = []
         for customer in customers:
             res.append(customer.serialize())
@@ -172,8 +168,6 @@ def list_customers():  # noqa: C901
         """
         app.logger.info("Request for customer with name: %s %s", firstname, lastname)
         customers = CustomerModel.find_by_name(firstname, lastname)
-        if customers.count() == 0:
-            abort(status.HTTP_404_NOT_FOUND, f"Customer with name '{firstname, lastname}' was not found.")
         res = []
         for customer in customers:
             res.append(customer.serialize())
@@ -185,8 +179,6 @@ def list_customers():  # noqa: C901
         """
         app.logger.info("Request for customer with birthday: %s %s", birthday)
         customers = CustomerModel.find_by_birthday(birthday)
-        if customers.count() == 0:
-            abort(status.HTTP_404_NOT_FOUND, f"Customer with birthday '{birthday}' was not found.")
         res = []
         for customer in customers:
             res.append(customer.serialize())

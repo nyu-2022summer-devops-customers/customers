@@ -502,3 +502,51 @@ class TestCustomersService(unittest.TestCase):
             json=test_address.serialize()
         )
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+
+    def test_get_customer_list_by_non_existing_nickname(self):
+        """It should get an empty customer list by non-existing nickname"""
+        customers = CustomerFactory.create_batch(3)
+        for test_customer in customers:
+            logging.debug("Test Customer: %s", test_customer.serialize())
+            response = self.client.post(BASE_URL, json=test_customer.serialize())
+            self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+
+        response = self.client.get(f"{BASE_URL}?nickname=not-exist")
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.get_json(), [])
+
+    def test_get_customer_list_by_non_existing_email(self):
+        """It should get an empty customer list by non-existing email"""
+        customers = CustomerFactory.create_batch(3)
+        for test_customer in customers:
+            logging.debug("Test Customer: %s", test_customer.serialize())
+            response = self.client.post(BASE_URL, json=test_customer.serialize())
+            self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+
+        response = self.client.get(f"{BASE_URL}?email=not-exist@nyu.edu")
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.get_json(), [])
+
+    def test_get_customer_list_by_non_existing_name(self):
+        """It should get an empty customer list by non-existing name"""
+        customers = CustomerFactory.create_batch(3)
+        for test_customer in customers:
+            logging.debug("Test Customer: %s", test_customer.serialize())
+            response = self.client.post(BASE_URL, json=test_customer.serialize())
+            self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+
+        response = self.client.get(f"{BASE_URL}?firstname=not&lastname=exist")
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.get_json(), [])
+
+    def test_get_customer_list_by_non_existing_birthday(self):
+        """It should get an empty customer list by non-existing birthday"""
+        customers = CustomerFactory.create_batch(3)
+        for test_customer in customers:
+            logging.debug("Test Customer: %s", test_customer.serialize())
+            response = self.client.post(BASE_URL, json=test_customer.serialize())
+            self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+
+        response = self.client.get(f"{BASE_URL}?birthday=9999-09-09")
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.get_json(), [])

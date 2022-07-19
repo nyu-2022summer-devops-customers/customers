@@ -298,7 +298,7 @@ class TestCustomersModel(unittest.TestCase):
         self.assertIsNot(customer_list.count(), 0)
         for customer in customer_list:
             self.assertEqual(customer.nickname, customers[0].nickname)
-    
+
     def test_find_customer_by_non_existing_nickname(self):
         """It should return an empty customer list found by nickname"""
         customers = CustomerFactory.create_batch(3)
@@ -319,7 +319,7 @@ class TestCustomersModel(unittest.TestCase):
         for customer in customer_list:
             self.assertEqual(customer.first_name, customers[0].first_name)
             self.assertEqual(customer.last_name, customers[0].last_name)
-    
+
     def test_find_customer_by_non_existing_name(self):
         """It should return an empty customer list found by name"""
         customers = CustomerFactory.create_batch(3)

@@ -48,6 +48,12 @@ Created for NYU Devops project, Summer 2022. Microservices built for handling cu
 |`POST` | `/customers/{customer_id}/addresses` | Creates a new Address record in the database |{'customer_id': string, 'address_id': integer, 'address': string}| Address Object
 |`PUT` | `/customers/{customer_id}/addresses/{address_id}` | Updates/Modify an Address record in the database |'customer_id': string, 'address_id': integer, 'address': string|AddressModel Object
 |`DELETE` | `/customers/{customer_id}` | Delete the Address with the given address_id number |'customer_id': string|204 Status Code
+|`GET`|`/customers?birthday=<string:birthday>`|List customers by birthday|'birthday': string|200 Status Code|
+|`GET`|`/customers?nickname=<string:email>`|List customers by email|'email': string|200 Status Code|
+|`GET`|`/customers?firstname=<string:firstname>&lastname=<string:lastname>`|List customers by their name|'firstname': string, 'lastname': string|200 Status Code|
+|`GET`|`/customers?nickname=<string:nickname>`|List customers by nickname|'nickname': string|200 Status Code|
+|`PUT`|`/customers/<int:customer_id>/activate`|Active a customer|--|204 Status Code|
+|`DELETE`|`/customers/<int:customer_id>/deactivate`|Deactive a customer|--|204 Status Code|
 
 ## Prerequisite Software Installation
 

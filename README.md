@@ -40,7 +40,7 @@ Created for NYU Devops project, Summer 2022. Microservices built for handling cu
 |`GET` | `/` | Get information about the customer service  |None|Json
 | `GET` | `/customers/{customer_id}` | Get customer by Customer_ID |'customer_id': string|CustomerModel Object
 | `GET` | `/customers` | Returns a list of all the Customers |None|CustomerModel Object
-| `POST` | `/customers` | Creates a new Customer record in the database |{'customer_id': string, 'first_name': string, 'last_name': string, 'nickname': string, 'email': string, 'gender': 'FEMALE' or 'MALE' or'UNKNOWN', 'birthday': string, 'password': string}|CustomerModel Object
+| `POST` | `/customers` | Creates a new Customer record in the database |{'first_name': string, 'last_name': string, 'nickname': string, 'email': string, 'gender': 'FEMALE' or 'MALE' or'UNKNOWN', 'birthday': string, 'password': string, 'is_active': boolean}|CustomerModel Object
 | `PUT` | `/customers/{customer_id}` | Updates/Modify a Customer record in the database |'customer_id': string, 'first_name': string, 'last_name': string, 'nickname': string, 'email': string, 'gender': 'FEMALE' or 'MALE' or'UNKNOWN', 'birthday': string, 'password': string|CustomerModel Object
 | `DELETE` | `/customers/{customer_id}` | Delete the Customer with the given id number |'customer_id': string|204 Status Code
 |`GET` | `/customers/{customer_id}/addresses` | Returns a list of all Addresses of a Customer |'customer_id': string, 'address_id': integer|Address Object

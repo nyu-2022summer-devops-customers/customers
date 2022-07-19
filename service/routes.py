@@ -232,14 +232,12 @@ def activate_a_customers(customer_id):
 def deactivate_a_customer(customer_id):
     """Activate a customer"""
     app.logger.info("Request to deactivate customer with id: %s', customer_id")
-    check_content_type("application/json")
+    # check_content_type("application/json")
 
     customer = CustomerModel.find(customer_id)
     if not customer:
         abort(status.HTTP_404_NOT_FOUND, f"Customer with id '{customer_id}' was not found.")
 
-    customer.deserialize(request.get_json())
-    customer.customer_id = customer_id
     customer.is_active = False
     customer.update()
 

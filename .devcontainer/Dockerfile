@@ -1,3 +1,7 @@
+
+# This image has selenium and chrome driver already installed
+FROM rofrano/pipeline-selenium:latest
+
 # Image for a Python 3 development environment
 FROM python:3.9-slim
 

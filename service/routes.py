@@ -29,34 +29,36 @@ def abort_when_customer_not_exist(customer_id):
 @app.route("/")
 def index():
     """ Root URL response """
+    return app.send_static_file("index.html")
+
     # return (
     #     "Reminder: return some useful information in json format about the service here",
     #     status.HTTP_200_OK,
     # )
-    return (
-        jsonify(
-            title="Customer REST Service",
-            description="This is the customers service",
-            version="1.0.0",
-            list_customers=f"GET {BASE_URL}",
-            create_customers=f"POST {BASE_URL}",
-            get_a_customer=f"GET {BASE_URL}/<int:customer_id>",
-            update_a_customer=f"PUT {BASE_URL}/<int:customer_id>",
-            delete_a_customer=f"DELETE {BASE_URL}/<int:customer_id>",
-            activate_a_customer=f"PUT {BASE_URL}/<int:customer_id>/activate",
-            deactivate_a_customer=f"DELETE {BASE_URL}/<int:customer_id>/deactivate",
-            create_address=f"POST {BASE_URL}/<int:customer_id>/addresses",
-            get_an_address_of_a_customer=f"GET {BASE_URL}/<int:customer_id>/addresses/<int:address_id>",
-            list_addresses=f"GET {BASE_URL}/<int:customer_id>/addresses",
-            update_an_address_of_a_customer=f"PUT {BASE_URL}/<int:customer_id>/addresses/<int:address_id>",
-            delete_an_address_of_a_customer=f"DELETE {BASE_URL}/<int:customer_id>/addresses/<int:address_id>",
-            get_customer_list_by_nickname=f"GET {BASE_URL}?nickname=<string:nickname>",
-            get_customer_list_by_email=f"GET {BASE_URL}?nickname=<string:email>",
-            get_customer_list_by_name=f"GET {BASE_URL}?firstname=<string:firstname>&lastname=<string:lastname>",
-            get_customer_list_by_birthday=f"GET {BASE_URL}?birthday=<string:birthday>"
-        ),
-        status.HTTP_200_OK
-    )
+    #return (
+    #    jsonify(
+    #        title="Customer REST Service",
+    #        description="This is the customers service",
+    #        version="1.0.0",
+    #        list_customers=f"GET {BASE_URL}",
+    #        create_customers=f"POST {BASE_URL}",
+    #        get_a_customer=f"GET {BASE_URL}/<int:customer_id>",
+    #        update_a_customer=f"PUT {BASE_URL}/<int:customer_id>",
+    #        delete_a_customer=f"DELETE {BASE_URL}/<int:customer_id>",
+    #        activate_a_customer=f"PUT {BASE_URL}/<int:customer_id>/activate",
+    #        deactivate_a_customer=f"DELETE {BASE_URL}/<int:customer_id>/deactivate",
+    #        create_address=f"POST {BASE_URL}/<int:customer_id>/addresses",
+    #        get_an_address_of_a_customer=f"GET {BASE_URL}/<int:customer_id>/addresses/<int:address_id>",
+    #        list_addresses=f"GET {BASE_URL}/<int:customer_id>/addresses",
+    #        update_an_address_of_a_customer=f"PUT {BASE_URL}/<int:customer_id>/addresses/<int:address_id>",
+    #        delete_an_address_of_a_customer=f"DELETE {BASE_URL}/<int:customer_id>/addresses/<int:address_id>",
+    #        get_customer_list_by_nickname=f"GET {BASE_URL}?nickname=<string:nickname>",
+    #        get_customer_list_by_email=f"GET {BASE_URL}?nickname=<string:email>",
+    #        get_customer_list_by_name=f"GET {BASE_URL}?firstname=<string:firstname>&lastname=<string:lastname>",
+    #        get_customer_list_by_birthday=f"GET {BASE_URL}?birthday=<string:birthday>"
+    #    ),
+    #    status.HTTP_200_OK
+    #)
 
 
 ######################################################################

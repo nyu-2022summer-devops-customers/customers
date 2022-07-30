@@ -35,7 +35,7 @@ def index():
     #     "Reminder: return some useful information in json format about the service here",
     #     status.HTTP_200_OK,
     # )
-    #return (
+    # return (
     #    jsonify(
     #        title="Customer REST Service",
     #        description="This is the customers service",
@@ -58,7 +58,7 @@ def index():
     #        get_customer_list_by_birthday=f"GET {BASE_URL}?birthday=<string:birthday>"
     #    ),
     #    status.HTTP_200_OK
-    #)
+    # )
 
 
 ######################################################################

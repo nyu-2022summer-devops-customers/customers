@@ -278,4 +278,54 @@ $(function () {
 
     });
 
+    // ****************************************
+    //  F U N C T I O N S   F O R   A D D R E S S E S
+    // ****************************************
+
+
+
+    // ****************************************
+    // Search for a Customer Address
+    // ****************************************
+
+    $("#address-search-btn").click(function () {
+
+        let customer_id = $("#customer_id_2").val();
+
+        $("#flash_message").empty();
+
+        let ajax = $.ajax({
+            type: "GET",
+            url: `/customers/${customer_id}/addresses`,
+            contentType: "application/json",
+            data: ''
+        })
+
+        ajax.done(function(res){
+            $("#address_search_results").empty();
+            let table = '<table class="table table-striped" cellpadding="10">'
+            table += '<thead><tr>'
+            table += '<th class="col-md-2">ID</th>'
+            table += '<th class="col-md-2">Address ID</th>'
+            table += '<th class="col-md-8">Address</th>'
+            table += '</tr></thead><tbody>'
+            let firstAddress = "";
+            for(let i = 0; i < res.length; i++) {
+                let address = res[i];
+                table +=  `<tr id="row_${i}"><td>${address.customer_id}</td><td>${address.address_id}</td><td>${address.address}</td></tr>`;
+                if (i == 0) {
+                    firstAddress = address;
+                }
+            }
+            table += '</tbody></table>';
+            $("#address_search_results").append(table);
+
+            flash_message("Success")
+        });
+
+        ajax.fail(function(res){
+            flash_message(res.responseJSON.message)
+        });
+
+    });
 })

@@ -39,3 +39,11 @@ Scenario: Create a Customer
     And the "Gender" field should be empty
     And the "Birthday" field should be empty
     And the "Is Active" field should be empty
+
+Scenario: List all Customers
+    When I visit the "Home Page"
+    And I press the "Search" button
+    Then I should see the message "Success"
+    And I should see "Karayan" in the results
+    And I should see "Zayne" in the results
+    And I should see "Dominique" in the results

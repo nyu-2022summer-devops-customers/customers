@@ -143,12 +143,73 @@
         </table>
       </div>
 
+    </div> <!-- container -->
+
+    <!-- Address Container -->
+    <div class="container">
+
+      <!-- ADDRESS FORM -->
+      <div class="col-md-12" id="address_form_data">
+        <h3>Create, Retrieve, Update, and Delete a Customer Address:</h3>
+        <div class="well">
+          <div class="form-horizontal">
+            <div class="form-group">
+              <label class="control-label col-sm-2" for="customer_id_2">Customer ID:</label>
+              <div class="col-sm-3">
+                <input type="text" class="form-control" id="customer_id_2" placeholder="Enter Customer ID of Address">
+              </div>
+              <div class="col-sm-3">
+                <input type="text" class="form-control" id="customer_address_id" placeholder="Enter Address ID">
+              </div>
+              <div class="col-sm-4">
+                <!-- <button type="submit" class="btn btn-primary" id="address-retrieve-btn">Retrieve</button> -->
+                <!-- <button type="submit" class="btn btn-danger" id="address-delete-btn">Delete</button> -->
+              </div>
+            </div>
+          </div> <!-- form horizontal -->
+
+          <div class="form-horizontal">
+
+            <!-- Address -->
+            <div class="form-group">
+              <label class="control-label col-sm-2" for="customer_address">Address:</label>
+              <div class="col-sm-10">
+                <input type="text" class="form-control" id="customer_address" placeholder="Enter Address Detail">
+              </div>
+            </div>
+
+            <!-- SUBMIT BUTTONS -->
+            <div class="form-group">
+              <div class="col-sm-offset-2 col-sm-10">
+                <!-- <button type="submit" class="btn btn-primary" id="address-search-btn">Search</button> -->
+                <!-- <button type="submit" class="btn btn-primary" id="address-clear-btn">Clear</button> -->
+                <!-- <button type="submit" class="btn btn-success" id="address-create-btn">Create</button> -->
+                <!-- <button type="submit" class="btn btn-warning" id="address-update-btn">Update</button> -->
+              </div>
+            </div>
+          </div> <!-- form horizontal -->
+        </div> <!-- end well -->
+      </div> <!-- end Form -->
+
+      <!-- Search Results -->
+      <div class="table-responsive col-md-12" id="search_results">
+        <table class="table table-striped">
+          <thead>
+          <tr>
+            <th class="col-md-2">ID</th>
+            <th class="col-md-2">Address ID</th>
+            <th class="col-md-8">Address</th>
+          </tr>
+          </thead>
+        </table>
+      </div>
+
       <footer>
         <br><br>
         <p>&copy; NYU DevOps Company 2022</p>
       </footer>
 
-    </div> <!-- container -->
+    </div> <!-- Address Container -->
 
   <script type="text/javascript" src = "static/js/jquery-3.6.0.min.js"></script>
   <script type="text/javascript" src = "static/js/bootstrap.min.js"></script>

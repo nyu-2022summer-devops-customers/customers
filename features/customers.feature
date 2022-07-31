@@ -10,6 +10,11 @@ Background:
         | Karayan    | Calarook     | K        | xxxx     | em123@nyu.edu | MALE    | 2021-07-30 | True      |
         | Zayne      | Wood         | Z        | xxxx     | em456@nyu.edu | FEMALE  | 1999-04-30 | True      |
         | Dominique  | Caligari     | D        | xxxx     | em789@nyu.edu | MALE    | 1941-07-22 | False     |
+    Given the following addresses
+        | address                                    |
+        | 251 Mercer St, New York, NY 10012          |
+        | 70 Washington Square S, New York, NY 10012 |
+        | 60 5th Ave, New York, NY 10011             |
 
 Scenario: The server is running
     When I visit the "Home Page"

@@ -20,3 +20,8 @@ test: ## Run the unit tests
 run: ## Run the service
 	$(info Starting service...)
 	honcho start
+
+team-login: ## Login the IBM Cloud
+	$(info Login the IBM Cloud...)
+	ibmcloud login -a cloud.ibm.com -g Default -r us-south --apikey @~/.bluemix/apikey-team.json
+	ibmcloud ks cluster config --cluster devops-customers

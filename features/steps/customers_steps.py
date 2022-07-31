@@ -50,7 +50,7 @@ def step_impl(context):
         context.resp = requests.delete(f"{rest_endpoint}/{customer['customer_id']}")
         expect(context.resp.status_code).to_equal(204)
 
-    # load the database with new pets
+    # load the database with new customers
     for row in context.table:
         payload = {
             "first_name": row['first_name'],
@@ -61,6 +61,27 @@ def step_impl(context):
             "gender": row['gender'],
             "birthday": row['birthday'],
             "is_active": row['is_active'] in ['True', 'true', '1']
+        }
+        context.resp = requests.post(rest_endpoint, json=payload)
+        expect(context.resp.status_code).to_equal(201)
+
+@given('the following addresses')
+def step_impl(context):
+    """ Append addresses to newly created customers """
+    # List all of the customers and get their id
+    rest_endpoint = f"{context.BASE_URL}/customers"
+    context.resp = requests.get(rest_endpoint)
+    expect(context.resp.status_code).to_equal(200)
+    customer_ids = []
+    for customer in context.resp.json():
+        customer_ids.append(customer['customer_id'])
+    
+    rest_endpoint = rest_endpoint + f"/{customer_ids[0]}/addresses"
+    # load the database with new addresses that add to the first customer in the database
+    for row in context.table:
+        payload = {
+            "customer_id": customer_ids[0],
+            "address": row['address']
         }
         context.resp = requests.post(rest_endpoint, json=payload)
         expect(context.resp.status_code).to_equal(201)

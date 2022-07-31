@@ -22,7 +22,7 @@ spec:
         image: us.icr.io/devops_customers/customers:1.0
         imagePullPolicy: Always
         ports:
-        - containerPort: 8080
+        - containerPort: 8000
           protocol: TCP
         env:
           - name: DATABASE_URI
@@ -35,7 +35,7 @@ spec:
           periodSeconds: 30
           httpGet:
             path: /health
-            port: 8080
+            port: 8000
         resources:
           limits:
             cpu: "0.20"

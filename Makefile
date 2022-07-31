@@ -52,15 +52,43 @@ run: ## Run the service
 .PHONY: deploy
 deploy: ## Deploy the service on local Kubernetes
 	$(info Deploying service locally...)
-	kubectl apply -f deploy/
+	kubectl -n default apply -f deploy/
+
+.PHONY: undeploy
+undeploy: ## Deploy the service on local Kubernetes
+	$(info Deploying service locally...)
+	kubectl delete pods,services,replicasets,deployments,statefulsets --all -n default
 
 .PHONY: team-login
 team-login: ## Login the IBM Cloud
 	$(info Login the IBM Cloud...)
-	ibmcloud login -a cloud.ibm.com -g Default -r us-south --apikey @~/.bluemix/apikey-team.json
+	ibmcloud login -a cloud.ibm.com -g Default -r us-south --apikey @~/apikey-team.json
 	ibmcloud cr login
 	ibmcloud ks cluster config --cluster devops-customers
 	kubectl cluster-info
+
+.PHONY: dev-deploy
+dev-deploy:
+	$(info Deploy to dev ns)
+	kubectl -n dev apply -f deploy/
+
+.PHONY: prod-deploy
+prod-deploy:
+	$(info Deploy to dev ns)
+	kubectl -n prod apply -f deploy/
+
+.PHONY: dev-undeploy
+dev-undeploy:
+	$(info Delete all in dev ns)
+	kubectl delete pods,services,replicasets,deployments,statefulsets --all -n dev
+
+
+.PHONY: prod-undeploy
+prod-undeploy:
+	$(info Delete all in prod ns)
+	kubectl delete pods,services,replicasets,deployments,statefulsets --all -n prod
+
+
 
 ############################################################
 # COMMANDS FOR BUILDING THE IMAGE

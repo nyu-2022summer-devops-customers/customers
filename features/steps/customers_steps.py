@@ -14,6 +14,8 @@
 # limitations under the License.
 ######################################################################
 
+# pylint: disable=function-redefined, missing-function-docstring
+# flake8: noqa
 """
 Pet Steps
 

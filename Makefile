@@ -24,4 +24,5 @@ run: ## Run the service
 team-login: ## Login the IBM Cloud
 	$(info Login the IBM Cloud...)
 	ibmcloud login -a cloud.ibm.com -g Default -r us-south --apikey @~/.bluemix/apikey-team.json
+	ibmcloud cr login
 	ibmcloud ks cluster config --cluster devops-customers

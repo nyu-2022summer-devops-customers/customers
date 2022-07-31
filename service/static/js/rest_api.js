@@ -135,31 +135,31 @@ $(function () {
     // Retrieve a Customer
     // ****************************************
 
-    // $("#retrieve-btn").click(function () {
+    $("#retrieve-btn").click(function () {
 
-    //     let customer_id = $("#customer_id").val();
+        let customer_id = $("#customer_id").val();
 
-    //     $("#flash_message").empty();
+        $("#flash_message").empty();
 
-    //     let ajax = $.ajax({
-    //         type: "GET",
-    //         url: `/customers/${customer_id}`,
-    //         contentType: "application/json",
-    //         data: ''
-    //     })
+        let ajax = $.ajax({
+            type: "GET",
+            url: `/customers/${customer_id}`,
+            contentType: "application/json",
+            data: ''
+        })
 
-    //     ajax.done(function(res){
-    //         //alert(res.toSource())
-    //         update_form_data(res)
-    //         flash_message("Success")
-    //     });
+        ajax.done(function(res){
+            //alert(res.toSource())
+            update_form_data(res)
+            flash_message("Success")
+        });
 
-    //     ajax.fail(function(res){
-    //         clear_form_data()
-    //         flash_message(res.responseJSON.message)
-    //     });
+        ajax.fail(function(res){
+            clear_form_data()
+            flash_message(res.responseJSON.message)
+        });
 
-    // });
+    });
 
     // ****************************************
     // Delete a Customer

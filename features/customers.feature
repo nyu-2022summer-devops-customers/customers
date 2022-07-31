@@ -16,13 +16,13 @@ Scenario: The server is running
     Then I should see "Customers RESTful API Service" in the title
     And I should not see "404 Not Found"
 
-Scenario: Create a Customer
+Scenario: Create and Retrieve a Customer
     When I visit the "Home Page"
     And I set the "First Name" to "Gralrur"
     And I set the "Last Name" to "Lord Of Fire"
     And I set the "Nickname" to "Gral"
     And I set the "Password" to "xxxx"
-    And I set the "Email" to "email@nyu.edu"
+    And I set the "Email" to "em730@nyu.edu"
     And I select "Male" in the "Gender" dropdown
     And I set the "Birthday" to "09-01-1939"
     And I select "True" in the "Is Active" dropdown
@@ -39,6 +39,17 @@ Scenario: Create a Customer
     And the "Gender" field should be empty
     And the "Birthday" field should be empty
     And the "Is Active" field should be empty
+    When I paste the "Id" field
+    And I press the "Retrieve" button
+    Then I should see the message "Success"
+    And I should see "Gralrur" in the "First Name" field
+    And I should see "Lord Of Fire" in the "Last Name" field
+    And I should see "Gral" in the "Nickname" field
+    And I should see "xxxx" in the "password" field
+    And I should see "em730@nyu.edu" in the "Email" field
+    And I should see "Male" in the "Gender" dropdown
+    And I should see "1939-09-01" in the "Birthday" field
+    And I should see "True" in the "Is Active" dropdown
 
 Scenario: List all Customers
     When I visit the "Home Page"

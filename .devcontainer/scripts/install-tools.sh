@@ -10,6 +10,13 @@ echo "**********************************************************************"
 curl -s "https://raw.githubusercontent.com/rancher/k3d/main/install.sh" | sudo bash
 
 echo "**********************************************************************"
+echo "Install Kustomize CLI..."
+echo "**********************************************************************"
+curl -s "https://raw.githubusercontent.com/kubernetes-sigs/kustomize/master/hack/install_kustomize.sh" | bash
+sudo mv kustomize /usr/local/bin/kustomize
+echo "Creating ku alias for kustomize..."
+
+echo "**********************************************************************"
 echo "Installing IBM Cloud CLI..."
 echo "**********************************************************************"
 curl -fsSL https://clis.cloud.ibm.com/install/linux | sh
@@ -19,6 +26,7 @@ ibmcloud plugin install container-service -r 'IBM Cloud'
 ibmcloud plugin install container-registry -r 'IBM Cloud'
 
 echo "Creating aliases for new tools..."
+echo "alias ku='/usr/local/bin/kustomize'" >> $HOME/.bash_aliases
 echo "alias ic='/usr/local/bin/ibmcloud'" >> $HOME/.bash_aliases
 echo "alias kc='/usr/local/bin/kubectl'" >> $HOME/.bash_aliases
 echo "alias ku='/usr/local/bin/kustomize'" >> $HOME/.bash_aliases

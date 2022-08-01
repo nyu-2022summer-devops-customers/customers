@@ -1,5 +1,4 @@
-# This image has selenium and chrome driver already installed
-FROM rofrano/pipeline-selenium:latest
+FROM python:3.9-slim
 
 # Added libraries for PostgreSQL before pip install
 RUN apt-get update && apt-get install -y gcc libpq-dev

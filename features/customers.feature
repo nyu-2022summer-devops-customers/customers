@@ -56,6 +56,27 @@ Scenario: Create and Retrieve a Customer
     And I should see "1939-09-01" in the "Birthday" field
     And I should see "True" in the "Is Active" dropdown
 
+Scenario: Update a Customer
+    When I visit the "Home Page"
+    And I set the "First Name" to "Karayan"
+    And I press the "search" button
+    Then I should see "Karayan" in the "First Name" field
+    And I should see "Calarook" in the "Last Name" field
+    And I should see "K" in the "Nickname" field
+    And I should see "xxxx" in the "password" field
+    And I should see "em123@nyu.edu" in the "email" field
+    And I should see "Male" in the "Gender" dropdown
+    And I should see "2021-07-30" in the "Birthday" field
+    And I should see "True" in the "Is Active" dropdown
+    When I change "Nickname" to "Kara"
+    And I press the "Update" button
+    Then I should see the message "Success"
+    When I copy the "Id" field
+    And I press the "Clear" button
+    And I paste the "Id" field
+    And I press the "Retrieve" button
+    Then I should see "Kara" in the "Nickname" field
+
 Scenario: List all Customers
     When I visit the "Home Page"
     And I press the "Search" button
@@ -71,7 +92,7 @@ Scenario: Delete a Customer
     And I press the "Clear" button
     And I paste the "Id" field
     And I press the "Delete" button
-    Then I should see the message "Success"
+    Then I should see the message "Customer has been Deleted!"
 
 Scenario: List all Addresses of a Customer
     When I visit the "Home Page"

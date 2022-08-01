@@ -61,10 +61,10 @@ undeploy: ## Deploy the service on local Kubernetes
 
 .PHONY: team-login
 team-login: ## Login the IBM Cloud
-	$(info Login the IBM Cloud...)
+	$(info Login the IBM Cloud cluster $(CLUSTER)...)
 	ibmcloud login -a cloud.ibm.com -g Default -r us-south --apikey @~/apikey-team.json
 	ibmcloud cr login
-	ibmcloud ks cluster config --cluster devops-customers
+	ibmcloud ks cluster config --cluster $(CLUSTER)
 	kubectl cluster-info
 
 .PHONY: dev-deploy

@@ -7,7 +7,7 @@ Background:
     Given the server is started
     Given the following customers
         | first_name | last_name    | nickname | password | email         | gender  | birthday   | is_active |
-        | Karayan    | Karayan     | K        | xxxx     | em123@nyu.edu | MALE    | 2021-07-30 | True      |
+        | Karayan    | Calarook     | K        | xxxx     | em123@nyu.edu | MALE    | 2021-07-30 | True      |
         | Zayne      | Wood         | Z        | xxxx     | em456@nyu.edu | FEMALE  | 1999-04-30 | True      |
         | Dominique  | Caligari     | D        | xxxx     | em789@nyu.edu | MALE    | 1941-07-22 | False     |
     Given the following addresses
@@ -76,11 +76,6 @@ Scenario: Update a Customer
     And I paste the "Id" field
     And I press the "Retrieve" button
     Then I should see "Kara" in the "Nickname" field
-    When I press the "Clear" button
-    And I set the "firstname" to "Karayan"
-    And I press the "Search" button
-    Then I should see "Kara" in the "Nickname" field
-    And I should not see "K" in the results
 
 Scenario: List all Customers
     When I visit the "Home Page"
@@ -97,7 +92,7 @@ Scenario: Delete a Customer
     And I press the "Clear" button
     And I paste the "Id" field
     And I press the "Delete" button
-    Then I should see the message "Success"
+    Then I should see the message "Customer has been Deleted!"
 
 Scenario: List all Addresses of a Customer
     When I visit the "Home Page"

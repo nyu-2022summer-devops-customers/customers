@@ -21,10 +21,11 @@ BASE_URL = "/customers"
 CONTENT_TYPE_JSON = "application/json"
 
 
-
 ######################################################################
 #  T E S T   C U S T O M E R S   S E R V I C E
 ######################################################################
+
+
 class TestCustomersService(unittest.TestCase):
     """ REST API Server Tests """
 

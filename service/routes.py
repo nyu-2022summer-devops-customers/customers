@@ -22,10 +22,21 @@ def abort_when_customer_not_exist(customer_id):
     if customer is None:
         abort(status.HTTP_400_BAD_REQUEST, f"Addresses with id '{customer_id}' was not found.")
 
+############################################################
+# Health Endpoint
+############################################################
+
+
+@app.route("/health")
+def health():
+    """Health Status"""
+    return jsonify(dict(status="OK")), status.HTTP_200_OK
 
 ######################################################################
 # GET INDEX
 ######################################################################
+
+
 @app.route("/")
 def index():
     """ Root URL response """

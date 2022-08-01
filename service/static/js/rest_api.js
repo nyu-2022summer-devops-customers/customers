@@ -90,46 +90,46 @@ $(function () {
     // Update a Customer
     // ****************************************
 
-    // $("#update-btn").click(function () {
+    $("#update-btn").click(function (){
+        let customer_id = $("#customer_id").val();
+        let first_name = $("#customer_first_name").val();
+        let last_name = $("#customer_last_name").val();
+        let nickname = $("#customer_nickname").val();
+        let password = $("#customer_password").val();
+        let email = $("#customer_email").val();
+        let gender = $("#customer_gender").val();
+        let birthday = $("#customer_birthday").val();
+        let is_active = $("#customer_is_active").val() == "true";
 
-    //     let customer_id = $("#customer_id").val();
-    //     let first_name = $("#first_name").val();
-    //     let last_name = $("#last_name").val();
-    //     let nickname = $("#nickname").val();
-    //     let email = $("#email").val();
-    //     let is_active = $("#is_active").val() == "true";
-    //     let gender = $("#pet_gender").val();
-    //     let birthday = $("#pet_birthday").val();
+        let data = {
+            "first_name": first_name,
+            "last_name": last_name,
+            "nickname": nickname,
+            "password": password,
+            "email": email,
+            "gender": gender,
+            "birthday": birthday,
+            "is_active": is_active
+        };
 
-    //     let data = {
-    //         "first_name": first_name,
-    //         "last_name": last_name,
-    //         "nickname": nickname,
-    //         "email": email,
-    //         "gender": gender,
-    //         "birthday": birthday,
-    //         "is_active": is_active
-    //     };
+        $("#flash_message").empty();
 
-    //     $("#flash_message").empty();
+        let ajax = $.ajax({
+                type: "PUT",
+                url: `/customers/${customer_id}`,
+                contentType: "application/json",
+                data: JSON.stringify(data),
+        })
+            
+        ajax.done(function(res){
+            update_form_data(res)
+            flash_message("Success")
+        });
 
-    //     let ajax = $.ajax({
-    //             type: "PUT",
-    //             url: `/customers/${customer_id}`,
-    //             contentType: "application/json",
-    //             data: JSON.stringify(data)
-    //         })
-
-    //     ajax.done(function(res){
-    //         update_form_data(res)
-    //         flash_message("Success")
-    //     });
-
-    //     ajax.fail(function(res){
-    //         flash_message(res.responseJSON.message)
-    //     });
-
-    // });
+        ajax.fail(function(res){
+            flash_message(res.responseJSON.message)
+        });
+    });
 
     // ****************************************
     // Retrieve a Customer
@@ -204,7 +204,7 @@ $(function () {
 
     $("#search-btn").click(function () {
 
-        // let first_name = $("#first_name").val();
+        let first_name = $("#first_name").val();
         // let last_name = $("#last_name").val();
         // let nickname = $("#nickname").val();
         // let birthday = $("#birthday").val();
@@ -212,9 +212,9 @@ $(function () {
 
         let queryString = ""
 
-        // if (first_name && last_name) {
-        //     queryString += 'first name=' + first_name + 'last name=' + last_name
-        // }
+        if (first_name) {
+             queryString += 'first name=' + first_name 
+        }
         // if (nickname) {
         //     queryString += 'nick name=' + nickname
         // }

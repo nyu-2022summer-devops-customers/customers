@@ -17,7 +17,7 @@
 # pylint: disable=function-redefined, missing-function-docstring
 # flake8: noqa
 """
-Pet Steps
+Customers Steps
 
 Steps file for customers.feature
 

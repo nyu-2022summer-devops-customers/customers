@@ -64,6 +64,15 @@ Scenario: List all Customers
     And I should see "Zayne" in the results
     And I should see "Dominique" in the results
 
+Scenario: Delete a Customer
+    When I visit the "Home Page"
+    And I press the "Search" button
+    And I copy the "Id" field
+    And I press the "Clear" button
+    And I paste the "Id" field
+    And I press the "Delete" button
+    Then I should see the message "Success"
+
 Scenario: List all Addresses of a Customer
     When I visit the "Home Page"
     And I press the "Search" button

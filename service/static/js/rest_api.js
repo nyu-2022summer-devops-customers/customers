@@ -165,28 +165,29 @@ $(function () {
     // Delete a Customer
     // ****************************************
 
-    // $("#delete-btn").click(function () {
+     $("#delete-btn").click(function () {
 
-    //     let customer_id = $("#customer_id").val();
+         let customer_id = $("#customer_id").val()
 
-    //     $("#flash_message").empty();
+         $("#flash_message").empty()
 
-    //     let ajax = $.ajax({
-    //         type: "DELETE",
-    //         url: `/customers/${customer_id}`,
-    //         contentType: "application/json",
-    //         data: '',
-    //     })
+         let ajax = $.ajax({
+             type: "DELETE",
+             url: `/customers/${customer_id}`,
+             contentType: "application/json",
+             data: '',
+         })
 
-    //     ajax.done(function(res){
-    //         clear_form_data()
-    //         flash_message("Pet has been Deleted!")
-    //     });
+         ajax.done(function(res){
+             clear_form_data()
+             flash_message("Customer has been Deleted!")
+         });
 
-    //     ajax.fail(function(res){
-    //         flash_message("Server error!")
-    //     });
-    // });
+         ajax.fail(function(res){
+             flash_message("Server error!")
+         });
+
+     });
 
     // ****************************************
     // Clear the form

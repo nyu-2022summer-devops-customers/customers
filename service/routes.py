@@ -81,6 +81,32 @@ def create_customers():
 
     return jsonify(message), status.HTTP_201_CREATED, {"Location": location_url}
 
+######################################################################
+# UPDATE AN ADDRESS OF A CUSTOMER
+######################################################################
+@app.route(f"{BASE_URL}/<int:customer_id>/addresses/<int:address_id>", methods=["PUT"])
+def update_an_address_of_a_customer(customer_id, address_id):
+    """
+    Update an Address of a Customer
+    This endpoint will delete an Address based on the data in the body that is posted
+    """
+    app.logger.info("Update an Address of a Customer")
+    check_content_type("application/json")
+    abort_when_customer_not_exist(customer_id=customer_id)
+    address = AddressModel()
+    address.deserialize(request.get_json())
+    address.update()
+
+    found = AddressModel.find_by_customer_and_address_id(customer_id, address_id)
+    if found.count() == 0:
+        abort(status.HTTP_404_NOT_FOUND, f"Address with id '{address_id}' was not found.")
+
+    address = found[0]
+    address.deserialize(request.get_json())
+    address.update()
+
+    app.logger.info("Address with ID [%s] updated.", address.address_id)
+    return jsonify(address.serialize()), status.HTTP_200_OK
 
 ######################################################################
 # UPDATE A CUSTOMER
@@ -310,7 +336,8 @@ def get_an_address_of_a_customer(customer_id, address_id):
     if found.count() == 0:
         abort(status.HTTP_404_NOT_FOUND, f"Address '{address_id}' with customer id '{customer_id}' was not found.")
     address = found[0]
-    app.logger.info("Address with ID [%s] created.", address.address_id)
+
+    app.logger.info(address.serialize());
 
     return jsonify(address.serialize()), status.HTTP_200_OK
 
@@ -357,32 +384,6 @@ def delete_an_address_of_a_customer(customer_id, address_id):
     return "", status.HTTP_204_NO_CONTENT
 
 
-######################################################################
-# UPDATE AN ADDRESS OF A CUSTOMER
-######################################################################
-@app.route(f"{BASE_URL}/<int:customer_id>/addresses/<int:address_id>", methods=["PUT"])
-def update_an_address_of_a_customer(customer_id, address_id):
-    """
-    Update an Address of a Customer
-    This endpoint will delete an Address based on the data in the body that is posted
-    """
-    app.logger.info("Update an Address of a Customer")
-    check_content_type("application/json")
-    abort_when_customer_not_exist(customer_id=customer_id)
-    address = AddressModel()
-    address.deserialize(request.get_json())
-    address.update()
-
-    found = AddressModel.find_by_customer_and_address_id(customer_id, address_id)
-    if found.count() == 0:
-        abort(status.HTTP_404_NOT_FOUND, f"Address with id '{address_id}' was not found.")
-
-    address = found[0]
-    address.deserialize(request.get_json())
-    address.update()
-
-    app.logger.info("Address with ID [%s] updated.", address.customer_id)
-    return jsonify(address.serialize()), status.HTTP_200_OK
 
 
 ######################################################################

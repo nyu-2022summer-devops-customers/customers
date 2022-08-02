@@ -85,6 +85,15 @@ Scenario: List all Customers
     And I should see "Zayne" in the results
     And I should see "Dominique" in the results
 
+
+Scenario: List all Customers
+    When I visit the "Home Page"
+    And I press the "Search" button
+    Then I should see the message "Success"
+    And I should see "Karayan" in the results
+    And I should see "Zayne" in the results
+    And I should see "Dominique" in the results
+
 Scenario: Delete a Customer
     When I visit the "Home Page"
     And I press the "Search" button
@@ -93,6 +102,7 @@ Scenario: Delete a Customer
     And I paste the "Id" field
     And I press the "Delete" button
     Then I should see the message "Customer has been Deleted!"
+
 
 Scenario: Activate a Customer
     When I visit the "Home Page"
@@ -104,6 +114,7 @@ Scenario: Activate a Customer
     And I press the "Activate" button
     Then I should see the message "Customer activated"
 
+
 Scenario: Deactivate a Customer
     When I visit the "Home Page"
     And I press the "Search" button
@@ -112,6 +123,7 @@ Scenario: Deactivate a Customer
     And I paste the "Id" field
     And I press the "Deactivate" button
     Then I should see the message "Customer deactivated"
+
 
 Scenario: List all Addresses of a Customer
     When I visit the "Home Page"
@@ -125,3 +137,78 @@ Scenario: List all Addresses of a Customer
     And I should see "251 Mercer St, New York, NY 10012" in the address results
     And I should see "70 Washington Square S, New York, NY 10012" in the address results
     And I should see "60 5th Ave, New York, NY 10011" in the address results
+
+Scenario: Clear the address form
+     When I visit the "Home Page"
+    And I press the "Search" button
+    Then I should see the message "Success"
+    And I should see "Karayan" in the results
+    When I copy the "Id" field
+    And I paste the "Id_2" field
+    And I press the "Address-Search" button
+    Then I should see the message "Success"
+    When I press the "address-clear" button
+    Then the "address_id" field should be empty
+    Then the "address" field should be empty
+    Then the "id_2" field should be empty
+ 
+Scenario: Retrieve an Adresses by customer_id and address_id
+    When I visit the "Home Page"
+    And I press the "Search" button
+    Then I should see the message "Success"
+    And I should see "Karayan" in the results
+    When I copy the "id" field
+    And I paste the "id_2" field
+    And I press the "Address-Search" button
+    Then I should see the message "Success"
+    And I should see "251 Mercer St, New York, NY 10012" in the address results
+    And I should see "70 Washington Square S, New York, NY 10012" in the address results
+    And I should see "60 5th Ave, New York, NY 10011" in the address results
+    When I press the "address-retrieve" button
+    Then I should see the message "Success"
+    And I should see "251 Mercer St, New York, NY 10012" in the "address" field
+
+Scenario: Create an Adresses by customer_id 
+    When I visit the "Home Page"
+    And I press the "Search" button
+    Then I should see the message "Success"
+    And I should see "Karayan" in the results
+    When I copy the "id" field
+    And I paste the "id_2" field
+    And I set the "address" to "607 pavonia ave"
+    And I press the "address-create" button
+    # Then I should see the message "Success"
+    When I press the "Address-Search" button
+    Then I should see the message "Success"
+    And I should see "251 Mercer St, New York, NY 10012" in the address results
+    And I should see "70 Washington Square S, New York, NY 10012" in the address results
+    And I should see "60 5th Ave, New York, NY 10011" in the address results
+    And I should see "607 pavonia ave" in the address results
+
+Scenario: Update an Address
+    When I visit the "Home Page"
+    And I press the "Search" button
+    Then I should see the message "Success"
+    And I should see "Karayan" in the results
+    When I copy the "id" field
+    And I paste the "id_2" field
+    And I press the "Address-Search" button
+    Then I should see the message "Success"
+    And I should see "251 Mercer St, New York, NY 10012" in the "address" field
+    When I change "address" to "new address"
+    And I press the "address-update" button
+    Then I should see the message "Success"
+    When I press the "address-search" button
+    Then I should see "new address" in the address results
+
+Scenario: Delete an Address
+    When I visit the "Home Page"
+    And I press the "Search" button
+    Then I should see the message "Success"
+    And I should see "Karayan" in the results
+    When I copy the "id" field
+    And I paste the "id_2" field
+    And I press the "Address-Search" button
+    Then I should see the message "Success"
+    When I press the "Address-Delete" buttoon
+    Then I should see the message "Success"

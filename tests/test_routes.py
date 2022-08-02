@@ -24,6 +24,8 @@ CONTENT_TYPE_JSON = "application/json"
 ######################################################################
 #  T E S T   C U S T O M E R S   S E R V I C E
 ######################################################################
+
+
 class TestCustomersService(unittest.TestCase):
     """ REST API Server Tests """
 
@@ -87,6 +89,13 @@ class TestCustomersService(unittest.TestCase):
     ######################################################################
     #  T E S T   C A S E S
     ######################################################################
+
+    def test_health(self):
+        """Get the health endpoint"""
+        resp = self.client.get("/health")
+        self.assertEqual(resp.status_code, 200)
+        data = resp.get_json()
+        self.assertEqual(data["status"], "OK")
 
     def test_index(self):
         """ It should call the home page """

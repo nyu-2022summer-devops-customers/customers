@@ -104,6 +104,17 @@ Scenario: Delete a Customer
     Then I should see the message "Customer has been Deleted!"
 
 
+Scenario: Activate a Customer
+    When I visit the "Home Page"
+    And I press the "Search" button
+    And I copy the "Id" field
+    And I press the "Clear" button
+    And I paste the "Id" field
+    And I press the "Deactivate" button
+    And I press the "Activate" button
+    Then I should see the message "Customer activated"
+
+
 Scenario: Deactivate a Customer
     When I visit the "Home Page"
     And I press the "Search" button
@@ -111,7 +122,7 @@ Scenario: Deactivate a Customer
     And I press the "Clear" button
     And I paste the "Id" field
     And I press the "Deactivate" button
-    Then I should see "False" in the "Is Active" dropdown
+    Then I should see the message "Customer deactivated"
 
 
 Scenario: List all Addresses of a Customer

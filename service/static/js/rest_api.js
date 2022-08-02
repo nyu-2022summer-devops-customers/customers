@@ -279,6 +279,32 @@ $(function () {
     });
 
     // ****************************************
+    // Activate a Customer
+    // ****************************************
+
+    $('#activate-btn').click(function () {
+        let customer_id = $("#customer_id").val();
+    
+        var ajax = $.ajax({
+          type: 'PUT',
+          url:`/customers/${customer_id}/activate`,
+          contentType: 'application/json',
+          data: '',
+        });
+    
+        ajax.done(function (res) {
+          //alert(res.toSource())
+          update_form_data(res);
+          flash_message('Customer activated');
+        });
+    
+        ajax.fail(function (res) {
+          clear_form_data();
+          flash_message(res.responseJSON.message);
+        });
+      });
+
+    // ****************************************
     // Deactivate a Customer
     // ****************************************
 
@@ -295,7 +321,7 @@ $(function () {
         ajax.done(function (res) {
           //alert(res.toSource())
           update_form_data(res);
-          flash_message('Success');
+          flash_message('Customer deactivated');
         });
     
         ajax.fail(function (res) {

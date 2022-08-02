@@ -19,7 +19,7 @@ spec:
       restartPolicy: Always
       containers:
       - name: customers
-        image: us.icr.io/devops_customers/customers:1.0
+        image: us.icr.io/devops_customers/devops-customers:1.0
         imagePullPolicy: Always
         ports:
         - containerPort: 8000

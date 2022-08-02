@@ -379,7 +379,7 @@ def delete_an_address_of_a_customer(customer_id, address_id):
         address = found[0]
         address.delete()
 
-    app.logger.info(f"Address '{address_id}' with customer id '{customer_id}' delete complete.", address.address_id)
+    app.logger.info(f"Address '{address_id}' with customer id '{customer_id}' delete complete.")
 
     return "", status.HTTP_204_NO_CONTENT
 

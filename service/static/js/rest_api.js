@@ -312,8 +312,6 @@ $(function () {
             }
             table += '</tbody></table>';
             $("#address_search_results").append(table);
-            update_address_form(res);
-            flash_message("Success");
         });
     }
     
@@ -414,8 +412,8 @@ $(function () {
 
         ajax.done(function(res){
             clear_form_data();
-            reload_search_result(customer_id);
-            flash_message("Address has been deleted")
+            // reload_search_result(customer_id);
+            flash_message("Success")
         });
 
         ajax.fail(function(res){
@@ -424,7 +422,7 @@ $(function () {
     });
 
     // ****************************************
-    // Create a Customer Address
+    // Create an Address
     // ****************************************
     $("#address-create-btn").click(function () {
         let customer_id = $("#customer_id_2").val();
@@ -433,6 +431,7 @@ $(function () {
             "customer_id":customer_id,
             "address":address
         }
+
         $("#flash_message").empty();
         
         let ajax = $.ajax({
@@ -443,9 +442,8 @@ $(function () {
         })
 
         ajax.done(function(res){
-            //alert(res.toSource())
-            update_address_form(res)
-            flash_message("Success")
+            update_address_form(res);
+            flash_message("Success");
         });
 
         ajax.fail(function(res){
@@ -485,12 +483,13 @@ $(function () {
         })
 
         ajax.done(function(res){
-            update_address_form(res)
+            update_address_form(res);
+            // reload_search_result(customer_id);
             flash_message("Success")
         });
 
         ajax.fail(function(res){
-            flash_message(res.responseJSON.message)
+            flash_message(res.responseJSON.message);
         });
 
     });

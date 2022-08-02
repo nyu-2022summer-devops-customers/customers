@@ -280,6 +280,32 @@ $(function () {
     });
 
     // ****************************************
+    // Deactivate a Customer
+    // ****************************************
+
+    $('#deactivate-btn').click(function () {
+        let customer_id = $("#customer_id").val();
+    
+        var ajax = $.ajax({
+          type: 'DELETE',
+          url:`/customers/${customer_id}/deactivate`,
+          contentType: 'application/json',
+          data: '',
+        });
+    
+        ajax.done(function (res) {
+          //alert(res.toSource())
+          update_form_data(res);
+          flash_message('Success');
+        });
+    
+        ajax.fail(function (res) {
+          clear_form_data();
+          flash_message(res.responseJSON.message);
+        });
+      });
+    
+    // ****************************************
     //  F U N C T I O N S   F O R   A D D R E S S E S
     // ****************************************
 

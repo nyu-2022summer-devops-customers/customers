@@ -18,7 +18,6 @@
 Module: error_handlers
 """
 from flask import jsonify
-from requests import request
 from service.models import DataValidationError
 from service import app
 from . import status

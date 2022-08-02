@@ -1,7 +1,7 @@
 # These can be overidden with env vars.
 REGISTRY ?= us.icr.io
 NAMESPACE ?= devops_customers
-IMAGE_NAME ?= customers
+IMAGE_NAME ?= devops-customers
 IMAGE_TAG ?= 1.0
 IMAGE ?= $(REGISTRY)/$(NAMESPACE)/$(IMAGE_NAME):$(IMAGE_TAG)
 # PLATFORM ?= "linux/amd64,linux/arm64"

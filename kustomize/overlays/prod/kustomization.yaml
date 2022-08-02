@@ -16,5 +16,5 @@ patches:
 
 images:
   - name: customers
-    newName: us.icr.io/devops_customers/customers:1.0
+    newName: us.icr.io/devops_customers/devops-customers:1.0
     newTag: "21"

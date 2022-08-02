@@ -14,6 +14,9 @@ from service.models import CustomerModel, AddressModel
 # Import Flask application
 from . import app
 
+from flask import Flask, flash, redirect, render_template, \
+     request, url_for
+
 BASE_URL = "/customers"
 
 
@@ -106,6 +109,7 @@ def update_an_address_of_a_customer(customer_id, address_id):
     address.update()
 
     app.logger.info("Address with ID [%s] updated.", address.address_id)
+    flash('Success');
     return jsonify(address.serialize()), status.HTTP_200_OK
 
 ######################################################################

@@ -281,10 +281,11 @@ $(function () {
     //  F U N C T I O N S   F O R   A D D R E S S E S
     // ****************************************
     // Update the form with data from the response
-    function update_address_form(res) {
+    async function update_address_form(res,customer_id) {
         $("#customer_id_2").val(res[0].customer_id);
         $("#customer_address_id").val(res[0].address_id);
         $("#customer_address").val(res[0].address);
+        flash_message("Success")
     }
     
     function reload_search_result(customer_id){
@@ -355,9 +356,7 @@ $(function () {
             table += '</tbody></table>';
             $("#address_search_results").append(table);
 
-            update_address_form(res);
-            
-            flash_message("Success");
+            update_address_form(res).then(flash_message("Success"))
         });
 
         ajax.fail(function(res){
@@ -382,9 +381,7 @@ $(function () {
         })
 
         ajax.done(function(res){
-            //alert(res.toSource())
-            $("#customer_address").val(res.address);
-            flash_message("Success")
+            update_address_form(res).then(flash_message("Success"))
         });
 
         ajax.fail(function(res){
@@ -427,9 +424,10 @@ $(function () {
     $("#address-create-btn").click(function () {
         let customer_id = $("#customer_id_2").val();
         let address=$("#customer_address").val();
+
         var data={
             "customer_id":customer_id,
-            "address":address
+            "address":address,
         }
 
         $("#flash_message").empty();
@@ -440,14 +438,12 @@ $(function () {
             contentType: "application/json",
             data: JSON.stringify(data),
         })
-
+        
         ajax.done(function(res){
-            update_address_form(res);
-            flash_message("Success");
+            update_address_form(res).then(flash_message("Success"))
         });
 
         ajax.fail(function(res){
-            clear_form_data()
             flash_message(res.responseJSON.message)
         });
     });
@@ -483,9 +479,7 @@ $(function () {
         })
 
         ajax.done(function(res){
-            update_address_form(res);
-            // reload_search_result(customer_id);
-            flash_message("Success")
+            update_address_form(res).then(flash_message("Success"))
         });
 
         ajax.fail(function(res){

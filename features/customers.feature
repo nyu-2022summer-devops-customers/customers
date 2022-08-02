@@ -115,7 +115,7 @@ Scenario: Retrieve an Adresses by customer_id and address_id
     Then I should see the message "Success"
     And I should see "251 Mercer St, New York, NY 10012" in the "address" field
 
-Scenario: Create an Adresses by customer_id 
+Scenario: Create an Adresses 
     When I visit the "Home Page"
     And I press the "Search" button
     Then I should see the message "Success"
@@ -124,7 +124,7 @@ Scenario: Create an Adresses by customer_id
     And I paste the "id_2" field
     And I set the "address" to "607 pavonia ave"
     And I press the "address-create" button
-    # Then I should see the message "Success"
+    Then I should see the message "Success"
     When I press the "Address-Search" button
     Then I should see the message "Success"
     And I should see "251 Mercer St, New York, NY 10012" in the address results
@@ -157,5 +157,5 @@ Scenario: Delete an Address
     And I paste the "id_2" field
     And I press the "Address-Search" button
     Then I should see the message "Success"
-    When I press the "Address-Delete" buttoon
+    When I press the "Address-Delete" button
     Then I should see the message "Success"

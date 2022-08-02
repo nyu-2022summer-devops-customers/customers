@@ -1,133 +1,140 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <title>Customers RESTful API Service</title>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="stylesheet" href="static/css/cerulean_bootstrap.min.css">
-  </head>
-  <body>
-    <div class="container">
-      <div class="page-header">
-          <h1>Customers RESTful API Service</h1>
-      </div>
 
-      <!-- Flash Message -->
-      <div class="table-responsive">
-        <table class="table">
-          <tr><td>Status:</td><td><span id="flash_message"></span></td></tr>
-        </table>
-      </div>
+<head>
+  <title>Customers RESTful API Service</title>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="static/css/cerulean_bootstrap.min.css">
+</head>
 
-      <!-- FORM -->
-      <div class="col-md-12" id="form_data">
-        <h3>Create, Retrieve, Update, and Delete a Customer:</h3>
-        <div class="well">
-          <div class="form-horizontal">
-            <div class="form-group">
-              <label class="control-label col-sm-2" for="customer_id">Customer ID:</label>
-              <div class="col-sm-6">
-                <input type="text" class="form-control" id="customer_id" placeholder="Enter ID of Customer">
-              </div>
-              <div class="col-sm-4">
-                <button type="submit" class="btn btn-primary" id="retrieve-btn">Retrieve</button>
-                <!-- <button type="submit" class="btn btn-danger" id="delete-btn">Delete</button> -->
-              </div>
+<body>
+  <div class="container">
+    <div class="page-header">
+      <h1>Customers RESTful API Service</h1>
+    </div>
+
+    <!-- Flash Message -->
+    <div class="table-responsive">
+      <table class="table">
+        <tr>
+          <td>Status:</td>
+          <td><span id="flash_message"></span></td>
+        </tr>
+      </table>
+    </div>
+
+    <!-- FORM -->
+    <div class="col-md-12" id="form_data">
+      <h3>Create, Retrieve, Update, and Delete a Customer:</h3>
+      <div class="well">
+        <div class="form-horizontal">
+          <div class="form-group">
+            <label class="control-label col-sm-2" for="customer_id">Customer ID:</label>
+            <div class="col-sm-6">
+              <input type="text" class="form-control" id="customer_id" placeholder="Enter ID of Customer">
             </div>
-          </div> <!-- form horizontal -->
-
-          <div class="form-horizontal">
-
-            <!-- FIRST NAME -->
-            <div class="form-group">
-              <label class="control-label col-sm-2" for="customer_first_name">First Name:</label>
-              <div class="col-sm-10">
-                <input type="text" class="form-control" id="customer_first_name" placeholder="Enter first name for Customer">
-              </div>
+            <div class="col-sm-4">
+              <button type="submit" class="btn btn-primary" id="retrieve-btn">Retrieve</button>
+              <!-- <button type="submit" class="btn btn-danger" id="delete-btn">Delete</button> -->
             </div>
+          </div>
+        </div> <!-- form horizontal -->
 
-            <!-- LAST NAME -->
-            <div class="form-group">
-              <label class="control-label col-sm-2" for="customer_last_name">Last Name:</label>
-              <div class="col-sm-10">
-                <input type="text" class="form-control" id="customer_last_name" placeholder="Enter last name for Customer">
-              </div>
+        <div class="form-horizontal">
+
+          <!-- FIRST NAME -->
+          <div class="form-group">
+            <label class="control-label col-sm-2" for="customer_first_name">First Name:</label>
+            <div class="col-sm-10">
+              <input type="text" class="form-control" id="customer_first_name"
+                placeholder="Enter first name for Customer">
             </div>
+          </div>
 
-            <!-- NICKNAME -->
-            <div class="form-group">
-              <label class="control-label col-sm-2" for="customer_nickname">Nickname:</label>
-              <div class="col-sm-10">
-                <input type="text" class="form-control" id="customer_nickname" placeholder="Enter nickname for Customer">
-              </div>
+          <!-- LAST NAME -->
+          <div class="form-group">
+            <label class="control-label col-sm-2" for="customer_last_name">Last Name:</label>
+            <div class="col-sm-10">
+              <input type="text" class="form-control" id="customer_last_name"
+                placeholder="Enter last name for Customer">
             </div>
+          </div>
 
-            <!-- PASSWORD -->
-            <div class="form-group">
-              <label class="control-label col-sm-2" for="customer_password">Password:</label>
-              <div class="col-sm-10">
-                <input type="text" class="form-control" id="customer_password" placeholder="Enter password for Customer">
-              </div>
+          <!-- NICKNAME -->
+          <div class="form-group">
+            <label class="control-label col-sm-2" for="customer_nickname">Nickname:</label>
+            <div class="col-sm-10">
+              <input type="text" class="form-control" id="customer_nickname" placeholder="Enter nickname for Customer">
             </div>
+          </div>
 
-            <!-- EMAIL -->
-            <div class="form-group">
-              <label class="control-label col-sm-2" for="customer_email">Email:</label>
-              <div class="col-sm-10">
-                <input type="text" class="form-control" id="customer_email" placeholder="Enter email for Customer">
-              </div>
+          <!-- PASSWORD -->
+          <div class="form-group">
+            <label class="control-label col-sm-2" for="customer_password">Password:</label>
+            <div class="col-sm-10">
+              <input type="text" class="form-control" id="customer_password" placeholder="Enter password for Customer">
             </div>
+          </div>
 
-            <!-- GENDER -->
-            <div class="form-group">
-              <label class="control-label col-sm-2" for="customer_gender">Gender:</label>
-              <div class="col-sm-10">
-                <select class="form-control" id="customer_gender">
-                  <option value="UNKNOWN" selected>Unknown</option>
-                  <option value="MALE">Male</option>
-                  <option value="FEMALE">Female</option>
-                </select>
-              </div>
+          <!-- EMAIL -->
+          <div class="form-group">
+            <label class="control-label col-sm-2" for="customer_email">Email:</label>
+            <div class="col-sm-10">
+              <input type="text" class="form-control" id="customer_email" placeholder="Enter email for Customer">
             </div>
+          </div>
 
-            <!-- BIRTHDAY -->
-            <div class="form-group">
-              <label class="control-label col-sm-2" for="customer_birthday">Birthday:</label>
-              <div class="col-sm-10">
-                <input type="date" class="form-control" id="customer_birthday" placeholder="2022-04-01">
-              </div>
+          <!-- GENDER -->
+          <div class="form-group">
+            <label class="control-label col-sm-2" for="customer_gender">Gender:</label>
+            <div class="col-sm-10">
+              <select class="form-control" id="customer_gender">
+                <option value="UNKNOWN" selected>Unknown</option>
+                <option value="MALE">Male</option>
+                <option value="FEMALE">Female</option>
+              </select>
             </div>
+          </div>
 
-            <!-- IS ACTIVE -->
-            <div class="form-group">
-              <label class="control-label col-sm-2" for="customer_is_active">IS Active:</label>
-              <div class="col-sm-10">
-                <select class="form-control" id="customer_is_active">
-                  <option value="true" selected>True</option>
-                  <option value="false">False</option>
-                </select>
-              </div>
+          <!-- BIRTHDAY -->
+          <div class="form-group">
+            <label class="control-label col-sm-2" for="customer_birthday">Birthday:</label>
+            <div class="col-sm-10">
+              <input type="date" class="form-control" id="customer_birthday" placeholder="2022-04-01">
             </div>
+          </div>
 
-
-            <!-- SUBMIT BUTTONS -->
-            <div class="form-group">
-              <div class="col-sm-offset-2 col-sm-10">
-                <button type="submit" class="btn btn-primary" id="search-btn">Search</button>
-                <button type="submit" class="btn btn-primary" id="clear-btn">Clear</button>
-                <button type="submit" class="btn btn-success" id="create-btn">Create</button>
-                <!-- <button type="submit" class="btn btn-warning" id="update-btn">Update</button> -->
-              </div>
+          <!-- IS ACTIVE -->
+          <div class="form-group">
+            <label class="control-label col-sm-2" for="customer_is_active">IS Active:</label>
+            <div class="col-sm-10">
+              <select class="form-control" id="customer_is_active">
+                <option value="true" selected>True</option>
+                <option value="false">False</option>
+              </select>
             </div>
-          </div> <!-- form horizontal -->
-        </div> <!-- end well -->
-      </div> <!-- end Form -->
+          </div>
 
-      <!-- Search Results -->
-      <div class="table-responsive col-md-12" id="search_results">
-        <table class="table table-striped">
-          <thead>
+
+          <!-- SUBMIT BUTTONS -->
+          <div class="form-group">
+            <div class="col-sm-offset-2 col-sm-10">
+              <button type="submit" class="btn btn-primary" id="search-btn">Search</button>
+              <button type="submit" class="btn btn-primary" id="clear-btn">Clear</button>
+              <button type="submit" class="btn btn-success" id="create-btn">Create</button>
+              <!-- <button type="submit" class="btn btn-warning" id="update-btn">Update</button> -->
+            </div>
+          </div>
+        </div> <!-- form horizontal -->
+      </div> <!-- end well -->
+    </div> <!-- end Form -->
+
+    <!-- Search Results -->
+    <div class="table-responsive col-md-12" id="search_results">
+      <table class="table table-striped">
+        <thead>
           <tr>
             <th class="col-md-1">ID</th>
             <th class="col-md-2">First Name</th>
@@ -139,84 +146,85 @@
             <th class="col-md-2">Birthday</th>
             <th class="col-md-1">IS Active</th>
           </tr>
-          </thead>
-        </table>
-      </div>
+        </thead>
+      </table>
+    </div>
 
-    </div> <!-- container -->
+  </div> <!-- container -->
 
 
-    <!-- Address Container -->
-    <div class="container">
+  <!-- Address Container -->
+  <div class="container">
 
-      <!-- ADDRESS FORM -->
-      <div class="col-md-12" id="address_form_data">
-        <h3>Create, Retrieve, Update, and Delete a Customer Address:</h3>
-        <div class="well">
-          <div class="form-horizontal">
-            <div class="form-group">
-              <label class="control-label col-sm-2" for="customer_id_2">Customer ID:</label>
-              <div class="col-sm-3">
-                <input type="text" class="form-control" id="customer_id_2" placeholder="Enter Customer ID of Address">
-              </div>
-              <div class="col-sm-3">
-                <input type="text" class="form-control" id="customer_address_id" placeholder="Enter Address ID">
-              </div>
-              <div class="col-sm-4">
-                <button type="submit" class="btn btn-primary" id="address-retrieve-btn">Retrieve</button> 
-                <button type="submit" class="btn btn-danger" id="address-delete-btn">Delete</button>
-              </div>
+    <!-- ADDRESS FORM -->
+    <div class="col-md-12" id="address_form_data">
+      <h3>Create, Retrieve, Update, and Delete a Customer Address:</h3>
+      <div class="well">
+        <div class="form-horizontal">
+          <div class="form-group">
+            <label class="control-label col-sm-2" for="customer_id_2">Customer ID:</label>
+            <div class="col-sm-3">
+              <input type="text" class="form-control" id="customer_id_2" placeholder="Enter Customer ID of Address">
             </div>
-          </div> <!-- form horizontal -->
-
-          <div class="form-horizontal">
-
-            <!-- Address -->
-            <div class="form-group">
-              <label class="control-label col-sm-2" for="customer_address">Address:</label>
-              <div class="col-sm-10">
-                <input type="text" class="form-control" id="customer_address" placeholder="Enter Address Detail">
-              </div>
+            <div class="col-sm-3">
+              <input type="text" class="form-control" id="customer_address_id" placeholder="Enter Address ID">
             </div>
-
-            <!-- SUBMIT BUTTONS -->
-            <div class="form-group">
-              <div class="col-sm-offset-2 col-sm-10">
-                <button type="submit" class="btn btn-primary" id="address-search-btn">Search</button>
-                <button type="submit" class="btn btn-primary" id="address-clear-btn">Clear</button> 
-                <button type="submit" class="btn btn-success" id="address-create-btn">Create</button> 
-                <button type="submit" class="btn btn-warning" id="address-update-btn">Update</button>
-              </div>
+            <div class="col-sm-4">
+              <button type="submit" class="btn btn-primary" id="address-retrieve-btn">Retrieve</button>
+              <button type="submit" class="btn btn-danger" id="address-delete-btn">Delete</button>
             </div>
-          </div> <!-- form horizontal -->
-        </div> <!-- end well -->
-      </div> <!-- end Form -->
+          </div>
+        </div> <!-- form horizontal -->
 
-      <!-- Search Results -->
-      <div class="table-responsive col-md-12" id="address_search_results">
-        <table class="table table-striped">
-          <thead>
+        <div class="form-horizontal">
+
+          <!-- Address -->
+          <div class="form-group">
+            <label class="control-label col-sm-2" for="customer_address">Address:</label>
+            <div class="col-sm-10">
+              <input type="text" class="form-control" id="customer_address" placeholder="Enter Address Detail">
+            </div>
+          </div>
+
+          <!-- SUBMIT BUTTONS -->
+          <div class="form-group">
+            <div class="col-sm-offset-2 col-sm-10">
+              <button type="submit" class="btn btn-primary" id="address-search-btn">Search</button>
+              <button type="submit" class="btn btn-primary" id="address-clear-btn">Clear</button>
+              <button type="submit" class="btn btn-success" id="address-create-btn">Create</button>
+              <button type="submit" class="btn btn-warning" id="address-update-btn">Update</button>
+            </div>
+          </div>
+        </div> <!-- form horizontal -->
+      </div> <!-- end well -->
+    </div> <!-- end Form -->
+
+    <!-- Search Results -->
+    <div class="table-responsive col-md-12" id="address_search_results">
+      <table class="table table-striped">
+        <thead>
           <tr>
             <th class="col-md-2">ID</th>
             <th class="col-md-2">Address ID</th>
             <th class="col-md-8">Address</th>
           </tr>
-          </thead>
-        </table>
-      </div>
+        </thead>
+      </table>
+    </div>
 
-      <footer>
-        <br><br>
-        <p>&copy; NYU DevOps Company 2022</p>
-      </footer>
+    <footer>
+      <br><br>
+      <p>&copy; NYU DevOps Company 2022</p>
+    </footer>
 
-    </div> <!-- Address Container -->
+  </div> <!-- Address Container -->
 
-  <script type="text/javascript" src = "static/js/jquery-3.6.0.min.js"></script>
-  <script type="text/javascript" src = "static/js/bootstrap.min.js"></script>
+  <script type="text/javascript" src="static/js/jquery-3.6.0.min.js"></script>
+  <script type="text/javascript" src="static/js/bootstrap.min.js"></script>
 
   <!-- YOUR REST API -->
   <script type="text/javascript" src="static/js/rest_api.js"></script>
 
-  </body>
+</body>
+
 </html>

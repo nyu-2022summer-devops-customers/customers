@@ -25,10 +25,21 @@ def abort_when_customer_not_exist(customer_id):
     if customer is None:
         abort(status.HTTP_400_BAD_REQUEST, f"Addresses with id '{customer_id}' was not found.")
 
+############################################################
+# Health Endpoint
+############################################################
+
+
+@app.route("/health")
+def health():
+    """Health Status"""
+    return jsonify(dict(status="OK")), status.HTTP_200_OK
 
 ######################################################################
 # GET INDEX
 ######################################################################
+
+
 @app.route("/")
 def index():
     """ Root URL response """
@@ -84,6 +95,7 @@ def create_customers():
 
     return jsonify(message), status.HTTP_201_CREATED, {"Location": location_url}
 
+
 ######################################################################
 # UPDATE AN ADDRESS OF A CUSTOMER
 ######################################################################
@@ -111,6 +123,7 @@ def update_an_address_of_a_customer(customer_id, address_id):
     app.logger.info("Address with ID [%s] updated.", address.address_id)
     flash('Success');
     return jsonify(address.serialize()), status.HTTP_200_OK
+
 
 ######################################################################
 # UPDATE A CUSTOMER
@@ -341,7 +354,7 @@ def get_an_address_of_a_customer(customer_id, address_id):
         abort(status.HTTP_404_NOT_FOUND, f"Address '{address_id}' with customer id '{customer_id}' was not found.")
     address = found[0]
 
-    app.logger.info(address.serialize());
+    app.logger.info(address.serialize())
 
     return jsonify(address.serialize()), status.HTTP_200_OK
 
@@ -386,8 +399,6 @@ def delete_an_address_of_a_customer(customer_id, address_id):
     app.logger.info(f"Address '{address_id}' with customer id '{customer_id}' delete complete.")
 
     return "", status.HTTP_204_NO_CONTENT
-
-
 
 
 ######################################################################

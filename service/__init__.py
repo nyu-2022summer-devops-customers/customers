@@ -7,11 +7,12 @@ and SQL database
 import sys
 # import logging
 from flask import Flask
+from service import config
 from .utils import log_handlers
 
 # Create Flask application
 app = Flask(__name__)
-app.config.from_object("config")
+app.config.from_object(config)
 
 # Dependencies require we import the routes AFTER the Flask app is created
 # from service import routes, models

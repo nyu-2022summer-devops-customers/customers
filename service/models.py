@@ -10,6 +10,7 @@ from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 import re
 
+
 from tomlkit import string
 
 logger = logging.getLogger("flask.app")

@@ -335,9 +335,13 @@ $(function () {
     // ****************************************
     // Update the form with data from the response
     async function update_address_form(res,customer_id) {
-        $("#customer_id_2").val(res[0].customer_id);
-        $("#customer_address_id").val(res[0].address_id);
-        $("#customer_address").val(res[0].address);
+        let item = res
+        if (Array.isArray(res)) {
+            item = res[0]
+        }
+        $("#customer_id_2").val(item.customer_id);
+        $("#customer_address_id").val(item.address_id);
+        $("#customer_address").val(item.address);
         flash_message("Success")
     }
     

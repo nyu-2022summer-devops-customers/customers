@@ -408,7 +408,8 @@ $(function () {
         })
 
         ajax.done(function(res){
-            update_address_form(res).then(flash_message("Success"))
+            $("#customer_address").val(res.address);
+            flash_message("Success");
         });
 
         ajax.fail(function(res){

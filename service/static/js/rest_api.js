@@ -207,7 +207,7 @@ $(function () {
         //let first_name = $("#customer_first_name").val();
         //let last_name = $("#last_name").val();
         let nickname = $("#customer_nickname").val();
-        // let birthday = $("#birthday").val();
+        let birthday = $("#customer_birthday").val();
         let email = $("#customer_email").val();
 
         let queryString = ""
@@ -232,13 +232,13 @@ $(function () {
                 queryString += 'email=' + email
             }
          }
-        // if (birthday) {
-        //     if (queryString.length > 0) {
-        //         queryString += '&birthday=' + birthday
-        //     } else {
-        //         queryString += 'birthday=' + birthday
-        //     }
-        // }
+        if (birthday) {
+            if (queryString.length > 0) {
+                queryString += '&birthday=' + birthday
+            } else {
+                queryString += 'birthday=' + birthday
+            }
+        }
 
         $("#flash_message").empty();
 

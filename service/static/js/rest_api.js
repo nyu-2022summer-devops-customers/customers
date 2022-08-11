@@ -204,23 +204,27 @@ $(function () {
 
     $("#search-btn").click(function () {
 
-        let first_name = $("#first_name").val();
-        // let last_name = $("#last_name").val();
-        // let nickname = $("#nickname").val();
+        //let first_name = $("#customer_first_name").val();
+        //let last_name = $("#last_name").val();
+        //let nickname = $("#nickname").val();
         // let birthday = $("#birthday").val();
-        // let email = $("#email").val();
+        let email = $("#customer_email").val();
 
         let queryString = ""
 
-        if (first_name) {
-             queryString += 'first name=' + first_name 
-        }
+        //if (first_name) {
+        //     queryString += 'first name=' + first_name 
+        //}
         // if (nickname) {
         //     queryString += 'nick name=' + nickname
         // }
-        // if (email) {
-        //     queryString += 'email=' + email
-        // }
+        if (email) {
+            if (queryString.length > 0) {
+                queryString += '&email=' + email
+            } else {
+                queryString += 'email=' + email
+            }
+         }
         // if (birthday) {
         //     if (queryString.length > 0) {
         //         queryString += '&birthday=' + birthday

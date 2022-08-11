@@ -206,7 +206,7 @@ $(function () {
 
         //let first_name = $("#customer_first_name").val();
         //let last_name = $("#last_name").val();
-        //let nickname = $("#nickname").val();
+        let nickname = $("#customer_nickname").val();
         // let birthday = $("#birthday").val();
         let email = $("#customer_email").val();
 
@@ -218,6 +218,13 @@ $(function () {
         // if (nickname) {
         //     queryString += 'nick name=' + nickname
         // }
+        if (nickname) {
+            if (queryString.length > 0) {
+                queryString += '&nickname=' + nickname
+            } else {
+                queryString += 'nickname=' + nickname
+            }
+         }
         if (email) {
             if (queryString.length > 0) {
                 queryString += '&email=' + email

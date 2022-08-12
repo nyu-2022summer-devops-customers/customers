@@ -70,12 +70,12 @@ team-login: ## Login the IBM Cloud
 .PHONY: dev-deploy
 dev-deploy:
 	$(info Deploy to dev ns)
-	kc -n dev apply -f deploy/dev/
+	kubectl -n dev apply -f deploy/dev/
 
 .PHONY: prod-deploy
 prod-deploy:
 	$(info Deploy to prod ns)
-	kc -n prod apply -f deploy/prod/
+	kubectl -n prod apply -f deploy/prod/
 
 .PHONY: dev-undeploy
 dev-undeploy:

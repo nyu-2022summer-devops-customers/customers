@@ -50,13 +50,13 @@ metadata:
   labels:
     app: postgres
 spec:
-  type: NodePort
+  type: ClusterIP
   selector:
     app: postgres
   ports:
     - port: 5432
       targetPort: 5432
-      nodePort: 31033
+      # nodePort: 31033
 
 # These can also be created from the command line using environment variables
 #

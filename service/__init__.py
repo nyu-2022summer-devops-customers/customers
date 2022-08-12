@@ -9,10 +9,26 @@ import sys
 from flask import Flask
 from service import config
 from .utils import log_handlers
+from flask_restx import Api
 
 # Create Flask application
 app = Flask(__name__)
+app.url_map.strict_slashes = False
 app.config.from_object(config)
+BASE_URL = '/api/customers'
+
+######################################################################
+# Configure Swagger before initializing it
+######################################################################
+api = Api(app,
+          version='1.0.0',
+          title='Customers REST API Service',
+          description='This is a customers service.',
+          default='customers',
+          default_label='Customers management',
+          doc='/apidocs',
+          prefix='/api'
+          )
 
 # Dependencies require we import the routes AFTER the Flask app is created
 # from service import routes, models

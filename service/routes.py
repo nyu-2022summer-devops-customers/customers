@@ -9,8 +9,8 @@ from .utils import status  # HTTP Status Codes
 
 # For this example we'll use SQLAlchemy, a popular ORM that supports a
 # variety of backends including SQLite, MySQL, and PostgreSQL
-from service.models import CustomerModel, AddressModel
-from flask_restx import Resource, reqparse
+from service.models import CustomerModel, AddressModel, Gender
+from flask_restx import Resource, reqparse, fields
 
 # Import Flask application
 from . import app, api
@@ -49,7 +49,33 @@ def index():
 
 # Customer
 # TODO: Define the model so that the docs reflect what can be sent
+create_model = api.model('Customer', {
+    'password': fields.String(required=True,
+                          description='The password of the Customer'),
+    'first_name': fields.String(required=True,
+                          description='The first_name of the Customer'),
+    'last_name': fields.String(required=True,
+                          description='The first_name of the Customer'),
+    'nickname': fields.String(required=True,
+                          description='The nickname of the Customer'),
+    'email': fields.String(required=True,
+                          description='The email of the Customer'),
+    'gender': fields.String(enum=Gender._member_names_, description='The gender of the Customer'),
+    'birthday': fields.Date(required=True, description='The day the customer was born'),
+    'is_active': fields.Boolean(required=True,
+                                description='Is the Customer ative?'),
+    'address': fields.String(required=True,
+                          description='The address of the Customer')
+})
 
+customer_model = api.inherit(
+    'CustomerModel',
+    create_model,
+    {
+        '_id': fields.String(readOnly=True,
+                            description='The unique id assigned internally by service'),
+    }
+)
 # Address
 # TODO: Define the model so that the docs reflect what can be sent
 
@@ -58,7 +84,9 @@ def index():
 # TODO: add arguments
 customer_args = reqparse.RequestParser()
 
-
+######################################################################
+#  PATH: /customers/{id}
+######################################################################
 @api.route(f'{BASE_URL}/<int:customer_id>')
 @api.param('customer_id', 'The customer identifier')
 class CustomerResource(Resource):
@@ -67,8 +95,26 @@ class CustomerResource(Resource):
     CustomerResource class
 
     Allows the manipulation of a single Customer
+    GET /customers/{customer_id} - Returns a Customer with the id
+    PUT /customers/{customer_id} - Update a Customer with the id
+    DELETE /customers/{customer_id} -  Deletes a Customer with the id
     """
-
+    #------------------------------------------------------------------
+    # RETRIEVE A PET
+    #------------------------------------------------------------------
+    @api.doc('get_customers')
+    @api.response(404, 'Customer not found')
+    @api.marshal_with(customer_model)
+    def get(self, customer_id):
+        """
+        Retrieve a single Customer
+        This endpoint will return a Pet based on his/her id
+        """
+        app.logger.info("Request to Retrieve a pet with id [%s]", customer_id)
+        customer = CustomerModel.find(customer_id)
+        if not customer:
+            abort(status.HTTP_404_NOT_FOUND, "Customer with id '{}' was not found.".format(customer_id))
+        return customer.serialize(), status.HTTP_200_OK
 
 @api.route(f'{BASE_URL}', strict_slashes=False)
 class CustomerCollection(Resource):

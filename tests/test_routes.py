@@ -9,7 +9,7 @@ import os
 import logging
 import unittest
 
-from service import app
+from service import app, BASE_URL
 from service.models import CustomerModel, AddressModel, Gender, db
 from service.utils import status
 from tests.factories import AddressFactory, CustomerFactory  # HTTP Status Codes
@@ -17,7 +17,7 @@ from tests.factories import AddressFactory, CustomerFactory  # HTTP Status Codes
 DATABASE_URI = os.getenv(
     "DATABASE_URI", "postgresql://postgres:postgres@localhost:5432/postgres"
 )
-BASE_URL = "/customers"
+
 CONTENT_TYPE_JSON = "application/json"
 
 

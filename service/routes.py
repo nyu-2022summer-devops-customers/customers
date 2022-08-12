@@ -74,7 +74,7 @@ customer_model = api.inherit(
     create_model,
     {
         '_id': fields.String(readOnly=True,
-                            description='The unique id assigned internally by service'),
+                             description='The unique id assigned internally by service'),
     }
 )
 # Address
@@ -84,6 +84,7 @@ customer_model = api.inherit(
 # query string arguments
 # TODO: add arguments
 customer_args = reqparse.RequestParser()
+
 
 ######################################################################
 #  PATH: /customers/{id}
@@ -100,9 +101,9 @@ class CustomerResource(Resource):
     PUT /customers/{customer_id} - Update a Customer with the id
     DELETE /customers/{customer_id} -  Deletes a Customer with the id
     """
-    #------------------------------------------------------------------
+    # ------------------------------------------------------------------
     # RETRIEVE A PET
-    #------------------------------------------------------------------
+    # ------------------------------------------------------------------
     @api.doc('get_customers')
     @api.response(404, 'Customer not found')
     @api.marshal_with(customer_model)
@@ -116,6 +117,7 @@ class CustomerResource(Resource):
         if not customer:
             abort(status.HTTP_404_NOT_FOUND, "Customer with id '{}' was not found.".format(customer_id))
         return customer.serialize(), status.HTTP_200_OK
+
 
 @api.route(f'{BASE_URL}', strict_slashes=False)
 class CustomerCollection(Resource):

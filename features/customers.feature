@@ -85,15 +85,33 @@ Scenario: List all Customers
     And I should see "Zayne" in the results
     And I should see "Dominique" in the results
 
-
-Scenario: List all Customers
+Scenario: Query customers by email
     When I visit the "Home Page"
+    And I set the "email" to "em456@nyu.edu"
     And I press the "Search" button
-    Then I should see the message "Success"
-    And I should see "Karayan" in the results
-    And I should see "Zayne" in the results
-    And I should see "Dominique" in the results
+    Then I should see "em456@nyu.edu" in the "email" field
+    And I should see "Zayne" in the "First Name" field
+    And I should see "Wood" in the "Last Name" field
+    And I should see the message "Success"
 
+Scenario: Query customers by nickname
+    When I visit the "Home Page"
+    And I set the "nickname" to "D"
+    And I press the "Search" button
+    Then I should see "D" in the "nickname" field
+    And I should see "Dominique" in the "First Name" field
+    And I should see "Caligari" in the "Last Name" field
+    And I should see the message "Success"
+
+Scenario: Query customers by birthday
+    When I visit the "Home Page"
+    And I set the "birthday" to "07/30/2021"
+    And I press the "Search" button
+    Then I should see "K" in the "nickname" field
+    And I should see "Karayan" in the "First Name" field
+    And I should see "Calarook" in the "Last Name" field
+    And I should see the message "Success"
+    
 Scenario: Delete a Customer
     When I visit the "Home Page"
     And I press the "Search" button

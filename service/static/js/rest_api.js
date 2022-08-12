@@ -204,30 +204,41 @@ $(function () {
 
     $("#search-btn").click(function () {
 
-        let first_name = $("#first_name").val();
-        // let last_name = $("#last_name").val();
-        // let nickname = $("#nickname").val();
-        // let birthday = $("#birthday").val();
-        // let email = $("#email").val();
+        //let first_name = $("#customer_first_name").val();
+        //let last_name = $("#last_name").val();
+        let nickname = $("#customer_nickname").val();
+        let birthday = $("#customer_birthday").val();
+        let email = $("#customer_email").val();
 
         let queryString = ""
 
-        if (first_name) {
-             queryString += 'first name=' + first_name 
-        }
+        //if (first_name) {
+        //     queryString += 'first name=' + first_name 
+        //}
         // if (nickname) {
         //     queryString += 'nick name=' + nickname
         // }
-        // if (email) {
-        //     queryString += 'email=' + email
-        // }
-        // if (birthday) {
-        //     if (queryString.length > 0) {
-        //         queryString += '&birthday=' + birthday
-        //     } else {
-        //         queryString += 'birthday=' + birthday
-        //     }
-        // }
+        if (nickname) {
+            if (queryString.length > 0) {
+                queryString += '&nickname=' + nickname
+            } else {
+                queryString += 'nickname=' + nickname
+            }
+         }
+        if (email) {
+            if (queryString.length > 0) {
+                queryString += '&email=' + email
+            } else {
+                queryString += 'email=' + email
+            }
+         }
+        if (birthday) {
+            if (queryString.length > 0) {
+                queryString += '&birthday=' + birthday
+            } else {
+                queryString += 'birthday=' + birthday
+            }
+        }
 
         $("#flash_message").empty();
 
@@ -335,9 +346,13 @@ $(function () {
     // ****************************************
     // Update the form with data from the response
     async function update_address_form(res,customer_id) {
-        $("#customer_id_2").val(res[0].customer_id);
-        $("#customer_address_id").val(res[0].address_id);
-        $("#customer_address").val(res[0].address);
+        let item = res
+        if (Array.isArray(res)) {
+            item = res[0]
+        }
+        $("#customer_id_2").val(item.customer_id);
+        $("#customer_address_id").val(item.address_id);
+        $("#customer_address").val(item.address);
         flash_message("Success")
     }
     
@@ -434,7 +449,8 @@ $(function () {
         })
 
         ajax.done(function(res){
-            update_address_form(res).then(flash_message("Success"))
+            $("#customer_address").val(res.address);
+            flash_message("Success");
         });
 
         ajax.fail(function(res){

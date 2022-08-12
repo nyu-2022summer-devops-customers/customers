@@ -1,5 +1,6 @@
 $(function () {
 
+    const BASE_URL = '/api/customers'
     // ****************************************
     //  U T I L I T Y   F U N C T I O N S
     // ****************************************
@@ -70,7 +71,7 @@ $(function () {
         
         let ajax = $.ajax({
             type: "POST",
-            url: "/customers",
+            url: BASE_URL,
             contentType: "application/json",
             data: JSON.stringify(data),
         });
@@ -116,7 +117,7 @@ $(function () {
 
         let ajax = $.ajax({
                 type: "PUT",
-                url: `/customers/${customer_id}`,
+                url: `${BASE_URL}/${customer_id}`,
                 contentType: "application/json",
                 data: JSON.stringify(data),
         })
@@ -143,7 +144,7 @@ $(function () {
 
         let ajax = $.ajax({
             type: "GET",
-            url: `/customers/${customer_id}`,
+            url: `${BASE_URL}/${customer_id}`,
             contentType: "application/json",
             data: ''
         })
@@ -173,7 +174,7 @@ $(function () {
 
          let ajax = $.ajax({
              type: "DELETE",
-             url: `/customers/${customer_id}`,
+             url: `${BASE_URL}/${customer_id}`,
              contentType: "application/json",
              data: '',
          })
@@ -244,7 +245,7 @@ $(function () {
 
         let ajax = $.ajax({
             type: "GET",
-            url: `/customers?${queryString}`,
+            url: `${BASE_URL}?${queryString}`,
             contentType: "application/json",
             data: ''
         })
@@ -298,7 +299,7 @@ $(function () {
     
         var ajax = $.ajax({
           type: 'PUT',
-          url:`/customers/${customer_id}/activate`,
+          url:`${BASE_URL}/${customer_id}/activate`,
           contentType: 'application/json',
           data: '',
         });
@@ -324,7 +325,7 @@ $(function () {
     
         var ajax = $.ajax({
           type: 'DELETE',
-          url:`/customers/${customer_id}/deactivate`,
+          url:`${BASE_URL}/${customer_id}/deactivate`,
           contentType: 'application/json',
           data: '',
         });
@@ -359,7 +360,7 @@ $(function () {
     function reload_search_result(customer_id){
         let ajax = $.ajax({
             type: "GET",
-            url: `/customers/${customer_id}/addresses`,
+            url: `${BASE_URL}/${customer_id}/addresses`,
             contentType: "application/json",
             data: ''
         })
@@ -400,7 +401,7 @@ $(function () {
 
         let ajax = $.ajax({
             type: "GET",
-            url: `/customers/${customer_id}/addresses`,
+            url: `${BASE_URL}/${customer_id}/addresses`,
             contentType: "application/json",
             data: ''
         })
@@ -443,7 +444,7 @@ $(function () {
         
         let ajax = $.ajax({
             type: "GET",
-            url: `/customers/${customer_id}/addresses/${address_id}`,
+            url: `${BASE_URL}/${customer_id}/addresses/${address_id}`,
             contentType: "application/json",
             data: ''
         })
@@ -471,7 +472,7 @@ $(function () {
         
         let ajax = $.ajax({
             type: "DELETE",
-            url: `/customers/${customer_id}/addresses/${address_id}`,
+            url: `${BASE_URL}/${customer_id}/addresses/${address_id}`,
             contentType: "application/json",
             data: ''
         });
@@ -503,7 +504,7 @@ $(function () {
         
         let ajax = $.ajax({
             type: "POST",
-            url: `/customers/${customer_id}/addresses`,
+            url: `${BASE_URL}/${customer_id}/addresses`,
             contentType: "application/json",
             data: JSON.stringify(data),
         })
@@ -542,7 +543,7 @@ $(function () {
 
         var ajax = $.ajax({
                 type: "PUT",
-                url: `/customers/${customer_id}/addresses/${address_id}`,
+                url: `${BASE_URL}/${customer_id}/addresses/${address_id}`,
                 contentType: "application/json",
                 data: JSON.stringify(data)
         })

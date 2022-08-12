@@ -9,10 +9,12 @@ import os
 import logging
 import unittest
 
-from service import app, BASE_URL
+from service import app
 from service.models import CustomerModel, AddressModel, Gender, db
 from service.utils import status
 from tests.factories import AddressFactory, CustomerFactory  # HTTP Status Codes
+
+BASE_URL = '/api/customers'
 
 DATABASE_URI = os.getenv(
     "DATABASE_URI", "postgresql://postgres:postgres@localhost:5432/postgres"

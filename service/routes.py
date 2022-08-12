@@ -13,7 +13,8 @@ from service.models import CustomerModel, AddressModel
 from flask_restx import Resource, reqparse
 
 # Import Flask application
-from . import app, api, BASE_URL
+from . import app, api
+BASE_URL = '/api/customers'
 
 
 def abort_when_customer_not_exist(customer_id):

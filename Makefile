@@ -70,12 +70,12 @@ team-login: ## Login the IBM Cloud
 .PHONY: dev-deploy
 dev-deploy:
 	$(info Deploy to dev ns)
-	kubectl apply -k kustomize/overlays/dev/
+	kc -n dev apply -f deploy/dev/
 
 .PHONY: prod-deploy
 prod-deploy:
 	$(info Deploy to prod ns)
-	kubectl apply -k kustomize/overlays/prod/
+	kc -n prod apply -f deploy/prod/
 
 .PHONY: dev-undeploy
 dev-undeploy:

@@ -47,25 +47,26 @@ def index():
 # Flask-RESTx and OpenAPI Config
 ############################################################
 
+
 # Customer
 # TODO: Define the model so that the docs reflect what can be sent
 create_model = api.model('Customer', {
     'password': fields.String(required=True,
-                          description='The password of the Customer'),
+                              description='The password of the Customer'),
     'first_name': fields.String(required=True,
-                          description='The first_name of the Customer'),
+                                description='The first_name of the Customer'),
     'last_name': fields.String(required=True,
-                          description='The first_name of the Customer'),
+                               description='The first_name of the Customer'),
     'nickname': fields.String(required=True,
-                          description='The nickname of the Customer'),
+                              description='The nickname of the Customer'),
     'email': fields.String(required=True,
-                          description='The email of the Customer'),
+                           description='The email of the Customer'),
     'gender': fields.String(enum=Gender._member_names_, description='The gender of the Customer'),
     'birthday': fields.Date(required=True, description='The day the customer was born'),
     'is_active': fields.Boolean(required=True,
                                 description='Is the Customer ative?'),
     'address': fields.String(required=True,
-                          description='The address of the Customer')
+                             description='The address of the Customer')
 })
 
 customer_model = api.inherit(

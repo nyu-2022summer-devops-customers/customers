@@ -9,8 +9,8 @@ from .utils import status  # HTTP Status Codes
 
 # For this example we'll use SQLAlchemy, a popular ORM that supports a
 # variety of backends including SQLite, MySQL, and PostgreSQL
-from service.models import CustomerModel, AddressModel, Gender
-from flask_restx import Resource, fields, reqparse #, inputs
+from service.models import CustomerModel, AddressModel
+from flask_restx import Resource, reqparse
 
 # Import Flask application
 from . import app, api, BASE_URL
@@ -46,10 +46,10 @@ def index():
 # Flask-RESTx and OpenAPI Config
 ############################################################
 
-## Customer
+# Customer
 # TODO: Define the model so that the docs reflect what can be sent
 
-## Address
+# Address
 # TODO: Define the model so that the docs reflect what can be sent
 
 
@@ -78,6 +78,7 @@ class CustomerCollection(Resource):
     Like create, list operations
     """
 
+
 @api.route(f'{BASE_URL}/<int:customer_id>/addresses/<int:address_id>')
 @api.param('customer_id', 'The customer identifier')
 @api.param('address_id', 'The address identifier')
@@ -98,6 +99,7 @@ class AddressCollection(Resource):
 
     Like create, list operations
     """
+
 
 ######################################################################
 # CREATE NEW CUSTOMER

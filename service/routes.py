@@ -102,7 +102,7 @@ customer_args = reqparse.RequestParser()
 
 
 ######################################################################
-#  PATH: /customers/{id}
+#  PATH: /customers/{customer_id}
 ######################################################################
 @api.route(f'{BASE_URL}/<int:customer_id>')
 @api.param('customer_id', 'The customer identifier')
@@ -158,7 +158,7 @@ class CustomerResource(Resource):
         return customer.serialize(), status.HTTP_200_OK
 
     # ------------------------------------------------------------------
-    # DELETE A PET
+    # DELETE A CUSTOMER
     # ------------------------------------------------------------------
     @api.doc('delete_customers')
     @api.response(204, 'Customer deleted')
@@ -222,6 +222,9 @@ class CustomerCollection(Resource):
         return results, status.HTTP_200_OK
 
 
+######################################################################
+#  PATH: /customers/{customer_id}/addresses/{address_id}
+######################################################################
 @api.route(f'{BASE_URL}/<int:customer_id>/addresses/<int:address_id>')
 @api.param('customer_id', 'The customer identifier')
 @api.param('address_id', 'The address identifier')
@@ -230,8 +233,12 @@ class AddressResource(Resource):
     """
     AddressResource class
 
-    Allows the manipulation of a single Customer
+    Allows the manipulation of a single Address
+    GET /customers/{customer_id}/addresses/{address_id} - Returns a Customer with the id
+    PUT /customers/{customer_id}/addresses/{address_id} - Update a Customer with the id
+    DELETE /customers/{customer_id}/addresses/{address_id} -  Deletes a Customer with the id
     """
+    
 
 
 @api.route(f'{BASE_URL}/<int:customer_id>/addresses', strict_slashes=False)

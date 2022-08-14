@@ -49,7 +49,7 @@ def index():
 
 
 # Customer
-# TODO: Define the model so that the docs reflect what can be sent
+# Define the model so that the docs reflect what can be sent
 create_model = api.model('Customer', {
     'password': fields.String(required=True,
                               description='The password of the Customer'),
@@ -77,7 +77,7 @@ customer_model = api.inherit(
 )
 
 # Address
-# TODO: Define the model so that the docs reflect what can be sent
+# Define the model so that the docs reflect what can be sent
 create_address_model = api.model('Address', {
     'customer_id': fields.Integer(required=True,
                                   description='The customer id that this address belongs to'),
@@ -105,7 +105,6 @@ customer_args = reqparse.RequestParser()
 @api.route(f'{BASE_URL}/<int:customer_id>')
 @api.param('customer_id', 'The customer identifier')
 class CustomerResource(Resource):
-    # TODO: move apis related to resources into this class
     """
     CustomerResource class
 
@@ -236,7 +235,6 @@ class AddressResource(Resource):
     PUT /customers/{customer_id}/addresses/{address_id} - Update a Customer with the id
     DELETE /customers/{customer_id}/addresses/{address_id} -  Deletes a Customer with the id
     """
-    
 
 
 @api.route(f'{BASE_URL}/<int:customer_id>/addresses', strict_slashes=False)

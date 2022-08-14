@@ -5,8 +5,8 @@ Describe what your service does here
 """
 
 from flask import jsonify, request, url_for, abort
-from psycopg2 import Date
-from tomlkit import datetime
+# from psycopg2 import Date
+# from tomlkit import datetime
 from .utils import status  # HTTP Status Codes
 
 # For this example we'll use SQLAlchemy, a popular ORM that supports a
@@ -76,7 +76,7 @@ customer_model = api.inherit(
     create_model,
     {
         'customer_id': fields.Integer(readOnly=True,
-                             description='The unique id assigned internally by service'),
+                                      description='The unique id assigned internally by service'),
     }
 )
 # Address
@@ -230,6 +230,7 @@ class CustomerCollection(Resource):
         app.logger.info('Customer with new id [%s] created!', customer.customer_id)
         location_url = api.url_for(CustomerResource, customer_id=customer.customer_id, _external=True)
         return customer.serialize(), status.HTTP_201_CREATED, {'Location': location_url}
+
 
 @api.route(f'{BASE_URL}/<int:customer_id>/addresses/<int:address_id>')
 @api.param('customer_id', 'The customer identifier')

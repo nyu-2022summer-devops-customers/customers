@@ -77,9 +77,24 @@ customer_model = api.inherit(
                                       description='The unique id assigned internally by service'),
     }
 )
+
 # Address
 # TODO: Define the model so that the docs reflect what can be sent
+create_address_model = api.model('Address', {
+    'customer_id': fields.Integer(required=True,
+                                  description='The customer id that this address belongs to'),
+    'address': fields.String(required=True,
+                             description='The address detail'),
+})
 
+customer_model = api.inherit(
+    'AddressModel',
+    create_address_model,
+    {
+        'address_id': fields.Integer(readOnly=True,
+                                      description='The unique id assigned internally by service'),
+    }
+)
 
 # query string arguments
 # TODO: add arguments

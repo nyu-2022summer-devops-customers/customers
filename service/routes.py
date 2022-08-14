@@ -85,7 +85,7 @@ create_address_model = api.model('Address', {
                              description='The address detail'),
 })
 
-customer_model = api.inherit(
+address_model = api.inherit(
     'AddressModel',
     create_address_model,
     {

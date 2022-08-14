@@ -5,16 +5,18 @@ Describe what your service does here
 """
 
 from flask import jsonify, request, url_for, abort
+from psycopg2 import Date
+from tomlkit import datetime
 from .utils import status  # HTTP Status Codes
 
 # For this example we'll use SQLAlchemy, a popular ORM that supports a
 # variety of backends including SQLite, MySQL, and PostgreSQL
 from service.models import CustomerModel, AddressModel, Gender
-from flask_restx import Resource, reqparse, fields
+from flask_restx import Resource, reqparse, fields, inputs
 
 # Import Flask application
 from . import app, api
-BASE_URL = '/api/customers'
+BASE_URL = '/customers'
 
 
 def abort_when_customer_not_exist(customer_id):
@@ -51,12 +53,12 @@ def index():
 # Customer
 # TODO: Define the model so that the docs reflect what can be sent
 create_model = api.model('Customer', {
-    'password': fields.String(required=True,
-                              description='The password of the Customer'),
     'first_name': fields.String(required=True,
                                 description='The first_name of the Customer'),
     'last_name': fields.String(required=True,
                                description='The first_name of the Customer'),
+    'password': fields.String(required=True,
+                              description='The password of the Customer'),
     'nickname': fields.String(required=True,
                               description='The nickname of the Customer'),
     'email': fields.String(required=True,
@@ -73,7 +75,7 @@ customer_model = api.inherit(
     'CustomerModel',
     create_model,
     {
-        '_id': fields.String(readOnly=True,
+        'customer_id': fields.Integer(readOnly=True,
                              description='The unique id assigned internally by service'),
     }
 )
@@ -84,6 +86,11 @@ customer_model = api.inherit(
 # query string arguments
 # TODO: add arguments
 customer_args = reqparse.RequestParser()
+customer_args.add_argument('nickname', type=str, required=False, help='List Customers by nickname')
+customer_args.add_argument('email', type=str, required=False, help='List Customers by email')
+customer_args.add_argument('birthday', type=inputs.date, required=False, help='List Customers by birthday')
+customer_args.add_argument('firstname', type=str, required=False, help='List Customers by firstname and lastname')
+customer_args.add_argument('lastname', type=str, required=False, help='List Customers by firstname and lastname')
 
 
 ######################################################################
@@ -161,6 +168,9 @@ class CustomerResource(Resource):
         return '', status.HTTP_204_NO_CONTENT
 
 
+######################################################################
+#  PATH: /customers
+######################################################################
 @api.route(f'{BASE_URL}', strict_slashes=False)
 class CustomerCollection(Resource):
     # TODO: move apis related to collection into this class
@@ -169,7 +179,57 @@ class CustomerCollection(Resource):
 
     Like create, list operations
     """
+    # ------------------------------------------------------------------
+    # LIST ALL CUSTOMERS
+    # ------------------------------------------------------------------
+    @api.doc('list_customers')
+    @api.expect(customer_args, validate=True)
+    @api.marshal_list_with(customer_model)
+    def get(self):
+        """ Returns all of the Customers """
+        app.logger.info('Request to list Customers...')
+        customers = []
+        args = customer_args.parse_args()
+        if args['nickname']:
+            app.logger.info('Filtering by nickname: %s', args['nickname'])
+            customers = CustomerModel.find_by_nickname(args['nickname'])
+        elif args['email']:
+            app.logger.info('Filtering by name: %s', args['email'])
+            customers = CustomerModel.find_by_email(args['email'])
+        elif args['birthday']:
+            app.logger.info('Filtering by birthday: %s', args['birthday'])
+            customers = CustomerModel.find_by_birthday(args['birthday'])
+        elif args['firstname'] and args['lastname']:
+            app.logger.info('Filtering by name: %s %s', args['firstname'], args['lastname'])
+            customers = CustomerModel.find_by_name(args['firstname'], args['lastname'])
+        else:
+            app.logger.info('Returning unfiltered list.')
+            customers = CustomerModel.all()
 
+        app.logger.info('[%s] Customers returned', len(customers))
+        results = [customer.serialize() for customer in customers]
+        return results, status.HTTP_200_OK
+
+    # ------------------------------------------------------------------
+    # ADD A NEW CUSTOMER
+    # ------------------------------------------------------------------
+    @api.doc('create_customers')
+    @api.response(400, 'The posted data was not valid')
+    @api.expect(create_model)
+    @api.marshal_with(customer_model, code=201)
+    def post(self):
+        """
+        Creates a Customer
+        This endpoint will create a Customer based the data in the body that is posted
+        """
+        app.logger.info('Request to Create a Customer')
+        customer = CustomerModel()
+        app.logger.debug('Payload = %s', api.payload)
+        customer.deserialize(api.payload)
+        customer.create()
+        app.logger.info('Customer with new id [%s] created!', customer.customer_id)
+        location_url = api.url_for(CustomerResource, customer_id=customer.customer_id, _external=True)
+        return customer.serialize(), status.HTTP_201_CREATED, {'Location': location_url}
 
 @api.route(f'{BASE_URL}/<int:customer_id>/addresses/<int:address_id>')
 @api.param('customer_id', 'The customer identifier')

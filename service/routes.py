@@ -89,8 +89,7 @@ address_model = api.inherit(
     'AddressModel',
     create_address_model,
     {
-        'address_id': fields.Integer(readOnly=True,
-                                      description='The unique id assigned internally by service'),
+        'address_id': fields.Integer(readOnly=True, description='The unique id assigned internally by service')
     }
 )
 

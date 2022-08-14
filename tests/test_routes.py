@@ -442,7 +442,7 @@ class TestCustomersService(unittest.TestCase):
     def test_create_customer_no_content_type(self):
         """It should not Create a Customer with no content type"""
         response = self.client.post(BASE_URL)
-        self.assertEqual(response.status_code, status.HTTP_415_UNSUPPORTED_MEDIA_TYPE)
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
 
     def test_create_customer_bad_gender(self):
         """It should not Create a Customer with bad gender data"""

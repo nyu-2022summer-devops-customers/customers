@@ -10,11 +10,11 @@ from .utils import status  # HTTP Status Codes
 # For this example we'll use SQLAlchemy, a popular ORM that supports a
 # variety of backends including SQLite, MySQL, and PostgreSQL
 from service.models import CustomerModel, AddressModel, Gender
-from flask_restx import Resource, reqparse, fields
+from flask_restx import Resource, reqparse, fields, inputs
 
 # Import Flask application
 from . import app, api
-BASE_URL = '/customers'  # changed from '/api/customers' to '/customers'
+BASE_URL = '/customers'
 
 
 def abort_when_customer_not_exist(customer_id):
@@ -84,7 +84,6 @@ customer_model = api.inherit(
 # query string arguments
 # TODO: add arguments
 customer_args = reqparse.RequestParser()
-
 
 ######################################################################
 #  PATH: /customers/{id}

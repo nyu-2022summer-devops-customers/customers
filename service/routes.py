@@ -250,22 +250,22 @@ class AddressCollection(Resource):
 ######################################################################
 # CREATE NEW CUSTOMER
 ######################################################################
-@app.route(f"{BASE_URL}", methods=["POST"])
-def create_customers():
-    """
-    Creates a Customer
-    This endpoint will create a Customer based the data in the body that is posted
-    """
-    app.logger.info("Request to create a customer")
-    check_content_type("application/json")
-    customer = CustomerModel()
-    customer.deserialize(request.get_json())
-    customer.create()
-    message = customer.serialize()
-    location_url = url_for("create_customers", customer_id=customer.customer_id, _external=True)
-    app.logger.info("Customer with ID [%s] created.", customer.customer_id)
+# @app.route(f"{BASE_URL}", methods=["POST"])
+# def create_customers():
+#     """
+#     Creates a Customer
+#     This endpoint will create a Customer based the data in the body that is posted
+#     """
+#     app.logger.info("Request to create a customer")
+#     check_content_type("application/json")
+#     customer = CustomerModel()
+#     customer.deserialize(request.get_json())
+#     customer.create()
+#     message = customer.serialize()
+#     location_url = url_for("create_customers", customer_id=customer.customer_id, _external=True)
+#     app.logger.info("Customer with ID [%s] created.", customer.customer_id)
 
-    return jsonify(message), status.HTTP_201_CREATED, {"Location": location_url}
+#     return jsonify(message), status.HTTP_201_CREATED, {"Location": location_url}
 
 
 ######################################################################
@@ -299,45 +299,45 @@ def update_an_address_of_a_customer(customer_id, address_id):
 ######################################################################
 # UPDATE A CUSTOMER
 ######################################################################
-@app.route(f"{BASE_URL}/<int:customer_id>", methods=["PUT"])
-def update_a_customer(customer_id):
-    """
-    Update a Customer
+# @app.route(f"{BASE_URL}/<int:customer_id>", methods=["PUT"])
+# def update_a_customer(customer_id):
+#     """
+#     Update a Customer
 
-    This endpoint will update a Customer based the body that is posted
-    """
-    app.logger.info("Request to update customer with id: %s", customer_id)
-    check_content_type("application/json")
+#     This endpoint will update a Customer based the body that is posted
+#     """
+#     app.logger.info("Request to update customer with id: %s", customer_id)
+#     check_content_type("application/json")
 
-    customer = CustomerModel.find(customer_id)
-    if not customer:
-        abort(status.HTTP_404_NOT_FOUND, f"Customer with id '{customer_id}' was not found.")
+#     customer = CustomerModel.find(customer_id)
+#     if not customer:
+#         abort(status.HTTP_404_NOT_FOUND, f"Customer with id '{customer_id}' was not found.")
 
-    customer.deserialize(request.get_json())
-    customer.customer_id = customer_id
-    customer.update()
+#     customer.deserialize(request.get_json())
+#     customer.customer_id = customer_id
+#     customer.update()
 
-    app.logger.info("Customer with ID [%s] updated.", customer.customer_id)
-    return jsonify(customer.serialize()), status.HTTP_200_OK
+#     app.logger.info("Customer with ID [%s] updated.", customer.customer_id)
+#     return jsonify(customer.serialize()), status.HTTP_200_OK
 
 
 ######################################################################
 # READ A CUSTOMER BY CUSTOMER_ID
 ######################################################################
-@app.route(f"{BASE_URL}/<int:customer_id>", methods=["GET"])
-def get_a_customer(customer_id):
-    """
-    Retrieve a single Customer
+# @app.route(f"{BASE_URL}/<int:customer_id>", methods=["GET"])
+# def get_a_customer(customer_id):
+#     """
+#     Retrieve a single Customer
 
-    This endpoint will return a Customer based on it's id
-    """
-    app.logger.info("Request for customer with id: %s", customer_id)
-    customer: CustomerModel = CustomerModel.find(customer_id)
-    if not customer:
-        abort(status.HTTP_404_NOT_FOUND, f"Customer with id '{customer_id}' was not found.")
+#     This endpoint will return a Customer based on it's id
+#     """
+#     app.logger.info("Request for customer with id: %s", customer_id)
+#     customer: CustomerModel = CustomerModel.find(customer_id)
+#     if not customer:
+#         abort(status.HTTP_404_NOT_FOUND, f"Customer with id '{customer_id}' was not found.")
 
-    app.logger.info("Returning customer: Id %s, Name %s %s", customer.customer_id, customer.first_name, customer.last_name)
-    return jsonify(customer.serialize()), status.HTTP_200_OK
+#     app.logger.info("Returning customer: Id %s, Name %s %s", customer.customer_id, customer.first_name, customer.last_name)
+#     return jsonify(customer.serialize()), status.HTTP_200_OK
 
 
 ######################################################################
@@ -533,21 +533,21 @@ def get_an_address_of_a_customer(customer_id, address_id):
 ######################################################################
 # DELETE A CUSTOMER
 ######################################################################
-@app.route(f"{BASE_URL}/<int:customer_id>", methods=["DELETE"])
-def delete_customers(customer_id):
-    """
-    Delete a Customer
+# @app.route(f"{BASE_URL}/<int:customer_id>", methods=["DELETE"])
+# def delete_customers(customer_id):
+#     """
+#     Delete a Customer
 
-    This endpoint will delete a Customer based on the id specified in the path
-    """
-    app.logger.info("Request to delete customer with id: %s", customer_id)
-    abort_when_customer_not_exist(customer_id=customer_id)
-    customer = CustomerModel.find(customer_id)
-    if customer:
-        customer.delete()
+#     This endpoint will delete a Customer based on the id specified in the path
+#     """
+#     app.logger.info("Request to delete customer with id: %s", customer_id)
+#     abort_when_customer_not_exist(customer_id=customer_id)
+#     customer = CustomerModel.find(customer_id)
+#     if customer:
+#         customer.delete()
 
-    app.logger.info("Customer with ID [%s] delete complete.", customer_id)
-    return "", status.HTTP_204_NO_CONTENT
+#     app.logger.info("Customer with ID [%s] delete complete.", customer_id)
+#     return "", status.HTTP_204_NO_CONTENT
 
 
 ######################################################################

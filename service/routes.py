@@ -10,7 +10,7 @@ from .utils import status  # HTTP Status Codes
 # For this example we'll use SQLAlchemy, a popular ORM that supports a
 # variety of backends including SQLite, MySQL, and PostgreSQL
 from service.models import CustomerModel, AddressModel, Gender
-from flask_restx import Resource, reqparse, fields, inputs
+from flask_restx import Resource, reqparse, fields
 
 # Import Flask application
 from . import app, api
@@ -189,7 +189,7 @@ class CustomerCollection(Resource):
         app.logger.info('Customer with new id [%s] created!', customer.customer_id)
         location_url = api.url_for(CustomerResource, customer_id=customer.customer_id, _external=True)
         return customer.serialize(), status.HTTP_201_CREATED, {'Location': location_url}
-    
+
     # ------------------------------------------------------------------
     # LIST ALL CUSTOMERS
     # ------------------------------------------------------------------
@@ -201,7 +201,7 @@ class CustomerCollection(Resource):
 
         app.logger.info('Returning unfiltered list.')
         customers = CustomerModel.all()
-        
+
         app.logger.info('[%s] Customers returned', len(customers))
         results = [customer.serialize() for customer in customers]
         return results, status.HTTP_200_OK

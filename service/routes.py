@@ -10,7 +10,7 @@ from .utils import status  # HTTP Status Codes
 # For this example we'll use SQLAlchemy, a popular ORM that supports a
 # variety of backends including SQLite, MySQL, and PostgreSQL
 from service.models import CustomerModel, AddressModel, Gender
-from flask_restx import Resource, reqparse, fields, inputs
+from flask_restx import Resource, reqparse, fields
 
 # Import Flask application
 from . import app, api
@@ -84,6 +84,7 @@ customer_model = api.inherit(
 # query string arguments
 # TODO: add arguments
 customer_args = reqparse.RequestParser()
+
 
 ######################################################################
 #  PATH: /customers/{id}

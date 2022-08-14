@@ -117,10 +117,10 @@ class CustomerResource(Resource):
         if not customer:
             abort(status.HTTP_404_NOT_FOUND, "Customer with id '{}' was not found.".format(customer_id))
         return customer.serialize(), status.HTTP_200_OK
-    
-    #------------------------------------------------------------------
+
+    # ------------------------------------------------------------------
     # UPDATE AN EXISTING CUSTOMER
-    #------------------------------------------------------------------
+    # ------------------------------------------------------------------
     @api.doc('update_customers')
     @api.response(404, 'Customer not found')
     @api.response(400, 'The posted Customer data was not valid')

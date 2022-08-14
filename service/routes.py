@@ -142,6 +142,24 @@ class CustomerResource(Resource):
         customer.update()
         return customer.serialize(), status.HTTP_200_OK
 
+    # ------------------------------------------------------------------
+    # DELETE A PET
+    # ------------------------------------------------------------------
+    @api.doc('delete_customers')
+    @api.response(204, 'Customer deleted')
+    def delete(self, customer_id):
+        """
+        Delete a Customer
+        This endpoint will delete a Customer based the id specified in the path
+        """
+        app.logger.info('Request to Delete a customer with id [%s]', customer_id)
+        customer = CustomerModel.find(customer_id)
+        if customer:
+            customer.delete()
+            app.logger.info('Customer with id [%s] was deleted', customer_id)
+
+        return '', status.HTTP_204_NO_CONTENT
+
 
 @api.route(f'{BASE_URL}', strict_slashes=False)
 class CustomerCollection(Resource):

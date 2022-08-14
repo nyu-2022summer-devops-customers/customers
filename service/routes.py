@@ -102,7 +102,7 @@ class CustomerResource(Resource):
     DELETE /customers/{customer_id} -  Deletes a Customer with the id
     """
     # ------------------------------------------------------------------
-    # RETRIEVE A PET
+    # RETRIEVE A CUSTOMER
     # ------------------------------------------------------------------
     @api.doc('get_customers')
     @api.response(404, 'Customer not found')
@@ -110,12 +110,36 @@ class CustomerResource(Resource):
     def get(self, customer_id):
         """
         Retrieve a single Customer
-        This endpoint will return a Pet based on his/her id
+        This endpoint will return a Customer based on his/her id
         """
         app.logger.info("Request to Retrieve a pet with id [%s]", customer_id)
         customer = CustomerModel.find(customer_id)
         if not customer:
             abort(status.HTTP_404_NOT_FOUND, "Customer with id '{}' was not found.".format(customer_id))
+        return customer.serialize(), status.HTTP_200_OK
+    
+    #------------------------------------------------------------------
+    # UPDATE AN EXISTING CUSTOMER
+    #------------------------------------------------------------------
+    @api.doc('update_customers')
+    @api.response(404, 'Customer not found')
+    @api.response(400, 'The posted Customer data was not valid')
+    @api.expect(customer_model)
+    @api.marshal_with(customer_model)
+    def put(self, customer_id):
+        """
+        Update a Customer
+        This endpoint will update a Customer based the body that is posted
+        """
+        app.logger.info('Request to Update a customer with id [%s]', customer_id)
+        customer = CustomerModel.find(customer_id)
+        if not customer:
+            abort(status.HTTP_404_NOT_FOUND, "Customer with id '{}' was not found.".format(customer_id))
+        app.logger.debug('Payload = %s', api.payload)
+        data = api.payload
+        customer.deserialize(data)
+        customer.id = customer_id
+        customer.update()
         return customer.serialize(), status.HTTP_200_OK
 
 

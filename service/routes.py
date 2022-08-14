@@ -14,7 +14,7 @@ from flask_restx import Resource, reqparse, fields
 
 # Import Flask application
 from . import app, api
-BASE_URL = '/api/customers'
+BASE_URL = '/customers'
 
 
 def abort_when_customer_not_exist(customer_id):
@@ -64,9 +64,7 @@ create_model = api.model('Customer', {
     'gender': fields.String(enum=Gender._member_names_, description='The gender of the Customer'),
     'birthday': fields.Date(required=True, description='The day the customer was born'),
     'is_active': fields.Boolean(required=True,
-                                description='Is the Customer alive?'),
-    'address': fields.String(required=True,
-                             description='The address of the Customer')
+                                description='Is the Customer alive?')
 })
 
 customer_model = api.inherit(

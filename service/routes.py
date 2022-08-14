@@ -10,7 +10,7 @@ from .utils import status  # HTTP Status Codes
 # For this example we'll use SQLAlchemy, a popular ORM that supports a
 # variety of backends including SQLite, MySQL, and PostgreSQL
 from service.models import CustomerModel, AddressModel, Gender
-from flask_restx import Resource, reqparse, fields
+from flask_restx import Resource, reqparse, fields, inputs
 
 # Import Flask application
 from . import app, api
@@ -73,8 +73,8 @@ customer_model = api.inherit(
     'CustomerModel',
     create_model,
     {
-        '_id': fields.String(readOnly=True,
-                             description='The unique id assigned internally by service'),
+        'customer_id': fields.Integer(readOnly=True,
+                                      description='The unique id assigned internally by service'),
     }
 )
 # Address
@@ -138,7 +138,7 @@ class CustomerResource(Resource):
         app.logger.debug('Payload = %s', api.payload)
         data = api.payload
         customer.deserialize(data)
-        customer.id = customer_id
+        customer.customer_id = customer_id
         customer.update()
         return customer.serialize(), status.HTTP_200_OK
 
@@ -169,6 +169,42 @@ class CustomerCollection(Resource):
 
     Like create, list operations
     """
+    # ------------------------------------------------------------------
+    # ADD A NEW CUSTOMER
+    # ------------------------------------------------------------------
+    @api.doc('create_customers')
+    @api.response(400, 'The posted data was not valid')
+    @api.expect(create_model)
+    @api.marshal_with(customer_model, code=201)
+    def post(self):
+        """
+        Creates a Customer
+        This endpoint will create a Pet based the data in the body that is posted
+        """
+        app.logger.info('Request to Create a Customer')
+        customer = CustomerModel()
+        app.logger.debug('Payload = %s', api.payload)
+        customer.deserialize(api.payload)
+        customer.create()
+        app.logger.info('Customer with new id [%s] created!', customer.customer_id)
+        location_url = api.url_for(CustomerResource, customer_id=customer.customer_id, _external=True)
+        return customer.serialize(), status.HTTP_201_CREATED, {'Location': location_url}
+    
+    # ------------------------------------------------------------------
+    # LIST ALL CUSTOMERS
+    # ------------------------------------------------------------------
+    @api.doc('list_customers')
+    @api.expect(customer_args, validate=True)
+    @api.marshal_list_with(customer_model)
+    def get(self):
+        """ Returns all of the Customers """
+
+        app.logger.info('Returning unfiltered list.')
+        customers = CustomerModel.all()
+        
+        app.logger.info('[%s] Customers returned', len(customers))
+        results = [customer.serialize() for customer in customers]
+        return results, status.HTTP_200_OK
 
 
 @api.route(f'{BASE_URL}/<int:customer_id>/addresses/<int:address_id>')

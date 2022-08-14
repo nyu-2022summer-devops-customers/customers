@@ -14,7 +14,7 @@ from service.models import CustomerModel, AddressModel, Gender, db
 from service.utils import status
 from tests.factories import AddressFactory, CustomerFactory  # HTTP Status Codes
 
-BASE_URL = '/api/customers'
+BASE_URL = '/customers'   # changed from '/api/customers' to '/customers'
 
 DATABASE_URI = os.getenv(
     "DATABASE_URI", "postgresql://postgres:postgres@localhost:5432/postgres"

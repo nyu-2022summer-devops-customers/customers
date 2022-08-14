@@ -74,7 +74,7 @@ customer_model = api.inherit(
     create_model,
     {
         'customer_id': fields.Integer(readOnly=True,
-                             description='The unique id assigned internally by service'),
+                                      description='The unique id assigned internally by service'),
     }
 )
 # Address

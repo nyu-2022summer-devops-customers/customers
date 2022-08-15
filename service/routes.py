@@ -333,7 +333,7 @@ class AddressResource(Resource):
             address.delete()
         app.logger.info("Address [%s] with customer id [%s]] delete complete.", address_id, customer_id)
         return "", status.HTTP_204_NO_CONTENT
-        
+
     # ------------------------------------------------------------------
     # UPDATE AN ADDRESS OF A CUSTOMER
     # ------------------------------------------------------------------

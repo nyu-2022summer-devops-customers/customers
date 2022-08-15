@@ -313,7 +313,6 @@ class AddressResource(Resource):
         app.logger.info("Address [%s] with customer id [%s]] retrieve complete.", address_id, customer_id)
         return address.serialize(), status.HTTP_200_OK
 
-
     # ------------------------------------------------------------------
     # DELETE AN ADDRESS OF A CUSTOMER
     # ------------------------------------------------------------------

@@ -239,7 +239,6 @@ class AddressResource(Resource):
 @api.route(f'{BASE_URL}/<int:customer_id>/addresses', strict_slashes=False)
 @api.param('customer_id', 'The customer identifier')
 class AddressCollection(Resource):
-    # TODO: move apis related to collection into this class
     """
     CustomerCollection class
 
@@ -260,7 +259,7 @@ class AddressCollection(Resource):
         abort_when_customer_not_exist(customer_id=customer_id)
         addresses = AddressModel.find_by_customer_id(customer_id=customer_id)
 
-        app.logger.info("[%s] addresses under customer ID [%s] returned.", len(addresses), customer_id)
+        app.logger.info("Addresses under customer ID [%s] returned.", customer_id)
         results = [address.serialize() for address in addresses]
 
         return results, status.HTTP_200_OK

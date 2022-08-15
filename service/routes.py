@@ -266,6 +266,7 @@ class AddressCollection(Resource):
         location_url = api.url_for(AddressResource, customer_id=customer_id, address_id=address.address_id, _external=True)
 
         return address.serialize(), status.HTTP_201_CREATED, {"Location": location_url}
+
     # ------------------------------------------------------------------
     # LIST ALL ADDRESSES
     # ------------------------------------------------------------------
@@ -277,7 +278,6 @@ class AddressCollection(Resource):
         List all Addresses of a given customer
         """
         app.logger.info("Request for addresses with customer id: %s", customer_id)
-        address = AddressModel()
         abort_when_customer_not_exist(customer_id=customer_id)
         addresses = AddressModel.find_by_customer_id(customer_id=customer_id)
 

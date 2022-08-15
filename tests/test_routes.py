@@ -216,27 +216,27 @@ class TestCustomersService(unittest.TestCase):
                     break
             self.assertTrue(has)
 
-    # def test_get_an_address_of_a_customer(self):
-    #     """It should return an address of a customer"""
-    #     test_customer = CustomerFactory()
-    #     logging.debug("Test Customer: %s", test_customer.serialize())
-    #     response = self.client.post(BASE_URL, json=test_customer.serialize())
-    #     self.assertEqual(response.status_code, status.HTTP_201_CREATED)
-    #     new_customer = response.get_json()
+    def test_get_an_address_of_a_customer(self):
+        """It should return an address of a customer"""
+        test_customer = CustomerFactory()
+        logging.debug("Test Customer: %s", test_customer.serialize())
+        response = self.client.post(BASE_URL, json=test_customer.serialize())
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        new_customer = response.get_json()
 
-    #     customer_id = new_customer["customer_id"]
-    #     addresses = self._create_addresses(customer_id=customer_id, count=10)
-    #     self.assertEqual(len(addresses), 10)
-    #     address_id = addresses[0].address_id
-    #     address_str = addresses[0].address
+        customer_id = new_customer["customer_id"]
+        addresses = self._create_addresses(customer_id=customer_id, count=10)
+        self.assertEqual(len(addresses), 10)
+        address_id = addresses[0].address_id
+        address_str = addresses[0].address
 
-    #     response = self.client.get(f"{BASE_URL}/{customer_id}/addresses/{address_id}")
-    #     self.assertEqual(response.status_code, status.HTTP_200_OK)
+        response = self.client.get(f"{BASE_URL}/{customer_id}/addresses/{address_id}")
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
 
-    #     new_address = response.get_json()
-    #     self.assertEqual(new_address["address_id"], address_id)
-    #     self.assertEqual(new_address["customer_id"], customer_id)
-    #     self.assertEqual(new_address["address"], address_str)
+        new_address = response.get_json()
+        self.assertEqual(new_address["address_id"], address_id)
+        self.assertEqual(new_address["customer_id"], customer_id)
+        self.assertEqual(new_address["address"], address_str)
 
     def test_update_a_customer(self):
         """It should Update an existing Customer"""

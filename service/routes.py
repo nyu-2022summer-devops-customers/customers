@@ -464,7 +464,6 @@ class DeactivateResource(Resource):
 #     return jsonify(address.serialize()), status.HTTP_200_OK
 
 
-
 ######################################################################
 # UPDATE A CUSTOMER
 ######################################################################

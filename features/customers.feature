@@ -118,7 +118,6 @@ Scenario: Delete a Customer
     And I copy the "Id" field
     And I press the "Clear" button
     And I paste the "Id" field
-    And I press the "Retrieve" button 
     And I press the "Delete" button
     Then I should see the message "Customer has been Deleted!"
 

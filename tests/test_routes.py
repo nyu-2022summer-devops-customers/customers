@@ -306,26 +306,26 @@ class TestCustomersService(unittest.TestCase):
         # There should be only 5 customers, but there are 5 customers created when testing Address. Need to be fixed
         self.assertEqual(len(data), 5)
 
-    # def test_delete_an_address_of_a_customer(self):
-    #     """It should delete an address of a customer"""
-    #     test_customer = CustomerFactory()
-    #     logging.debug("Test Customer: %s", test_customer.serialize())
-    #     response = self.client.post(BASE_URL, json=test_customer.serialize())
-    #     self.assertEqual(response.status_code, status.HTTP_201_CREATED)
-    #     new_customer = response.get_json()
+    def test_delete_an_address_of_a_customer(self):
+        """It should delete an address of a customer"""
+        test_customer = CustomerFactory()
+        logging.debug("Test Customer: %s", test_customer.serialize())
+        response = self.client.post(BASE_URL, json=test_customer.serialize())
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        new_customer = response.get_json()
 
-    #     customer_id = new_customer["customer_id"]
-    #     addresses = self._create_addresses(customer_id=customer_id, count=1)
-    #     self.assertEqual(len(addresses), 1)
-    #     address_id = addresses[0].address_id
-    #     # address_str = addresses[0].address
+        customer_id = new_customer["customer_id"]
+        addresses = self._create_addresses(customer_id=customer_id, count=1)
+        self.assertEqual(len(addresses), 1)
+        address_id = addresses[0].address_id
+        # address_str = addresses[0].address
 
-    #     response = self.client.delete(f"{BASE_URL}/{customer_id}/addresses/{address_id}")
-    #     self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
-    #     self.assertEqual(len(response.data), 0)
-    #     # make sure they are deleted
-    #     response = self.client.get(f"{BASE_URL}/{customer_id}/addresses/{address_id}")
-    #     self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
+        response = self.client.delete(f"{BASE_URL}/{customer_id}/addresses/{address_id}")
+        self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
+        self.assertEqual(len(response.data), 0)
+        # make sure they are deleted
+        response = self.client.get(f"{BASE_URL}/{customer_id}/addresses/{address_id}")
+        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
 
     # def test_update_an_address_of_a_customer(self):
     #     """It should update an address of a customer"""

@@ -123,7 +123,7 @@ class CustomerResource(Resource):
         Retrieve a single Customer
         This endpoint will return a Customer based on his/her id
         """
-        app.logger.info("Request to Retrieve a pet with id [%s]", customer_id)
+        app.logger.info("Request to Retrieve a customer with id [%s]", customer_id)
         customer = CustomerModel.find(customer_id)
         if not customer:
             abort(status.HTTP_404_NOT_FOUND, "Customer with id '{}' was not found.".format(customer_id))
@@ -306,8 +306,11 @@ class AddressResource(Resource):
         abort_when_customer_not_exist(customer_id=customer_id)
         found = AddressModel.find_by_customer_and_address_id(customer_id=customer_id, address_id=address_id)
 
+        # if not found:
+        #     abort(status.HTTP_404_NOT_FOUND, "Customer with id '{}' was not found.".format(customer_id))
         if found.count() == 0:
-            abort(status.HTTP_404_NOT_FOUND, "Address [%s] with customer id [%s] was not found.", address_id, customer_id)
+            # app.logger.info('did not get the address')
+            abort(status.HTTP_404_NOT_FOUND, "Address with id {address_id} of customer with id {customer_id} was not found.")
         address = found[0]
 
         app.logger.info(address.serialize())

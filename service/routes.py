@@ -239,7 +239,6 @@ class AddressResource(Resource):
 @api.route(f'{BASE_URL}/<int:customer_id>/addresses', strict_slashes=False)
 @api.param('customer_id', 'The customer identifier')
 class AddressCollection(Resource):
-    # TODO: move apis related to collection into this class
     """
     CustomerCollection class
 
@@ -267,6 +266,26 @@ class AddressCollection(Resource):
         location_url = api.url_for(AddressResource, customer_id=customer_id, address_id=address.address_id, _external=True)
 
         return address.serialize(), status.HTTP_201_CREATED, {"Location": location_url}
+
+
+    # ------------------------------------------------------------------
+    # LIST ALL ADDRESSES
+    # ------------------------------------------------------------------
+    @api.doc('list_customers')
+    @api.response(400, 'Bad request to non-existing customer')
+    @api.marshal_list_with(address_model)
+    def get(self, customer_id):
+        """
+        List all Addresses of a given customer
+        """
+        app.logger.info("Request for addresses with customer id: %s", customer_id)
+        abort_when_customer_not_exist(customer_id=customer_id)
+        addresses = AddressModel.find_by_customer_id(customer_id=customer_id)
+
+        app.logger.info("Addresses under customer ID [%s] returned.", customer_id)
+        results = [address.serialize() for address in addresses]
+
+        return results, status.HTTP_200_OK
 
 
 ######################################################################
@@ -350,7 +369,7 @@ def update_an_address_of_a_customer(customer_id, address_id):
     This endpoint will delete an Address based on the data in the body that is posted
     """
     app.logger.info("Update an Address of a Customer")
-    check_content_type("application/json")
+    # check_content_type("application/json")
     abort_when_customer_not_exist(customer_id=customer_id)
     address = AddressModel()
     address.deserialize(request.get_json())
@@ -560,24 +579,24 @@ def list_customers():  # noqa: C901
 ######################################################################
 # LIST ALL ADDRESS OF A GIVEN CUSTOMER
 ######################################################################
-@app.route(f"{BASE_URL}/<int:customer_id>/addresses", methods=["GET"])
-def list_addresses(customer_id):
-    """
-    List all Address of a given customer
-    This endpoint will create an Address based the data in the body that is posted
-    """
-    app.logger.info("Request for addresses with customer id: %s", customer_id)
-    abort_when_customer_not_exist(customer_id=customer_id)
-    addresses = AddressModel.find_by_customer_id(customer_id=customer_id)
-    if addresses.count() == 0:
-        abort(status.HTTP_404_NOT_FOUND, f"Addresses with id '{customer_id}' was not found.")
+# @app.route(f"{BASE_URL}/<int:customer_id>/addresses", methods=["GET"])
+# def list_addresses(customer_id):
+#     """
+#     List all Address of a given customer
+#     This endpoint will create an Address based the data in the body that is posted
+#     """
+#     app.logger.info("Request for addresses with customer id: %s", customer_id)
+#     abort_when_customer_not_exist(customer_id=customer_id)
+#     addresses = AddressModel.find_by_customer_id(customer_id=customer_id)
+#     if addresses.count() == 0:
+#         abort(status.HTTP_404_NOT_FOUND, f"Addresses with id '{customer_id}' was not found.")
 
-    app.logger.info("All address under customer ID [%s].", customer_id)
+#     app.logger.info("All address under customer ID [%s].", customer_id)
 
-    res = []
-    for addr in addresses:
-        res.append(addr.serialize())
-    return jsonify(res), status.HTTP_200_OK
+#     res = []
+#     for addr in addresses:
+#         res.append(addr.serialize())
+#     return jsonify(res), status.HTTP_200_OK
 
 
 ######################################################################
@@ -654,13 +673,13 @@ def init_db():
     AddressModel.init_db(app)
 
 
-def check_content_type(media_type):
-    """Checks that the media type is correct"""
-    content_type = request.headers.get("Content-Type")
-    if content_type and content_type == media_type:
-        return
-    app.logger.error("Invalid Content-Type: %s", content_type)
-    abort(
-        status.HTTP_415_UNSUPPORTED_MEDIA_TYPE,
-        "Content-Type must be {}".format(media_type),
-    )
+# def check_content_type(media_type):
+#     """Checks that the media type is correct"""
+#     content_type = request.headers.get("Content-Type")
+#     if content_type and content_type == media_type:
+#         return
+#     app.logger.error("Invalid Content-Type: %s", content_type)
+#     abort(
+#         status.HTTP_415_UNSUPPORTED_MEDIA_TYPE,
+#         "Content-Type must be {}".format(media_type),
+#     )

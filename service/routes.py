@@ -208,14 +208,72 @@ class CustomerCollection(Resource):
     @api.expect(customer_args, validate=True)
     @api.marshal_list_with(customer_model)
     def get(self):
-        """ Returns all of the Customers """
 
-        app.logger.info('Returning unfiltered list.')
-        customers = CustomerModel.all()
+        def list_all_customers():
+            """Returns all of the Customers"""
+            app.logger.info("Request for customer list")
+            customers = []
+            customers = CustomerModel.all()
 
-        app.logger.info('[%s] Customers returned', len(customers))
-        results = [customer.serialize() for customer in customers]
-        return results, status.HTTP_200_OK
+            results = [customer.serialize() for customer in customers]
+            app.logger.info("Returning %d customers", len(results))
+            return results, status.HTTP_200_OK
+
+        def list_all_customers_by_nickname(nickname):
+            """
+            Retrieve a Customer list by nickname
+            """
+            app.logger.info("Request for customer with nickname: %s", nickname)
+            customers = CustomerModel.find_by_nickname(nickname=nickname)
+            results = [customer.serialize() for customer in customers]
+            return results, status.HTTP_200_OK
+
+        def list_all_customers_by_email(email):
+            """
+            Retrieve a Customer list by email
+            """
+            app.logger.info("Request for customer with email: %s", email)
+            customers = CustomerModel.find_by_email(email=email)
+            results = [customer.serialize() for customer in customers]
+            return results, status.HTTP_200_OK
+
+        def list_all_customers_by_name(firstname, lastname):
+            """
+            Retrieve a Customer list by name
+            """
+            app.logger.info("Request for customer with name: %s %s", firstname, lastname)
+            customers = CustomerModel.find_by_name(firstname, lastname)
+            results = [customer.serialize() for customer in customers]
+            return results, status.HTTP_200_OK
+
+        def list_all_customers_by_birthday(birthday):
+            """
+            Retrieve a Customer list by birthday
+            """
+            app.logger.info("Request for customer with birthday: %s %s", birthday)
+            customers = CustomerModel.find_by_birthday(birthday)
+            results = [customer.serialize() for customer in customers]
+            return results, status.HTTP_200_OK
+
+        args = request.args
+        nickname = args.get("nickname")
+        email = args.get("email")
+        firstname = args.get('firstname')
+        lastname = args.get('lastname')
+        birthday = args.get('birthday')
+
+        if args.get('nickname'):
+            return list_all_customers_by_nickname(nickname=nickname)
+        elif args.get('email'):
+            return list_all_customers_by_email(email=email)
+        elif args.get('birthday'):
+            return list_all_customers_by_birthday(birthday=birthday)
+        elif firstname and lastname:
+            return list_all_customers_by_name(firstname, lastname)
+        else:
+            return list_all_customers()
+
+
 
 
 ######################################################################
@@ -429,85 +487,6 @@ def update_an_address_of_a_customer(customer_id, address_id):
 
 #     app.logger.info("Returning customer: Id %s, Name %s %s", customer.customer_id, customer.first_name, customer.last_name)
 #     return jsonify(customer.serialize()), status.HTTP_200_OK
-
-
-######################################################################
-# LIST ALL CUSTOMERS
-######################################################################
-@app.route(BASE_URL, methods=["GET"])
-def list_customers():  # noqa: C901
-    """List customers"""
-    def list_all_customers():
-        """Returns all of the Customers"""
-        app.logger.info("Request for customer list")
-        customers = []
-        customers = CustomerModel.all()
-
-        results = [customer.serialize() for customer in customers]
-        app.logger.info("Returning %d customers", len(results))
-        return jsonify(results), status.HTTP_200_OK
-
-    def list_all_customers_by_nickname(nickname):
-        """
-        Retrieve a Customer list by nickname
-        """
-        app.logger.info("Request for customer with nickname: %s", nickname)
-        customers = CustomerModel.find_by_nickname(nickname=nickname)
-        res = []
-        for customer in customers:
-            res.append(customer.serialize())
-        return jsonify(res), status.HTTP_200_OK
-
-    def list_all_customers_by_email(email):
-        """
-        Retrieve a Customer list by email
-        """
-        app.logger.info("Request for customer with email: %s", email)
-        customers = CustomerModel.find_by_email(email=email)
-        res = []
-        for customer in customers:
-            res.append(customer.serialize())
-        return jsonify(res), status.HTTP_200_OK
-
-    def list_all_customers_by_name(firstname, lastname):
-        """
-        Retrieve a Customer list by name
-        """
-        app.logger.info("Request for customer with name: %s %s", firstname, lastname)
-        customers = CustomerModel.find_by_name(firstname, lastname)
-        res = []
-        for customer in customers:
-            res.append(customer.serialize())
-        return jsonify(res), status.HTTP_200_OK
-
-    def list_all_customers_by_birthday(birthday):
-        """
-        Retrieve a Customer list by birthday
-        """
-        app.logger.info("Request for customer with birthday: %s %s", birthday)
-        customers = CustomerModel.find_by_birthday(birthday)
-        res = []
-        for customer in customers:
-            res.append(customer.serialize())
-        return jsonify(res), status.HTTP_200_OK
-
-    args = request.args
-    nickname = args.get("nickname")
-    email = args.get("email")
-    firstname = args.get('firstname')
-    lastname = args.get('lastname')
-    birthday = args.get('birthday')
-
-    if args.get('nickname'):
-        return list_all_customers_by_nickname(nickname=nickname)
-    elif args.get('email'):
-        return list_all_customers_by_email(email=email)
-    elif args.get('birthday'):
-        return list_all_customers_by_birthday(birthday=birthday)
-    elif firstname and lastname:
-        return list_all_customers_by_name(firstname, lastname)
-    else:
-        return list_all_customers()
 
 
 ######################################################################

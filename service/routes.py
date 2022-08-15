@@ -6,6 +6,7 @@ Describe what your service does here
 
 from flask import jsonify, request, url_for, abort
 from .utils import status  # HTTP Status Codes
+import datetime
 
 # For this example we'll use SQLAlchemy, a popular ORM that supports a
 # variety of backends including SQLite, MySQL, and PostgreSQL
@@ -35,7 +36,17 @@ def health():
 ######################################################################
 # GET INDEX
 ######################################################################
-
+@app.before_request
+def pre_request_logging():
+    #Logging statement
+    app.logger.info('\t'.join([
+        datetime.datetime.today().ctime(),
+        request.remote_addr,
+        request.method,
+        request.url,
+        str(request.data),
+        ', '.join([': '.join(x) for x in request.headers])])
+    )
 
 @app.route("/")
 def index():
@@ -218,7 +229,7 @@ def list_customers():  # noqa: C901
         """
         Retrieve a Customer list by birthday
         """
-        app.logger.info("Request for customer with birthday: %s %s", birthday)
+        app.logger.info("Request for customer with birthday: %s", birthday)
         customers = CustomerModel.find_by_birthday(birthday)
         res = []
         for customer in customers:

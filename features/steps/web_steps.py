@@ -24,7 +24,9 @@ Steps file for web interactions with Selenium
 For information on Waiting until elements are present in the HTML see:
     https://selenium-python.readthedocs.io/waits.html
 """
+from lib2to3.pgen2 import driver
 import logging
+from time import sleep
 from behave import when, then # pylint: disable=no-name-in-module
 from compare import expect, ensure
 from selenium.webdriver.common.by import By
@@ -76,6 +78,18 @@ def step_impl(context, element_name):
     element_id = ID_PREFIX + element_name.lower().replace(' ', '_')
     element = context.driver.find_element_by_id(element_id)
     expect(element.get_attribute('value')).to_be(u'')
+
+@then('the "{element_name}" field should not be empty')
+def step_impl(context, element_name):
+    element_id = ID_PREFIX + element_name.lower().replace(' ', '_')
+    element = context.driver.find_element_by_id(element_id)
+    v = element.get_attribute('value')
+    expect(len(v)).to_be_greater_than(0)
+
+@when('wait for "{second}" seconds')
+def step_impl(_, second):
+    sleep(int(second))
+
 
 ##################################################################
 # These two function simulate copy and paste
@@ -153,6 +167,8 @@ def step_impl(context, name):
 
 @then('I should see the message "{message}"')
 def step_impl(context, message):
+    element = context.driver.find_element_by_id('flash_message')
+
     found = WebDriverWait(context.driver, context.WAIT_SECONDS).until(
         expected_conditions.text_to_be_present_in_element(
             (By.ID, 'flash_message'),

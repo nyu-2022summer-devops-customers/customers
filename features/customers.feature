@@ -115,6 +115,8 @@ Scenario: Query customers by birthday
 Scenario: Delete a Customer
     When I visit the "Home Page"
     And I press the "Search" button
+    And wait for "5" seconds
+    # Then the "Id" field should not be empty
     And I copy the "Id" field
     And I press the "Clear" button
     And I paste the "Id" field
@@ -125,6 +127,8 @@ Scenario: Delete a Customer
 Scenario: Activate a Customer
     When I visit the "Home Page"
     And I press the "Search" button
+    And wait for "5" seconds
+    # Then the "Id" field should not be empty
     And I copy the "Id" field
     And I press the "Clear" button
     And I paste the "Id" field
@@ -137,6 +141,8 @@ Scenario: Activate a Customer
 Scenario: Deactivate a Customer
     When I visit the "Home Page"
     And I press the "Search" button
+    And wait for "5" seconds
+    # Then the "Id" field should not be empty
     And I copy the "Id" field
     And I press the "Clear" button
     And I paste the "Id" field

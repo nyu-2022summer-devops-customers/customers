@@ -237,6 +237,7 @@ class AddressResource(Resource):
 
 
 @api.route(f'{BASE_URL}/<int:customer_id>/addresses', strict_slashes=False)
+@api.param('customer_id', 'The customer identifier')
 class AddressCollection(Resource):
     # TODO: move apis related to collection into this class
     """
@@ -244,12 +245,34 @@ class AddressCollection(Resource):
 
     Like create, list operations
     """
+    # ------------------------------------------------------------------
+    # ADD A NEW CUSTOMER ADDRESS
+    # ------------------------------------------------------------------
+    @api.doc('create_customers_address')
+    @api.response(400, 'The posted data was not valid')
+    @api.expect(create_address_model)
+    @api.marshal_with(address_model, code=201)
+    def post(self, customer_id):
+        """
+        Creates an Address
+        This endpoint will create an Address based the data in the body that is posted
+        """
+        app.logger.info("Request to create an address")
+        abort_when_customer_not_exist(customer_id=customer_id)
+        address = AddressModel()
+        app.logger.debug('Payload = %s', api.payload)
+        address.deserialize(api.payload)
+        address.create()
+        app.logger.info("Address with address_id [%s] is created!", address.address_id)
+        location_url = api.url_for(AddressResource, customer_id=customer_id, address_id=address.address_id, _external=True)
+
+        return address.serialize(), status.HTTP_201_CREATED, {"Location": location_url}
 
 
 ######################################################################
 #  PATH: /customers/{customer_id}/activate
 ######################################################################
-@api.route(f"{BASE_URL}/<customer_id>/activate", methods=["PUT"])
+@api.route(f"{BASE_URL}/<int:customer_id>/activate", methods=["PUT"])
 @api.param('customer_id', 'The customer identifier')
 class ActivateResource(Resource):
     """ Activate actions on a Customer """
@@ -490,23 +513,23 @@ def deactivate_a_customer(customer_id):
 # CREATE NEW ADDRESS
 # https://flask-sqlalchemy.palletsprojects.com/en/2.x/models/
 ######################################################################
-@app.route(f"{BASE_URL}/<int:customer_id>/addresses", methods=["POST"])
-def create_address(customer_id):
-    """
-    Creates an Address
-    This endpoint will create an Address based the data in the body that is posted
-    """
-    app.logger.info("Request to create an address")
-    check_content_type("application/json")
-    abort_when_customer_not_exist(customer_id=customer_id)
-    address = AddressModel()
-    address.deserialize(request.get_json())
-    address.create()
-    message = address.serialize()
-    location_url = url_for("create_address", customer_id=customer_id) + f"/{address.address_id}"
-    app.logger.info("Address with ID [%s] created.", address.address_id)
+# @app.route(f"{BASE_URL}/<int:customer_id>/addresses", methods=["POST"])
+# def create_address(customer_id):
+#     """
+#     Creates an Address
+#     This endpoint will create an Address based the data in the body that is posted
+#     """
+#     app.logger.info("Request to create an address")
+#     check_content_type("application/json")
+#     abort_when_customer_not_exist(customer_id=customer_id)
+#     address = AddressModel()
+#     address.deserialize(request.get_json())
+#     address.create()
+#     message = address.serialize()
+#     location_url = url_for("create_address", customer_id=customer_id) + f"/{address.address_id}"
+#     app.logger.info("Address with ID [%s] created.", address.address_id)
 
-    return jsonify(message), status.HTTP_201_CREATED, {"Location": location_url}
+#     return jsonify(message), status.HTTP_201_CREATED, {"Location": location_url}
 
 
 ######################################################################

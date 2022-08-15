@@ -153,41 +153,41 @@ class TestCustomersService(unittest.TestCase):
         response = self.client.get(f"{BASE_URL}/{test_customer.customer_id}")
         self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
 
-    # def test_create_address(self):
-    #     """It should Create a new Address for a Customer"""
-    #     test_customer = CustomerFactory()
-    #     logging.debug("Test Customer: %s", test_customer.serialize())
-    #     response = self.client.post(BASE_URL, json=test_customer.serialize())
+    def test_create_address(self):
+        """It should Create a new Address for a Customer"""
+        test_customer = CustomerFactory()
+        logging.debug("Test Customer: %s", test_customer.serialize())
+        response = self.client.post(BASE_URL, json=test_customer.serialize())
 
-    #     self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
 
-    #     # Make sure location header is set
-    #     location = response.headers.get("Location", None)
-    #     self.assertIsNotNone(location)
-    #     logging.debug("Location: %s", location)
+        # Make sure location header is set
+        location = response.headers.get("Location", None)
+        self.assertIsNotNone(location)
+        logging.debug("Location: %s", location)
 
-    #     # Check the data is correct
-    #     new_customer = response.get_json()
-    #     self.assertEqual(new_customer["password"], test_customer.password)
-    #     self.assertEqual(new_customer["first_name"], test_customer.first_name)
-    #     self.assertEqual(new_customer["last_name"], test_customer.last_name)
-    #     self.assertEqual(new_customer["nickname"], test_customer.nickname)
-    #     self.assertEqual(new_customer["email"], test_customer.email)
-    #     self.assertEqual(new_customer["gender"], test_customer.gender.name)
-    #     self.assertEqual(new_customer["birthday"], test_customer.birthday.isoformat())
+        # Check the data is correct
+        new_customer = response.get_json()
+        self.assertEqual(new_customer["password"], test_customer.password)
+        self.assertEqual(new_customer["first_name"], test_customer.first_name)
+        self.assertEqual(new_customer["last_name"], test_customer.last_name)
+        self.assertEqual(new_customer["nickname"], test_customer.nickname)
+        self.assertEqual(new_customer["email"], test_customer.email)
+        self.assertEqual(new_customer["gender"], test_customer.gender.name)
+        self.assertEqual(new_customer["birthday"], test_customer.birthday.isoformat())
 
-    #     # Create Address for this customer
-    #     test_address = AddressFactory()
-    #     test_address.customer_id = new_customer["customer_id"]
-    #     logging.debug("Test Address: %s", test_address.serialize())
-    #     response = self.client.post(f"{BASE_URL}/{test_address.customer_id}/addresses", json=test_address.serialize())
+        # Create Address for this customer
+        test_address = AddressFactory()
+        test_address.customer_id = new_customer["customer_id"]
+        logging.debug("Test Address: %s", test_address.serialize())
+        response = self.client.post(f"{BASE_URL}/{test_address.customer_id}/addresses", json=test_address.serialize())
 
-    #     self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
 
-    #     # Make sure location header is set
-    #     location = response.headers.get("Location", None)
-    #     self.assertIsNotNone(location)
-    #     logging.debug("Location: %s", location)
+        # Make sure location header is set
+        location = response.headers.get("Location", None)
+        self.assertIsNotNone(location)
+        logging.debug("Location: %s", location)
 
     # def test_list_addresses(self):
     #     """It should List all addresses of a Customer"""
@@ -454,19 +454,19 @@ class TestCustomersService(unittest.TestCase):
         response = self.client.post(BASE_URL, json=test_customer)
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
 
-    # def test_create_address_for_nonexisting_customer(self):
-    #     """It shouldn't Create a new Address for an non-existing Customer"""
-    #     customer_id = 0
-    #     # Check if 0 exists
-    #     response = self.client.get(f"{BASE_URL}/{customer_id}")
-    #     self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
+    def test_create_address_for_nonexisting_customer(self):
+        """It shouldn't Create a new Address for an non-existing Customer"""
+        customer_id = 0
+        # Check if 0 exists
+        response = self.client.get(f"{BASE_URL}/{customer_id}")
+        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
 
-    #     # Create Address for this non-existing customer
-    #     test_address = AddressFactory()
-    #     test_address.customer_id = customer_id
-    #     logging.debug("Test Address: %s", test_address.serialize())
-    #     response = self.client.post(f"{BASE_URL}/{customer_id}/addresses", json=test_address.serialize())
-    #     self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+        # Create Address for this non-existing customer
+        test_address = AddressFactory()
+        test_address.customer_id = customer_id
+        logging.debug("Test Address: %s", test_address.serialize())
+        response = self.client.post(f"{BASE_URL}/{customer_id}/addresses", json=test_address.serialize())
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
 
     # def test_delete_address_for_nonexisting_customer(self):
     #     """It shouldn't Delete the Address for an non-existing Customer"""

@@ -4,7 +4,7 @@ My Service
 Describe what your service does here
 """
 
-from flask import jsonify, request, url_for, abort
+from flask import jsonify, request, abort
 from .utils import status  # HTTP Status Codes
 
 # For this example we'll use SQLAlchemy, a popular ORM that supports a
@@ -237,6 +237,7 @@ class AddressResource(Resource):
 
 
 @api.route(f'{BASE_URL}/<int:customer_id>/addresses', strict_slashes=False)
+@api.param('customer_id', 'The customer identifier')
 class AddressCollection(Resource):
     # TODO: move apis related to collection into this class
     """
@@ -263,6 +264,53 @@ class AddressCollection(Resource):
         results = [address.serialize() for address in addresses]
 
         return results, status.HTTP_200_OK
+    # ------------------------------------------------------------------
+    # ADD A NEW CUSTOMER ADDRESS
+    # ------------------------------------------------------------------
+    @api.doc('create_customers_address')
+    @api.response(400, 'The posted data was not valid')
+    @api.expect(create_address_model)
+    @api.marshal_with(address_model, code=201)
+    def post(self, customer_id):
+        """
+        Creates an Address
+        This endpoint will create an Address based the data in the body that is posted
+        """
+        app.logger.info("Request to create an address")
+        abort_when_customer_not_exist(customer_id=customer_id)
+        address = AddressModel()
+        app.logger.debug('Payload = %s', api.payload)
+        address.deserialize(api.payload)
+        address.create()
+        app.logger.info("Address with address_id [%s] is created!", address.address_id)
+        location_url = api.url_for(AddressResource, customer_id=customer_id, address_id=address.address_id, _external=True)
+
+        return address.serialize(), status.HTTP_201_CREATED, {"Location": location_url}
+
+
+######################################################################
+#  PATH: /customers/{customer_id}/activate
+######################################################################
+@api.route(f"{BASE_URL}/<int:customer_id>/activate", methods=["PUT"])
+@api.param('customer_id', 'The customer identifier')
+class ActivateResource(Resource):
+    """ Activate actions on a Customer """
+    @api.doc('activate_customer')
+    @api.response(404, 'Customer not found')
+    def put(self, customer_id):
+        """
+        Activate a Customer
+
+        This endpoint will activate a customer
+        """
+        app.logger.info("Request to activate customer with customer_id: %s", customer_id)
+        customer = CustomerModel.find(customer_id)
+        if not customer:
+            abort(status.HTTP_404_NOT_FOUND, f"Customer with customer_id '{customer_id}' was not found.")
+        customer.is_active = True
+        customer.update()
+        app.logger.info('Customer with customer_id [%s] has been activated!', customer.customer_id)
+        return customer.serialize(), status.HTTP_200_OK
 
 
 ######################################################################
@@ -440,24 +488,24 @@ def list_customers():  # noqa: C901
 ######################################################################
 # ACTIVATE A CUSTOMER
 ######################################################################
-@app.route(f"{BASE_URL}/<int:customer_id>/activate", methods=["PUT"])
-def activate_a_customers(customer_id):
-    """Activate a customer"""
-    app.logger.info("Request to activate customer with id: %s', customer_id")
-    # check_content_type("application/json")
+# @app.route(f"{BASE_URL}/<int:customer_id>/activate", methods=["PUT"])
+# def activate_a_customers(customer_id):
+#     """Activate a customer"""
+#     app.logger.info("Request to activate customer with id: %s', customer_id")
+#     # check_content_type("application/json")
 
-    customer = CustomerModel.find(customer_id)
-    if not customer:
-        abort(status.HTTP_404_NOT_FOUND, f"Customer with id '{customer_id}' was not found.")
+#     customer = CustomerModel.find(customer_id)
+#     if not customer:
+#         abort(status.HTTP_404_NOT_FOUND, f"Customer with id '{customer_id}' was not found.")
 
-    customer.is_active = True
-    customer.update()
+#     customer.is_active = True
+#     customer.update()
 
-    app.logger.info(
-        "Customer with ID [%s] updated.",
-        customer.customer_id
-    )
-    return jsonify(customer.serialize()), status.HTTP_200_OK
+#     app.logger.info(
+#         "Customer with ID [%s] updated.",
+#         customer.customer_id
+#     )
+#     return jsonify(customer.serialize()), status.HTTP_200_OK
 
 
 ######################################################################
@@ -484,23 +532,23 @@ def deactivate_a_customer(customer_id):
 # CREATE NEW ADDRESS
 # https://flask-sqlalchemy.palletsprojects.com/en/2.x/models/
 ######################################################################
-@app.route(f"{BASE_URL}/<int:customer_id>/addresses", methods=["POST"])
-def create_address(customer_id):
-    """
-    Creates an Address
-    This endpoint will create an Address based the data in the body that is posted
-    """
-    app.logger.info("Request to create an address")
-    check_content_type("application/json")
-    abort_when_customer_not_exist(customer_id=customer_id)
-    address = AddressModel()
-    address.deserialize(request.get_json())
-    address.create()
-    message = address.serialize()
-    location_url = url_for("create_address", customer_id=customer_id) + f"/{address.address_id}"
-    app.logger.info("Address with ID [%s] created.", address.address_id)
+# @app.route(f"{BASE_URL}/<int:customer_id>/addresses", methods=["POST"])
+# def create_address(customer_id):
+#     """
+#     Creates an Address
+#     This endpoint will create an Address based the data in the body that is posted
+#     """
+#     app.logger.info("Request to create an address")
+#     check_content_type("application/json")
+#     abort_when_customer_not_exist(customer_id=customer_id)
+#     address = AddressModel()
+#     address.deserialize(request.get_json())
+#     address.create()
+#     message = address.serialize()
+#     location_url = url_for("create_address", customer_id=customer_id) + f"/{address.address_id}"
+#     app.logger.info("Address with ID [%s] created.", address.address_id)
 
-    return jsonify(message), status.HTTP_201_CREATED, {"Location": location_url}
+#     return jsonify(message), status.HTTP_201_CREATED, {"Location": location_url}
 
 
 ######################################################################

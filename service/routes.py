@@ -311,8 +311,7 @@ class AddressResource(Resource):
         address = found[0]
 
         app.logger.info(address.serialize())
-
-        return jsonify(address.serialize()), status.HTTP_200_OK
+        return address.serialize(), status.HTTP_200_OK
 
     # ------------------------------------------------------------------
     # DELETE AN ADDRESS OF A CUSTOMER

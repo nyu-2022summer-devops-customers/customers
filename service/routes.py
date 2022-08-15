@@ -343,7 +343,7 @@ def update_an_address_of_a_customer(customer_id, address_id):
     This endpoint will delete an Address based on the data in the body that is posted
     """
     app.logger.info("Update an Address of a Customer")
-    check_content_type("application/json")
+    # check_content_type("application/json")
     abort_when_customer_not_exist(customer_id=customer_id)
     address = AddressModel()
     address.deserialize(request.get_json())
@@ -647,13 +647,13 @@ def init_db():
     AddressModel.init_db(app)
 
 
-def check_content_type(media_type):
-    """Checks that the media type is correct"""
-    content_type = request.headers.get("Content-Type")
-    if content_type and content_type == media_type:
-        return
-    app.logger.error("Invalid Content-Type: %s", content_type)
-    abort(
-        status.HTTP_415_UNSUPPORTED_MEDIA_TYPE,
-        "Content-Type must be {}".format(media_type),
-    )
+# def check_content_type(media_type):
+#     """Checks that the media type is correct"""
+#     content_type = request.headers.get("Content-Type")
+#     if content_type and content_type == media_type:
+#         return
+#     app.logger.error("Invalid Content-Type: %s", content_type)
+#     abort(
+#         status.HTTP_415_UNSUPPORTED_MEDIA_TYPE,
+#         "Content-Type must be {}".format(media_type),
+#     )

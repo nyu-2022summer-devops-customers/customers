@@ -313,7 +313,7 @@ class AddressResource(Resource):
             abort(status.HTTP_404_NOT_FOUND, "Address with id {address_id} of customer with id {customer_id} was not found.")
         address = found[0]
 
-        app.logger.info(address.serialize())
+        app.logger.info("Address [%s] with customer id [%s]] retrieve complete.", address_id, customer_id)
         return address.serialize(), status.HTTP_200_OK
 
     # ------------------------------------------------------------------
@@ -336,6 +336,37 @@ class AddressResource(Resource):
             address.delete()
         app.logger.info("Address [%s] with customer id [%s]] delete complete.", address_id, customer_id)
         return "", status.HTTP_204_NO_CONTENT
+
+    # ------------------------------------------------------------------
+    # DELETE AN ADDRESS OF A CUSTOMER
+    # ------------------------------------------------------------------
+    @api.doc('update_customers_address')
+    @api.response(200, 'Address updated')
+    @api.marshal_with(address_model)
+    def put(self, customer_id, address_id):
+        """
+        Update an Address of a Customer
+        This endpoint will delete an Address based on the data in the body that is posted
+        """
+        app.logger.info("Update an Address of a Customer")
+        # check_content_type("application/json")
+        abort_when_customer_not_exist(customer_id=customer_id)
+        address = AddressModel()
+        address.deserialize(request.get_json())
+        address.update()
+
+        found = AddressModel.find_by_customer_and_address_id(customer_id, address_id)
+        if found.count() == 0:
+            abort(status.HTTP_404_NOT_FOUND, "Address with id '{address_id}' was not found.")
+        app.logger.debug('Payload = %s', api.payload)
+        data = api.payload
+        address = found[0]
+        address.deserialize(data)
+        address.address_id = address_id
+        address.update()
+
+        app.logger.info("Address with ID [%s] updated.", address.address_id)
+        return address.serialize(), status.HTTP_200_OK
 
 
 @api.route(f'{BASE_URL}/<int:customer_id>/addresses', strict_slashes=False)

@@ -270,6 +270,7 @@ class ActivateResource(Resource):
         app.logger.info('Customer with customer_id [%s] has been activated!', customer.customer_id)
         return customer.serialize(), status.HTTP_200_OK
 
+
 ######################################################################
 #  PATH: /customers/{customer_id}/deactivate
 ######################################################################

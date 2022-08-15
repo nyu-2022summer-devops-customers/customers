@@ -274,8 +274,6 @@ class CustomerCollection(Resource):
             return list_all_customers()
 
 
-
-
 ######################################################################
 #  PATH: /customers/{customer_id}/addresses/{address_id}
 ######################################################################
@@ -324,7 +322,6 @@ class AddressCollection(Resource):
         location_url = api.url_for(AddressResource, customer_id=customer_id, address_id=address.address_id, _external=True)
 
         return address.serialize(), status.HTTP_201_CREATED, {"Location": location_url}
-
 
     # ------------------------------------------------------------------
     # LIST ALL ADDRESSES

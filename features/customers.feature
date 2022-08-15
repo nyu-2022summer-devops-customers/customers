@@ -118,6 +118,7 @@ Scenario: Delete a Customer
     And I copy the "Id" field
     And I press the "Clear" button
     And I paste the "Id" field
+    And I press the "Retrieve" button 
     And I press the "Delete" button
     Then I should see the message "Customer has been Deleted!"
 
@@ -128,6 +129,7 @@ Scenario: Activate a Customer
     And I copy the "Id" field
     And I press the "Clear" button
     And I paste the "Id" field
+    And I press the "Retrieve" button 
     And I press the "Deactivate" button
     And I press the "Activate" button
     Then I should see the message "Customer activated"
@@ -139,6 +141,7 @@ Scenario: Deactivate a Customer
     And I copy the "Id" field
     And I press the "Clear" button
     And I paste the "Id" field
+    And I press the "Retrieve" button 
     And I press the "Deactivate" button
     Then I should see the message "Customer deactivated"
 

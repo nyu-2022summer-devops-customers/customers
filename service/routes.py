@@ -306,10 +306,7 @@ class AddressResource(Resource):
         abort_when_customer_not_exist(customer_id=customer_id)
         found = AddressModel.find_by_customer_and_address_id(customer_id=customer_id, address_id=address_id)
 
-        # if not found:
-        #     abort(status.HTTP_404_NOT_FOUND, "Customer with id '{}' was not found.".format(customer_id))
         if found.count() == 0:
-            # app.logger.info('did not get the address')
             abort(status.HTTP_404_NOT_FOUND, "Address with id {address_id} of customer with id {customer_id} was not found.")
         address = found[0]
 

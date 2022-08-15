@@ -138,17 +138,7 @@ Scenario: Deactivate a Customer
     And I press the "Search" button
     And I copy the "Id" field
     And I press the "Clear" button
-    Then the "Id" field should be empty
-    And the "First Name" field should be empty
-    And the "Last Name" field should be empty
-    And the "Nickname" field should be empty
-    And the "Password" field should be empty
-    And the "Email" field should be empty
-    And the "Gender" field should be empty
-    And the "Birthday" field should be empty
-    And the "Is Active" field should be empty 
-    When I paste the "Id" field
-    And I press the "Retrieve" button
+    And I paste the "Id" field
     And I press the "Deactivate" button
     Then I should see the message "Customer deactivated"
 

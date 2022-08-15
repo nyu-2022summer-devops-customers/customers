@@ -266,21 +266,21 @@ class TestCustomersService(unittest.TestCase):
         self.assertEqual(data["last_name"], test_customer.last_name)
         self.assertEqual(data["email"], test_customer.email)
 
-    # def test_activate_a_customer(self):
-    #     """It should activate a customer"""
-    #     # create a customer to activate
-    #     test_customer = CustomerFactory()
-    #     response = self.client.post(BASE_URL, json=test_customer.serialize())
-    #     self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+    def test_activate_a_customer(self):
+        """It should activate a customer"""
+        # create a customer to activate
+        test_customer = CustomerFactory()
+        response = self.client.post(BASE_URL, json=test_customer.serialize())
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
 
-    #     # unacivate the customer
-    #     new_customer = response.get_json()
-    #     logging.debug(new_customer)
-    #     new_customer["is_active"] = False
-    #     response = self.client.put(f"{BASE_URL}/{new_customer['customer_id']}/activate")
-    #     self.assertEqual(response.status_code, status.HTTP_200_OK)
-    #     updated_customer = response.get_json()
-    #     self.assertEqual(updated_customer["is_active"], True)
+        # unacivate the customer
+        new_customer = response.get_json()
+        logging.debug(new_customer)
+        new_customer["is_active"] = False
+        response = self.client.put(f"{BASE_URL}/{new_customer['customer_id']}/activate")
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        updated_customer = response.get_json()
+        self.assertEqual(updated_customer["is_active"], True)
 
     # def test_deactivate_a_customer(self):
     #     """It should deactivate a customer"""

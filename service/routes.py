@@ -245,25 +245,6 @@ class AddressCollection(Resource):
     Like create, list operations
     """
     # ------------------------------------------------------------------
-    # LIST ALL ADDRESSES
-    # ------------------------------------------------------------------
-    @api.doc('list_customers')
-    @api.response(400, 'Bad request to non-existing customer')
-    @api.marshal_list_with(address_model)
-    def get(self, customer_id):
-        """
-        List all Addresses of a given customer
-        """
-        app.logger.info("Request for addresses with customer id: %s", customer_id)
-        address = AddressModel()
-        abort_when_customer_not_exist(customer_id=customer_id)
-        addresses = AddressModel.find_by_customer_id(customer_id=customer_id)
-
-        app.logger.info("Addresses under customer ID [%s] returned.", customer_id)
-        results = [address.serialize() for address in addresses]
-
-        return results, status.HTTP_200_OK
-    # ------------------------------------------------------------------
     # ADD A NEW CUSTOMER ADDRESS
     # ------------------------------------------------------------------
     @api.doc('create_customers_address')
@@ -285,6 +266,25 @@ class AddressCollection(Resource):
         location_url = api.url_for(AddressResource, customer_id=customer_id, address_id=address.address_id, _external=True)
 
         return address.serialize(), status.HTTP_201_CREATED, {"Location": location_url}
+    # ------------------------------------------------------------------
+    # LIST ALL ADDRESSES
+    # ------------------------------------------------------------------
+    @api.doc('list_customers')
+    @api.response(400, 'Bad request to non-existing customer')
+    @api.marshal_list_with(address_model)
+    def get(self, customer_id):
+        """
+        List all Addresses of a given customer
+        """
+        app.logger.info("Request for addresses with customer id: %s", customer_id)
+        address = AddressModel()
+        abort_when_customer_not_exist(customer_id=customer_id)
+        addresses = AddressModel.find_by_customer_id(customer_id=customer_id)
+
+        app.logger.info("Addresses under customer ID [%s] returned.", customer_id)
+        results = [address.serialize() for address in addresses]
+
+        return results, status.HTTP_200_OK
 
 
 ######################################################################

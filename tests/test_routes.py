@@ -365,66 +365,66 @@ class TestCustomersService(unittest.TestCase):
     #     address.deserialize(response.get_json())
     #     self.assertEqual(address.address, new_address_str)
 
-    # def test_get_customer_list_by_nickname(self):
-    #     """It should get customer list by nickname"""
-    #     customers = CustomerFactory.create_batch(3)
-    #     for test_customer in customers:
-    #         logging.debug("Test Customer: %s", test_customer.serialize())
-    #         response = self.client.post(BASE_URL, json=test_customer.serialize())
-    #         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+    def test_get_customer_list_by_nickname(self):
+        """It should get customer list by nickname"""
+        customers = CustomerFactory.create_batch(3)
+        for test_customer in customers:
+            logging.debug("Test Customer: %s", test_customer.serialize())
+            response = self.client.post(BASE_URL, json=test_customer.serialize())
+            self.assertEqual(response.status_code, status.HTTP_201_CREATED)
 
-    #     response = self.client.get(f"{BASE_URL}?nickname={customers[0].nickname}")
-    #     self.assertEqual(response.status_code, status.HTTP_200_OK)
-    #     for customer_json in response.get_json():
-    #         customer = CustomerModel()
-    #         customer.deserialize(customer_json)
-    #         self.assertEqual(customer.nickname, customers[0].nickname)
+        response = self.client.get(f"{BASE_URL}?nickname={customers[0].nickname}")
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        for customer_json in response.get_json():
+            customer = CustomerModel()
+            customer.deserialize(customer_json)
+            self.assertEqual(customer.nickname, customers[0].nickname)
 
-    # def test_get_customer_list_by_email(self):
-    #     """It should get customer list by email"""
-    #     customers = CustomerFactory.create_batch(3)
-    #     for test_customer in customers:
-    #         logging.debug("Test Customer: %s", test_customer.serialize())
-    #         response = self.client.post(BASE_URL, json=test_customer.serialize())
-    #         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+    def test_get_customer_list_by_email(self):
+        """It should get customer list by email"""
+        customers = CustomerFactory.create_batch(3)
+        for test_customer in customers:
+            logging.debug("Test Customer: %s", test_customer.serialize())
+            response = self.client.post(BASE_URL, json=test_customer.serialize())
+            self.assertEqual(response.status_code, status.HTTP_201_CREATED)
 
-    #     response = self.client.get(f"{BASE_URL}?email={customers[0].email}")
-    #     self.assertEqual(response.status_code, status.HTTP_200_OK)
-    #     for customer_json in response.get_json():
-    #         customer = CustomerModel()
-    #         customer.deserialize(customer_json)
-    #         self.assertEqual(customer.email, customers[0].email)
+        response = self.client.get(f"{BASE_URL}?email={customers[0].email}")
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        for customer_json in response.get_json():
+            customer = CustomerModel()
+            customer.deserialize(customer_json)
+            self.assertEqual(customer.email, customers[0].email)
 
-    # def test_get_customer_list_by_name(self):
-    #     """It should get customer list by name"""
-    #     customers = CustomerFactory.create_batch(3)
-    #     for test_customer in customers:
-    #         logging.debug("Test Customer: %s", test_customer.serialize())
-    #         response = self.client.post(BASE_URL, json=test_customer.serialize())
-    #         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+    def test_get_customer_list_by_name(self):
+        """It should get customer list by name"""
+        customers = CustomerFactory.create_batch(3)
+        for test_customer in customers:
+            logging.debug("Test Customer: %s", test_customer.serialize())
+            response = self.client.post(BASE_URL, json=test_customer.serialize())
+            self.assertEqual(response.status_code, status.HTTP_201_CREATED)
 
-    #     response = self.client.get(f"{BASE_URL}?firstname={customers[0].first_name}&lastname={customers[0].last_name}")
-    #     self.assertEqual(response.status_code, status.HTTP_200_OK)
-    #     for customer_json in response.get_json():
-    #         customer = CustomerModel()
-    #         customer.deserialize(customer_json)
-    #         self.assertEqual(customer.first_name, customers[0].first_name)
-    #         self.assertEqual(customer.last_name, customers[0].last_name)
+        response = self.client.get(f"{BASE_URL}?firstname={customers[0].first_name}&lastname={customers[0].last_name}")
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        for customer_json in response.get_json():
+            customer = CustomerModel()
+            customer.deserialize(customer_json)
+            self.assertEqual(customer.first_name, customers[0].first_name)
+            self.assertEqual(customer.last_name, customers[0].last_name)
 
-    # def test_get_customer_list_by_birthday(self):
-    #     """It should get customer list by birthday"""
-    #     customers = CustomerFactory.create_batch(3)
-    #     for test_customer in customers:
-    #         logging.debug("Test Customer: %s", test_customer.serialize())
-    #         response = self.client.post(BASE_URL, json=test_customer.serialize())
-    #         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+    def test_get_customer_list_by_birthday(self):
+        """It should get customer list by birthday"""
+        customers = CustomerFactory.create_batch(3)
+        for test_customer in customers:
+            logging.debug("Test Customer: %s", test_customer.serialize())
+            response = self.client.post(BASE_URL, json=test_customer.serialize())
+            self.assertEqual(response.status_code, status.HTTP_201_CREATED)
 
-    #     response = self.client.get(f"{BASE_URL}?birthday={customers[0].birthday}")
-    #     self.assertEqual(response.status_code, status.HTTP_200_OK)
-    #     for customer_json in response.get_json():
-    #         customer = CustomerModel()
-    #         customer.deserialize(customer_json)
-    #         self.assertEqual(customer.birthday, customers[0].birthday)
+        response = self.client.get(f"{BASE_URL}?birthday={customers[0].birthday}")
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        for customer_json in response.get_json():
+            customer = CustomerModel()
+            customer.deserialize(customer_json)
+            self.assertEqual(customer.birthday, customers[0].birthday)
     ######################################################################
     #  T E S T   S A D   P A T H S
     ######################################################################
@@ -513,50 +513,50 @@ class TestCustomersService(unittest.TestCase):
     #     )
     #     self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
 
-    # def test_get_customer_list_by_non_existing_nickname(self):
-    #     """It should get an empty customer list by non-existing nickname"""
-    #     customers = CustomerFactory.create_batch(3)
-    #     for test_customer in customers:
-    #         logging.debug("Test Customer: %s", test_customer.serialize())
-    #         response = self.client.post(BASE_URL, json=test_customer.serialize())
-    #         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+    def test_get_customer_list_by_non_existing_nickname(self):
+        """It should get an empty customer list by non-existing nickname"""
+        customers = CustomerFactory.create_batch(3)
+        for test_customer in customers:
+            logging.debug("Test Customer: %s", test_customer.serialize())
+            response = self.client.post(BASE_URL, json=test_customer.serialize())
+            self.assertEqual(response.status_code, status.HTTP_201_CREATED)
 
-    #     response = self.client.get(f"{BASE_URL}?nickname=not-exist")
-    #     self.assertEqual(response.status_code, status.HTTP_200_OK)
-    #     self.assertEqual(response.get_json(), [])
+        response = self.client.get(f"{BASE_URL}?nickname=not-exist")
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.get_json(), [])
 
-    # def test_get_customer_list_by_non_existing_email(self):
-    #     """It should get an empty customer list by non-existing email"""
-    #     customers = CustomerFactory.create_batch(3)
-    #     for test_customer in customers:
-    #         logging.debug("Test Customer: %s", test_customer.serialize())
-    #         response = self.client.post(BASE_URL, json=test_customer.serialize())
-    #         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+    def test_get_customer_list_by_non_existing_email(self):
+        """It should get an empty customer list by non-existing email"""
+        customers = CustomerFactory.create_batch(3)
+        for test_customer in customers:
+            logging.debug("Test Customer: %s", test_customer.serialize())
+            response = self.client.post(BASE_URL, json=test_customer.serialize())
+            self.assertEqual(response.status_code, status.HTTP_201_CREATED)
 
-    #     response = self.client.get(f"{BASE_URL}?email=not-exist@nyu.edu")
-    #     self.assertEqual(response.status_code, status.HTTP_200_OK)
-    #     self.assertEqual(response.get_json(), [])
+        response = self.client.get(f"{BASE_URL}?email=not-exist@nyu.edu")
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.get_json(), [])
 
-    # def test_get_customer_list_by_non_existing_name(self):
-    #     """It should get an empty customer list by non-existing name"""
-    #     customers = CustomerFactory.create_batch(3)
-    #     for test_customer in customers:
-    #         logging.debug("Test Customer: %s", test_customer.serialize())
-    #         response = self.client.post(BASE_URL, json=test_customer.serialize())
-    #         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+    def test_get_customer_list_by_non_existing_name(self):
+        """It should get an empty customer list by non-existing name"""
+        customers = CustomerFactory.create_batch(3)
+        for test_customer in customers:
+            logging.debug("Test Customer: %s", test_customer.serialize())
+            response = self.client.post(BASE_URL, json=test_customer.serialize())
+            self.assertEqual(response.status_code, status.HTTP_201_CREATED)
 
-    #     response = self.client.get(f"{BASE_URL}?firstname=not&lastname=exist")
-    #     self.assertEqual(response.status_code, status.HTTP_200_OK)
-    #     self.assertEqual(response.get_json(), [])
+        response = self.client.get(f"{BASE_URL}?firstname=not&lastname=exist")
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.get_json(), [])
 
-    # def test_get_customer_list_by_non_existing_birthday(self):
-    #     """It should get an empty customer list by non-existing birthday"""
-    #     customers = CustomerFactory.create_batch(3)
-    #     for test_customer in customers:
-    #         logging.debug("Test Customer: %s", test_customer.serialize())
-    #         response = self.client.post(BASE_URL, json=test_customer.serialize())
-    #         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+    def test_get_customer_list_by_non_existing_birthday(self):
+        """It should get an empty customer list by non-existing birthday"""
+        customers = CustomerFactory.create_batch(3)
+        for test_customer in customers:
+            logging.debug("Test Customer: %s", test_customer.serialize())
+            response = self.client.post(BASE_URL, json=test_customer.serialize())
+            self.assertEqual(response.status_code, status.HTTP_201_CREATED)
 
-    #     response = self.client.get(f"{BASE_URL}?birthday=9999-09-09")
-    #     self.assertEqual(response.status_code, status.HTTP_200_OK)
-    #     self.assertEqual(response.get_json(), [])
+        response = self.client.get(f"{BASE_URL}?birthday=9999-09-09")
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.get_json(), [])

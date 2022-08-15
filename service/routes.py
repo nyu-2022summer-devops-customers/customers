@@ -270,6 +270,30 @@ class ActivateResource(Resource):
         app.logger.info('Customer with customer_id [%s] has been activated!', customer.customer_id)
         return customer.serialize(), status.HTTP_200_OK
 
+######################################################################
+#  PATH: /customers/{customer_id}/deactivate
+######################################################################
+@api.route(f"{BASE_URL}/<int:customer_id>/deactivate", methods=["DELETE"])
+@api.param('customer_id', 'The customer identifier')
+class DeactivateResource(Resource):
+    """ Deactivate actions on a Customer """
+    @api.doc('deactivate_customer')
+    @api.response(404, 'Customer not found')
+    def delete(self, customer_id):
+        """
+        Deactivate a Customer
+
+        This endpoint will deactivate a customer
+        """
+        app.logger.info("Request to deactivate customer with customer_id: %s", customer_id)
+        customer = CustomerModel.find(customer_id)
+        if not customer:
+            abort(status.HTTP_404_NOT_FOUND, f"Customer with customer_id '{customer_id}' was not found.")
+        customer.is_active = False
+        customer.update()
+        app.logger.info('Customer with customer_id [%s] has been deactivated!', customer.customer_id)
+        return customer.serialize(), status.HTTP_200_OK
+
 
 ######################################################################
 # CREATE NEW CUSTOMER
@@ -469,21 +493,21 @@ def list_customers():  # noqa: C901
 ######################################################################
 # DEACTIVATE A CUSTOMER
 ######################################################################
-@app.route(f"{BASE_URL}/<int:customer_id>/deactivate", methods=["DELETE"])
-def deactivate_a_customer(customer_id):
-    """Deactivate a customer"""
-    app.logger.info("Request to deactivate customer with id: %s', customer_id")
-    # check_content_type("application/json")
+# @app.route(f"{BASE_URL}/<int:customer_id>/deactivate", methods=["DELETE"])
+# def deactivate_a_customer(customer_id):
+#     """Deactivate a customer"""
+#     app.logger.info("Request to deactivate customer with id: %s', customer_id")
+#     # check_content_type("application/json")
 
-    customer = CustomerModel.find(customer_id)
-    if not customer:
-        abort(status.HTTP_404_NOT_FOUND, f"Customer with id '{customer_id}' was not found.")
+#     customer = CustomerModel.find(customer_id)
+#     if not customer:
+#         abort(status.HTTP_404_NOT_FOUND, f"Customer with id '{customer_id}' was not found.")
 
-    customer.is_active = False
-    customer.update()
+#     customer.is_active = False
+#     customer.update()
 
-    app.logger.info("Customer with ID [%s] updated.", customer.customer_id)
-    return jsonify(customer.serialize()), status.HTTP_200_OK
+#     app.logger.info("Customer with ID [%s] updated.", customer.customer_id)
+#     return jsonify(customer.serialize()), status.HTTP_200_OK
 
 
 ######################################################################

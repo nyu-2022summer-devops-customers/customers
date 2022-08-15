@@ -247,6 +247,31 @@ class AddressCollection(Resource):
 
 
 ######################################################################
+#  PATH: /customers/{customer_id}/activate
+######################################################################
+@api.route(f"{BASE_URL}/<customer_id>/activate", methods=["PUT"])
+@api.param('customer_id', 'The customer identifier')
+class ActivateResource(Resource):
+    """ Activate actions on a Customer """
+    @api.doc('activate_customer')
+    @api.response(404, 'Customer not found')
+    def put(self, customer_id):
+        """
+        Activate a Customer
+
+        This endpoint will activate a customer
+        """
+        app.logger.info("Request to activate customer with customer_id: %s", customer_id)
+        customer = CustomerModel.find(customer_id)
+        if not customer:
+            abort(status.HTTP_404_NOT_FOUND, f"Customer with customer_id '{customer_id}' was not found.")
+        customer.is_active = True
+        customer.update()
+        app.logger.info('Customer with customer_id [%s] has been activated!', customer.customer_id)
+        return customer.serialize(), status.HTTP_200_OK
+
+
+######################################################################
 # CREATE NEW CUSTOMER
 ######################################################################
 # @app.route(f"{BASE_URL}", methods=["POST"])
@@ -421,24 +446,24 @@ def list_customers():  # noqa: C901
 ######################################################################
 # ACTIVATE A CUSTOMER
 ######################################################################
-@app.route(f"{BASE_URL}/<int:customer_id>/activate", methods=["PUT"])
-def activate_a_customers(customer_id):
-    """Activate a customer"""
-    app.logger.info("Request to activate customer with id: %s', customer_id")
-    # check_content_type("application/json")
+# @app.route(f"{BASE_URL}/<int:customer_id>/activate", methods=["PUT"])
+# def activate_a_customers(customer_id):
+#     """Activate a customer"""
+#     app.logger.info("Request to activate customer with id: %s', customer_id")
+#     # check_content_type("application/json")
 
-    customer = CustomerModel.find(customer_id)
-    if not customer:
-        abort(status.HTTP_404_NOT_FOUND, f"Customer with id '{customer_id}' was not found.")
+#     customer = CustomerModel.find(customer_id)
+#     if not customer:
+#         abort(status.HTTP_404_NOT_FOUND, f"Customer with id '{customer_id}' was not found.")
 
-    customer.is_active = True
-    customer.update()
+#     customer.is_active = True
+#     customer.update()
 
-    app.logger.info(
-        "Customer with ID [%s] updated.",
-        customer.customer_id
-    )
-    return jsonify(customer.serialize()), status.HTTP_200_OK
+#     app.logger.info(
+#         "Customer with ID [%s] updated.",
+#         customer.customer_id
+#     )
+#     return jsonify(customer.serialize()), status.HTTP_200_OK
 
 
 ######################################################################

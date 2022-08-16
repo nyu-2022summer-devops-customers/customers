@@ -134,7 +134,6 @@ Scenario: Delete a Customer
     And I press the "Delete" button
     Then I should see the message "Customer has been Deleted!"
 
-
 Scenario: Activate a Customer
     When I visit the "Home Page"
     And I press the "Search" button
@@ -148,7 +147,6 @@ Scenario: Activate a Customer
     And I press the "Activate" button
     Then I should see the message "Customer activated"
 
-
 Scenario: Deactivate a Customer
     When I visit the "Home Page"
     And I press the "Search" button
@@ -160,7 +158,6 @@ Scenario: Deactivate a Customer
     And I press the "Retrieve" button 
     And I press the "Deactivate" button
     Then I should see the message "Customer deactivated"
-
 
 Scenario: List all Addresses of a Customer
     When I visit the "Home Page"

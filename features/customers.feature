@@ -112,6 +112,17 @@ Scenario: Query customers by birthday
     And I should see "Calarook" in the "Last Name" field
     And I should see the message "Success"
     
+Scenario: Query customers by firstname and lastname
+    When I visit the "Home Page"
+    And I set the "first name" to "Karayan"
+    And I set the "last name" to "Calarook"
+    And I press the "Search" button
+    Then I should see "em123@nyu.edu" in the "email" field
+    And I should see "K" in the "nickname" field
+    And I should see "MALE" in the "gender" field
+    And I should see "2021-07-30" in the "birthday" field
+    And I should see the message "Success"
+
 Scenario: Delete a Customer
     When I visit the "Home Page"
     And I press the "Search" button

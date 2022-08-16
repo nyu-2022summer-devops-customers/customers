@@ -1,5 +1,6 @@
 $(function () {
 
+    const BASE_URL = '/api/customers'
     // ****************************************
     //  U T I L I T Y   F U N C T I O N S
     // ****************************************
@@ -70,7 +71,7 @@ $(function () {
         
         let ajax = $.ajax({
             type: "POST",
-            url: "/customers",
+            url: BASE_URL,
             contentType: "application/json",
             data: JSON.stringify(data),
         });
@@ -116,7 +117,7 @@ $(function () {
 
         let ajax = $.ajax({
                 type: "PUT",
-                url: `/customers/${customer_id}`,
+                url: `${BASE_URL}/${customer_id}`,
                 contentType: "application/json",
                 data: JSON.stringify(data),
         })
@@ -143,7 +144,7 @@ $(function () {
 
         let ajax = $.ajax({
             type: "GET",
-            url: `/customers/${customer_id}`,
+            url: `${BASE_URL}/${customer_id}`,
             contentType: "application/json",
             data: ''
         })
@@ -173,7 +174,7 @@ $(function () {
 
          let ajax = $.ajax({
              type: "DELETE",
-             url: `/customers/${customer_id}`,
+             url: `${BASE_URL}/${customer_id}`,
              contentType: "application/json",
              data: '',
          })
@@ -204,20 +205,23 @@ $(function () {
 
     $("#search-btn").click(function () {
 
-        //let first_name = $("#customer_first_name").val();
-        //let last_name = $("#last_name").val();
+        let first_name = $("#customer_first_name").val();
+        let last_name = $("#last_name").val();
         let nickname = $("#customer_nickname").val();
         let birthday = $("#customer_birthday").val();
         let email = $("#customer_email").val();
 
         let queryString = ""
 
-        //if (first_name) {
-        //     queryString += 'first name=' + first_name 
-        //}
-        // if (nickname) {
-        //     queryString += 'nick name=' + nickname
-        // }
+        if (first_name && last_name) {
+            if (queryString.length > 0) {
+                queryString += '&first_name=' + first_name
+                queryString += '&last_name=' + last_name
+            } else {
+                queryString += 'first_name=' + nickname
+                queryString += 'last_name=' + last_name
+            }
+        }
         if (nickname) {
             if (queryString.length > 0) {
                 queryString += '&nickname=' + nickname
@@ -244,7 +248,7 @@ $(function () {
 
         let ajax = $.ajax({
             type: "GET",
-            url: `/customers?${queryString}`,
+            url: `${BASE_URL}?${queryString}`,
             contentType: "application/json",
             data: ''
         })
@@ -298,7 +302,7 @@ $(function () {
     
         var ajax = $.ajax({
           type: 'PUT',
-          url:`/customers/${customer_id}/activate`,
+          url:`${BASE_URL}/${customer_id}/activate`,
           contentType: 'application/json',
           data: '',
         });
@@ -324,7 +328,7 @@ $(function () {
     
         var ajax = $.ajax({
           type: 'DELETE',
-          url:`/customers/${customer_id}/deactivate`,
+          url:`${BASE_URL}/${customer_id}/deactivate`,
           contentType: 'application/json',
           data: '',
         });
@@ -359,7 +363,7 @@ $(function () {
     function reload_search_result(customer_id){
         let ajax = $.ajax({
             type: "GET",
-            url: `/customers/${customer_id}/addresses`,
+            url: `${BASE_URL}/${customer_id}/addresses`,
             contentType: "application/json",
             data: ''
         })
@@ -400,7 +404,7 @@ $(function () {
 
         let ajax = $.ajax({
             type: "GET",
-            url: `/customers/${customer_id}/addresses`,
+            url: `${BASE_URL}/${customer_id}/addresses`,
             contentType: "application/json",
             data: ''
         })
@@ -443,7 +447,7 @@ $(function () {
         
         let ajax = $.ajax({
             type: "GET",
-            url: `/customers/${customer_id}/addresses/${address_id}`,
+            url: `${BASE_URL}/${customer_id}/addresses/${address_id}`,
             contentType: "application/json",
             data: ''
         })
@@ -471,7 +475,7 @@ $(function () {
         
         let ajax = $.ajax({
             type: "DELETE",
-            url: `/customers/${customer_id}/addresses/${address_id}`,
+            url: `${BASE_URL}/${customer_id}/addresses/${address_id}`,
             contentType: "application/json",
             data: ''
         });
@@ -503,7 +507,7 @@ $(function () {
         
         let ajax = $.ajax({
             type: "POST",
-            url: `/customers/${customer_id}/addresses`,
+            url: `${BASE_URL}/${customer_id}/addresses`,
             contentType: "application/json",
             data: JSON.stringify(data),
         })
@@ -542,7 +546,7 @@ $(function () {
 
         var ajax = $.ajax({
                 type: "PUT",
-                url: `/customers/${customer_id}/addresses/${address_id}`,
+                url: `${BASE_URL}/${customer_id}/addresses/${address_id}`,
                 contentType: "application/json",
                 data: JSON.stringify(data)
         })

@@ -565,8 +565,3 @@ class TestCustomersService(unittest.TestCase):
         """It should not update a customer that doesn't exist"""
         response = self.client.put(f"{BASE_URL}/0", json={})
         self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
-
-    # def test_update_address_not_found(self):
-    #     """It should not update a address that doesn't exist"""
-    #     response = self.client.put(f"{BASE_URL}/0/addresses/0", json={})
-    #     self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)

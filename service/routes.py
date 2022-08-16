@@ -123,7 +123,7 @@ class CustomerResource(Resource):
         Retrieve a single Customer
         This endpoint will return a Customer based on his/her id
         """
-        app.logger.info("Request to Retrieve a pet with id [%s]", customer_id)
+        app.logger.info("Request to Retrieve a customer with id [%s]", customer_id)
         customer = CustomerModel.find(customer_id)
         if not customer:
             abort(status.HTTP_404_NOT_FOUND, "Customer with id '{}' was not found.".format(customer_id))
@@ -305,12 +305,64 @@ class AddressResource(Resource):
         app.logger.info("Get an Address of a Customer ")
         abort_when_customer_not_exist(customer_id=customer_id)
         found = AddressModel.find_by_customer_and_address_id(customer_id=customer_id, address_id=address_id)
+
         if found.count() == 0:
-            abort(status.HTTP_404_NOT_FOUND, "Address [%s] with customer id [%s] was not found.", address_id, customer_id)
+            abort(status.HTTP_404_NOT_FOUND, "Address with id {address_id} of customer with id {customer_id} was not found.")
         address = found[0]
 
-        # app.logger.info(found.count());
-        app.logger.info(address.serialize())
+        app.logger.info("Address [%s] with customer id [%s]] retrieve complete.", address_id, customer_id)
+        return address.serialize(), status.HTTP_200_OK
+
+    # ------------------------------------------------------------------
+    # DELETE AN ADDRESS OF A CUSTOMER
+    # ------------------------------------------------------------------
+    @api.doc('delete_customers_address')
+    @api.response(204, 'Address deleted')
+    @api.marshal_with(address_model)
+    def delete(self, customer_id, address_id):
+        """
+        Delete an Address of a Customer
+        This endpoint will delete an Address based on the data in the body that is posted
+        """
+        app.logger.info("Delete an Address of a Customer")
+        abort_when_customer_not_exist(customer_id=customer_id)
+        found = AddressModel.find_by_customer_and_address_id(customer_id=customer_id, address_id=address_id)
+
+        if found.count() == 1:
+            address = found[0]
+            address.delete()
+        app.logger.info("Address [%s] with customer id [%s]] delete complete.", address_id, customer_id)
+        return "", status.HTTP_204_NO_CONTENT
+
+    # ------------------------------------------------------------------
+    # UPDATE AN ADDRESS OF A CUSTOMER
+    # ------------------------------------------------------------------
+    @api.doc('update_customers_address')
+    @api.response(200, 'Address updated')
+    @api.marshal_with(address_model)
+    def put(self, customer_id, address_id):
+        """
+        Update an Address of a Customer
+        This endpoint will delete an Address based on the data in the body that is posted
+        """
+        app.logger.info("Update an Address of a Customer")
+        # check_content_type("application/json")
+        abort_when_customer_not_exist(customer_id=customer_id)
+        address = AddressModel()
+        address.deserialize(request.get_json())
+        address.update()
+
+        found = AddressModel.find_by_customer_and_address_id(customer_id, address_id)
+        if found.count() == 0:
+            abort(status.HTTP_404_NOT_FOUND, "Address with id '{address_id}' was not found.")
+        app.logger.debug('Payload = %s', api.payload)
+        data = api.payload
+        address = found[0]
+        address.deserialize(data)
+        address.address_id = address_id
+        address.update()
+
+        app.logger.info("Address with ID [%s] updated.", address.address_id)
         return address.serialize(), status.HTTP_200_OK
 
 

@@ -94,7 +94,6 @@ address_model = api.inherit(
 )
 
 # query string arguments
-# TODO: add arguments
 customer_args = reqparse.RequestParser()
 
 
@@ -174,7 +173,6 @@ class CustomerResource(Resource):
 
 @api.route(f'{BASE_URL}', strict_slashes=False)
 class CustomerCollection(Resource):
-    # TODO: move apis related to collection into this class
     """
     CustomerCollection class
 
@@ -281,7 +279,6 @@ class CustomerCollection(Resource):
 @api.param('customer_id', 'The customer identifier')
 @api.param('address_id', 'The address identifier')
 class AddressResource(Resource):
-    # TODO: move apis related to resources into this class
     """
     AddressResource class
 

@@ -18,6 +18,7 @@ BASE_URL = '/customers'
 
 
 def abort_when_customer_not_exist(customer_id):
+    """ Rise 400 BAD request if the customer id not exist """
     customer = CustomerModel.find(customer_id)
     if customer is None:
         abort(status.HTTP_400_BAD_REQUEST, f"Addresses with id '{customer_id}' was not found.")
@@ -29,7 +30,7 @@ def abort_when_customer_not_exist(customer_id):
 
 @app.route("/health")
 def health():
-    """Health Status"""
+    """ Health Status """
     return jsonify(dict(status="OK")), status.HTTP_200_OK
 
 ######################################################################

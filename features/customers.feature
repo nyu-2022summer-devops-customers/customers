@@ -126,6 +126,8 @@ Scenario: Query customers by firstname and lastname
 Scenario: Delete a Customer
     When I visit the "Home Page"
     And I press the "Search" button
+    And wait for "5" seconds
+    # Then the "Id" field should not be empty
     And I copy the "Id" field
     And I press the "Clear" button
     And I paste the "Id" field
@@ -136,9 +138,12 @@ Scenario: Delete a Customer
 Scenario: Activate a Customer
     When I visit the "Home Page"
     And I press the "Search" button
+    And wait for "5" seconds
+    # Then the "Id" field should not be empty
     And I copy the "Id" field
     And I press the "Clear" button
     And I paste the "Id" field
+    And I press the "Retrieve" button 
     And I press the "Deactivate" button
     And I press the "Activate" button
     Then I should see the message "Customer activated"
@@ -147,19 +152,12 @@ Scenario: Activate a Customer
 Scenario: Deactivate a Customer
     When I visit the "Home Page"
     And I press the "Search" button
+    And wait for "5" seconds
+    # Then the "Id" field should not be empty
     And I copy the "Id" field
     And I press the "Clear" button
-    Then the "Id" field should be empty
-    And the "First Name" field should be empty
-    And the "Last Name" field should be empty
-    And the "Nickname" field should be empty
-    And the "Password" field should be empty
-    And the "Email" field should be empty
-    And the "Gender" field should be empty
-    And the "Birthday" field should be empty
-    And the "Is Active" field should be empty 
-    When I paste the "Id" field
-    And I press the "Retrieve" button
+    And I paste the "Id" field
+    And I press the "Retrieve" button 
     And I press the "Deactivate" button
     Then I should see the message "Customer deactivated"
 

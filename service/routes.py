@@ -556,8 +556,9 @@ class DeactivateResource(Resource):
 #     if not customer:
 #         abort(status.HTTP_404_NOT_FOUND, f"Customer with id '{customer_id}' was not found.")
 
-#     app.logger.info("Returning customer: Id %s, Name %s %s", customer.customer_id, customer.first_name, customer.last_name)
-#     return jsonify(customer.serialize()), status.HTTP_200_OK
+
+#    app.logger.info("Returning customer: Id %s, Name %s %s", customer.customer_id, customer.first_name, customer.last_name)
+#    return jsonify(customer.serialize()), status.HTTP_200_OK
 
 
 ######################################################################

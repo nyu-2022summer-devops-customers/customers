@@ -565,8 +565,8 @@ class DeactivateResource(Resource):
 ######################################################################
 # LIST ALL CUSTOMERS
 ######################################################################
-#@app.route("/customers", methods=["GET"])
-#def list_customers():  # noqa: C901
+# @app.route("/customers", methods=["GET"])
+# def list_customers():  # noqa: C901
 #    """List customers"""
 #    def list_all_customers():
 #        """Returns all of the Customers"""
@@ -642,7 +642,6 @@ class DeactivateResource(Resource):
 #
 #     app.logger.info("Returning customer: Id %s, Name %s %s", customer.customer_id, customer.first_name, customer.last_name)
 #     return jsonify(customer.serialize()), status.HTTP_200_OK
-
 
 
 ######################################################################

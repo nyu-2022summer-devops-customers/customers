@@ -87,8 +87,7 @@ Scenario: List all Customers
 
 Scenario: Query customers by email
     When I visit the "Home Page"
-    And I press the "Search" button
-    Then I set the "ez" to "Karayan2"
+    And I set the "email" to "em456@nyu.edu"
     And I press the "Search" button
     Then I should see "em456@nyu.edu" in the "email" field
     And I should see "Zayne" in the "First Name" field

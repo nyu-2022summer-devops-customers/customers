@@ -24,7 +24,6 @@ Steps file for web interactions with Selenium
 For information on Waiting until elements are present in the HTML see:
     https://selenium-python.readthedocs.io/waits.html
 """
-from lib2to3.pgen2 import driver
 import logging
 from time import sleep
 from behave import when, then # pylint: disable=no-name-in-module
@@ -167,8 +166,6 @@ def step_impl(context, name):
 
 @then('I should see the message "{message}"')
 def step_impl(context, message):
-    element = context.driver.find_element_by_id('flash_message')
-
     found = WebDriverWait(context.driver, context.WAIT_SECONDS).until(
         expected_conditions.text_to_be_present_in_element(
             (By.ID, 'flash_message'),

@@ -302,40 +302,18 @@ class AddressResource(Resource):
         Get an Address of a Customer
         This endpoint will create an Address based the data in the body that is posted
         """
-        app.logger.info("Get an Address of a Customer")
+        app.logger.info("Get an Address of a Customer ")
         abort_when_customer_not_exist(customer_id=customer_id)
         found = AddressModel.find_by_customer_and_address_id(customer_id=customer_id, address_id=address_id)
 
-        # if not found:
-        #     abort(status.HTTP_404_NOT_FOUND, "Customer with id '{}' was not found.".format(customer_id))
         if found.count() == 0:
-            # app.logger.info('did not get the address')
             abort(status.HTTP_404_NOT_FOUND, "Address with id {address_id} of customer with id {customer_id} was not found.")
         address = found[0]
 
+        # app.logger.info(found.count());
         app.logger.info(address.serialize())
         return address.serialize(), status.HTTP_200_OK
 
-    # ------------------------------------------------------------------
-    # DELETE AN ADDRESS OF A CUSTOMER
-    # ------------------------------------------------------------------
-    @api.doc('delete_customers_address')
-    @api.response(204, 'Address deleted')
-    @api.marshal_with(address_model)
-    def delete(self, customer_id, address_id):
-        """
-        Delete an Address of a Customer
-        This endpoint will delete an Address based on the data in the body that is posted
-        """
-        app.logger.info("Delete an Address of a Customer")
-        abort_when_customer_not_exist(customer_id=customer_id)
-        found = AddressModel.find_by_customer_and_address_id(customer_id=customer_id, address_id=address_id)
-
-        if found.count() == 1:
-            address = found[0]
-            address.delete()
-        app.logger.info("Address [%s] with customer id [%s]] delete complete.", address_id, customer_id)
-        return "", status.HTTP_204_NO_CONTENT
 
 
 @api.route(f'{BASE_URL}/<int:customer_id>/addresses', strict_slashes=False)

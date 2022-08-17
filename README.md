@@ -13,25 +13,72 @@ Created for NYU Devops project, Summer 2022. Microservices built for handling cu
 The project contains the following:
 
 ```text
-.gitignore          - this will ignore vagrant and other metadata files
-.flaskenv           - Environment variables to configure Flask
-.gitattributes      - File to gix Windows CRLF issues
-.devcontainers/     - Folder with support for VSCode Remote Containers
-dot-env-example     - copy to .env to use environment variables
-requirements.txt    - list if Python libraries required by your code
-config.py           - configuration parameters
-service/                   - service python package
-├── __init__.py            - package initializer
-├── models.py              - module with business models
-├── routes.py              - module with service routes
-└── utils                  - utility package
-    ├── error_handlers.py  - HTTP error handling code
-    ├── log_handlers.py    - logging setup code
-    └── status.py          - HTTP status constants
-tests/              - test cases package
-├── __init__.py     - package initializer
-├── test_models.py  - test suite for business models
-└── test_routes.py  - test suite for service routes
+.devcontainer
+   |-- Dockerfile
+   |-- devcontainer.json
+   |-- docker-compose.yml
+   |-- scripts
+   |   |-- install-tools.sh
+.flaskenv
+.gitattributes
+.github
+   |-- ISSUE_TEMPLATE
+   |   |-- bug_report.md
+   |   |-- story.md
+   |-- workflows
+   |   |-- ci.yml
+.gitignore
+.pylintrc
+Dockerfile
+LICENSE
+Makefile
+Procfile
+README.md
+deploy
+   |-- dev
+   |   |-- deployment.yaml
+   |   |-- postgresql.yaml
+   |   |-- service.yaml
+   |-- prod
+   |   |-- deployment.yaml
+   |   |-- postgresql.yaml
+   |   |-- service.yaml
+dot-env-example
+features
+   |-- customers.feature
+   |-- environment.py
+   |-- steps
+   |   |-- customers_steps.py
+   |   |-- web_steps.py
+requirements.txt
+service
+   |-- __init__.py
+   |-- config.py
+   |-- models.py
+   |-- routes.py
+   |-- static
+   |   |-- css
+   |   |   |-- blue_bootstrap.min.css
+   |   |   |-- cerulean_bootstrap.min.css
+   |   |   |-- darkly_bootstrap.min.css
+   |   |   |-- flatly_bootstrap.min.css
+   |   |   |-- slate_bootstrap.min.css
+   |   |-- index.html
+   |   |-- js
+   |   |   |-- bootstrap.min.js
+   |   |   |-- jquery-3.6.0.min.js
+   |   |   |-- rest_api.js
+   |-- utils
+   |   |-- cli_commands.py
+   |   |-- error_handlers.py
+   |   |-- log_handlers.py
+   |   |-- status.py
+setup.cfg
+tests
+   |-- __init__.py
+   |-- factories.py
+   |-- test_models.py
+   |-- test_routes.py
 ```
 Created for NYU Devops project, Summer 2022. Microservices built for handling customer data for an e-commerce site.
 

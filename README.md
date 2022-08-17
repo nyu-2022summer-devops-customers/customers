@@ -94,19 +94,8 @@ Note that there is a period `.` after the `code` command. This tells Visual Stud
 
 Once the environment is loaded you should be placed at a `bash` prompt in the `/app` folder inside of the development container. This folder is mounted to the current working directory of your repository on your computer. This means that any file you edit while inside of the `/app` folder in the container is actually being edited on your computer. You can then commit your changes to `git` from either inside or outside of the container.
 
-### Using Vagrant and VirtualBox
 
-Bring up the virtual machine using Vagrant.
-
-```shell
-$ vagrant up
-$ vagrant ssh
-$ cd /vagrant
-```
-
-This will place you in the virtual machine in the `/vagrant` folder which has been shared with your computer so that your source files can be edited outside of the VM and run inside of the VM.
-
-## Running the tests
+## Running TDD tests
 
 As developers we always want to run the tests before we change any code. That way we know if we broke the code or if someone before us did. Always run the test cases first!
 
@@ -147,26 +136,26 @@ I've also included `pylint` in the requirements. Visual Studio Code is configure
 The project uses *honcho* which gets it's commands from the `Procfile`. To start the service simply use:
 
 ```shell
-$ honcho start
+$ make run
 ```
 
 You should be able to reach the service at: http://localhost:8000. The port that is used is controlled by an environment variable defined in the `.flaskenv` file which Flask uses to load it's configuration from the environment by default.
 
-## Shutdown development environment
 
-If you are using Visual Studio Code with Docker, simply existing Visual Studio Code will stop the docker containers. They will start up again the next time you need to develop as long as you don't manually delete them.
+## Running BDD tests
 
-If you are using Vagrant and VirtualBox, when you are done, you can exit and shut down the vm with:
+To run BDD tests, you should start the service first, then using `behave` command to do BDD tests.
+
+To start the service:
 
 ```shell
-$ exit
-$ vagrant halt
+$ make run
 ```
 
-If the VM is no longer needed you can remove it with:
+Then open another terminal to run BDD tests:
 
 ```shell
-$ vagrant destroy
+$ behave
 ```
 
 ## What's featured in the project?

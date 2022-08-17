@@ -86,7 +86,7 @@ Created for NYU Devops project, Summer 2022. Microservices built for handling cu
 
 | HTTP Method | URL | Description|Input|Return
 | :--- | :--- | :--- | :--- | :--- |
-|`GET` |`/apidocs/` | Get the documentation API | None| HTML
+|`GET` |`/apidocs` | Get the documentation API | None| HTML
 |`GET` | `/api` | Get information about the customer service | None | HTML
 | `GET` | `/api/customers/{customer_id}` | Get customer by Customer_ID |'customer_id': string|CustomerModel Object
 | `GET` | `/api/customers` | Returns a list of all the Customers |None|CustomerModel Object

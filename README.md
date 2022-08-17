@@ -1,9 +1,10 @@
 # Customers
 [![License](https://img.shields.io/badge/License-Apache_2.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
 [![Python](https://img.shields.io/badge/Language-Python-blue.svg)](https://python.org/)
-[![Build Status](https://github.com/nyu-2022summer-devops-customers/customers/actions/workflows/tdd-tests.yml/badge.svg)](https://github.com/nyu-2022summer-devops-customers/customers/actions)
-[![Build Status](https://github.com/nyu-2022summer-devops-customers/customers/actions/workflows/bdd-tests.yml/badge.svg)](https://github.com/nyu-2022summer-devops-customers/customers/actions)
+[![Build Status](https://github.com/nyu-2022summer-devops-customers/customers/actions/workflows/tdd.yml/badge.svg)](https://github.com/nyu-2022summer-devops-customers/customers/actions)
+[![Build Status](https://github.com/nyu-2022summer-devops-customers/customers/actions/workflows/bdd.yml/badge.svg)](https://github.com/nyu-2022summer-devops-customers/customers/actions)
 [![codecov](https://codecov.io/gh/nyu-2022summer-devops-customers/customers/branch/master/graph/badge.svg?token=J40BECK4ZX)](https://codecov.io/gh/nyu-2022summer-devops-customers/customers)
+[![Open in Remote - Containers](https://img.shields.io/static/v1?label=Remote%20-%20Containers&message=Open&color=blue&logo=visualstudiocode)](https://vscode.dev/redirect?url=vscode://ms-vscode-remote.remote-containers/cloneInVolume?url=https://github.com/nyu-2022summer-devops-customers/customers)
 
 Created for NYU Devops project, Summer 2022. Microservices built for handling customer data for an e-commerce site.
 

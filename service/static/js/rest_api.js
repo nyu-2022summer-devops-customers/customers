@@ -244,8 +244,6 @@ $(function () {
             }
         }
 
-        console.log(queryString)
-
         $("#flash_message").empty();
 
         let ajax = $.ajax({

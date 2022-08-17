@@ -210,8 +210,8 @@ $ behave
 
 ## What's featured in the project?
 
-    * app/routes.py -- the main Service routes using Python Flask
-    * app/models.py -- the data model using SQLAlchemy
+    * service/routes.py -- the main Service routes using Python Flask
+    * service/models.py -- the data model using SQLAlchemy
     * tests/test_routes.py -- test cases against the Customer service
     * tests/test_models.py -- test cases against the Customer model
   

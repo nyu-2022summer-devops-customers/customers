@@ -18,10 +18,10 @@ BASE_URL = '/customers'
 
 
 def abort_when_customer_not_exist(customer_id):
-    """ Rise 400 BAD request if the customer id not exist """
+    """ Rise 404 NOT Found if the customer id not exist """
     customer = CustomerModel.find(customer_id)
     if customer is None:
-        abort(status.HTTP_400_BAD_REQUEST, f"Addresses with id '{customer_id}' was not found.")
+        abort(status.HTTP_404_NOT_FOUND, f"Addresses with id '{customer_id}' was not found.")
 
 ############################################################
 # Health Endpoint

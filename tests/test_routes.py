@@ -444,15 +444,15 @@ class TestCustomersService(unittest.TestCase):
         response = self.client.post(BASE_URL)
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
 
-    # def test_create_customer_bad_gender(self):
-    #     """It should not Create a Customer with bad gender data"""
-    #     customer = CustomerFactory()
-    #     logging.debug(customer)
-    #     # change gender to a bad string
-    #     test_customer = customer.serialize()
-    #     test_customer["gender"] = "male"    # wrong case
-    #     response = self.client.post(BASE_URL, json=test_customer)
-    #     self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+    def test_create_customer_bad_gender(self):
+        """It should not Create a Customer with bad gender data"""
+        customer = CustomerFactory()
+        logging.debug(customer)
+        # change gender to a bad string
+        test_customer = customer.serialize()
+        test_customer["gender"] = "male"    # wrong case
+        response = self.client.post(BASE_URL, json=test_customer)
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
 
     def test_create_address_for_nonexisting_customer(self):
         """It shouldn't Create a new Address for an non-existing Customer"""

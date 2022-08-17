@@ -206,7 +206,7 @@ $(function () {
     $("#search-btn").click(function () {
 
         let first_name = $("#customer_first_name").val();
-        let last_name = $("#last_name").val();
+        let last_name = $("#customer_last_name").val();
         let nickname = $("#customer_nickname").val();
         let birthday = $("#customer_birthday").val();
         let email = $("#customer_email").val();
@@ -215,11 +215,11 @@ $(function () {
 
         if (first_name && last_name) {
             if (queryString.length > 0) {
-                queryString += '&first_name=' + first_name
-                queryString += '&last_name=' + last_name
+                queryString += '&firstname=' + first_name
+                queryString += '&lastname=' + last_name
             } else {
-                queryString += 'first_name=' + nickname
-                queryString += 'last_name=' + last_name
+                queryString += 'firstname=' + first_name
+                queryString += '&lastname=' + last_name
             }
         }
         if (nickname) {

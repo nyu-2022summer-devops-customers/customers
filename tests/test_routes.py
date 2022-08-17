@@ -434,25 +434,25 @@ class TestCustomersService(unittest.TestCase):
         response = self.client.delete(BASE_URL)
         self.assertEqual(response.status_code, status.HTTP_405_METHOD_NOT_ALLOWED)
 
-    # def test_create_customer_no_data(self):
-    #     """It should not Create a Customer with missing data"""
-    #     response = self.client.post(BASE_URL, json={})
-    #     self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+    def test_create_customer_no_data(self):
+        """It should not Create a Customer with missing data"""
+        response = self.client.post(BASE_URL, json={})
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
 
     def test_create_customer_no_content_type(self):
         """It should not Create a Customer with no content type"""
         response = self.client.post(BASE_URL)
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
 
-    # def test_create_customer_bad_gender(self):
-    #     """It should not Create a Customer with bad gender data"""
-    #     customer = CustomerFactory()
-    #     logging.debug(customer)
-    #     # change gender to a bad string
-    #     test_customer = customer.serialize()
-    #     test_customer["gender"] = "male"    # wrong case
-    #     response = self.client.post(BASE_URL, json=test_customer)
-    #     self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+    def test_create_customer_bad_gender(self):
+        """It should not Create a Customer with bad gender data"""
+        customer = CustomerFactory()
+        logging.debug(customer)
+        # change gender to a bad string
+        test_customer = customer.serialize()
+        test_customer["gender"] = "male"    # wrong case
+        response = self.client.post(BASE_URL, json=test_customer)
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
 
     def test_create_address_for_nonexisting_customer(self):
         """It shouldn't Create a new Address for an non-existing Customer"""
@@ -466,52 +466,52 @@ class TestCustomersService(unittest.TestCase):
         test_address.customer_id = customer_id
         logging.debug("Test Address: %s", test_address.serialize())
         response = self.client.post(f"{BASE_URL}/{customer_id}/addresses", json=test_address.serialize())
-        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
 
-    # def test_delete_address_for_nonexisting_customer(self):
-    #     """It shouldn't Delete the Address for an non-existing Customer"""
-    #     customer_id = 0
-    #     # Check if 0 exists
-    #     response = self.client.get(f"{BASE_URL}/{customer_id}")
-    #     self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
+    def test_delete_address_for_nonexisting_customer(self):
+        """It shouldn't Delete the Address for an non-existing Customer"""
+        customer_id = 0
+        # Check if 0 exists
+        response = self.client.get(f"{BASE_URL}/{customer_id}")
+        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
 
-    #     # Delete Address for this non-existing customer
-    #     test_address = AddressFactory()
-    #     test_address.customer_id = customer_id
-    #     logging.debug("Test Address: %s", test_address.serialize())
-    #     response = self.client.delete(f"{BASE_URL}/{customer_id}/addresses/{test_address.address_id}")
-    #     self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+        # Delete Address for this non-existing customer
+        test_address = AddressFactory()
+        test_address.customer_id = customer_id
+        logging.debug("Test Address: %s", test_address.serialize())
+        response = self.client.delete(f"{BASE_URL}/{customer_id}/addresses/{test_address.address_id}")
+        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
 
-    # def test_read_address_for_nonexisting_customer(self):
-    #     """It shouldn't Read the Address for an non-existing Customer"""
-    #     customer_id = 0
-    #     # Check if 0 exists
-    #     response = self.client.get(f"{BASE_URL}/{customer_id}")
-    #     self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
+    def test_read_address_for_nonexisting_customer(self):
+        """It shouldn't Read the Address for an non-existing Customer"""
+        customer_id = 0
+        # Check if 0 exists
+        response = self.client.get(f"{BASE_URL}/{customer_id}")
+        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
 
-    #     # Read Address for this non-existing customer
-    #     test_address = AddressFactory()
-    #     test_address.customer_id = customer_id
-    #     logging.debug("Test Address: %s", test_address.serialize())
-    #     response = self.client.get(f"{BASE_URL}/{customer_id}/addresses/{test_address.address_id}")
-    #     self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+        # Read Address for this non-existing customer
+        test_address = AddressFactory()
+        test_address.customer_id = customer_id
+        logging.debug("Test Address: %s", test_address.serialize())
+        response = self.client.get(f"{BASE_URL}/{customer_id}/addresses/{test_address.address_id}")
+        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
 
-    # def test_update_address_for_nonexisting_customer(self):
-    #     """It shouldn't Modify the Address for an non-existing Customer"""
-    #     customer_id = 0
-    #     # Check if 0 exists
-    #     response = self.client.get(f"{BASE_URL}/{customer_id}")
-    #     self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
+    def test_update_address_for_nonexisting_customer(self):
+        """It shouldn't Modify the Address for an non-existing Customer"""
+        customer_id = 0
+        # Check if 0 exists
+        response = self.client.get(f"{BASE_URL}/{customer_id}")
+        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
 
-    #     # Create Address for this non-existing customer
-    #     test_address = AddressFactory()
-    #     test_address.customer_id = customer_id
-    #     logging.debug("Test Address: %s", test_address.serialize())
-    #     response = self.client.put(
-    #         f"{BASE_URL}/{customer_id}/addresses/{test_address.address_id}",
-    #         json=test_address.serialize()
-    #     )
-    #     self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+        # Create Address for this non-existing customer
+        test_address = AddressFactory()
+        test_address.customer_id = customer_id
+        logging.debug("Test Address: %s", test_address.serialize())
+        response = self.client.put(
+            f"{BASE_URL}/{customer_id}/addresses/{test_address.address_id}",
+            json=test_address.serialize()
+        )
+        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
 
     def test_get_customer_list_by_non_existing_nickname(self):
         """It should get an empty customer list by non-existing nickname"""

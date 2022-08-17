@@ -307,7 +307,7 @@ class AddressResource(Resource):
         found = AddressModel.find_by_customer_and_address_id(customer_id=customer_id, address_id=address_id)
 
         if found.count() == 0:
-            abort(status.HTTP_404_NOT_FOUND, "Address with id {address_id} of customer with id {customer_id} was not found.")
+            abort(status.HTTP_404_NOT_FOUND, "Address with id '{}' was not found.".format(address_id))
         address = found[0]
 
         app.logger.info("Address [%s] with customer id [%s]] retrieve complete.", address_id, customer_id)
@@ -318,7 +318,6 @@ class AddressResource(Resource):
     # ------------------------------------------------------------------
     @api.doc('delete_customers_address')
     @api.response(204, 'Address deleted')
-    @api.marshal_with(address_model)
     def delete(self, customer_id, address_id):
         """
         Delete an Address of a Customer
@@ -331,7 +330,7 @@ class AddressResource(Resource):
         if found.count() == 1:
             address = found[0]
             address.delete()
-        app.logger.info("Address [%s] with customer id [%s]] delete complete.", address_id, customer_id)
+            app.logger.info("Address [%s] with customer id [%s]] delete complete.", address_id, customer_id)
         return "", status.HTTP_204_NO_CONTENT
 
     # ------------------------------------------------------------------
@@ -339,7 +338,9 @@ class AddressResource(Resource):
     # ------------------------------------------------------------------
     @api.doc('update_customers_address')
     @api.response(200, 'Address updated')
+    @api.response(404, 'Address not found')
     @api.marshal_with(address_model)
+    @api.expect(address_model)
     def put(self, customer_id, address_id):
         """
         Update an Address of a Customer
@@ -353,8 +354,10 @@ class AddressResource(Resource):
         address.update()
 
         found = AddressModel.find_by_customer_and_address_id(customer_id, address_id)
+
         if found.count() == 0:
-            abort(status.HTTP_404_NOT_FOUND, "Address with id '{address_id}' was not found.")
+            abort(status.HTTP_404_NOT_FOUND, "Address with id '{}' was not found.".format(address_id))
+
         app.logger.debug('Payload = %s', api.payload)
         data = api.payload
         address = found[0]

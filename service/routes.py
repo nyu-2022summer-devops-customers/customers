@@ -404,7 +404,7 @@ class AddressCollection(Resource):
     # LIST ALL ADDRESSES
     # ------------------------------------------------------------------
     @api.doc('list_customers')
-    @api.response(404,'Customer not found')
+    @api.response(404, 'Customer not found')
     @api.marshal_list_with(address_model)
     def get(self, customer_id):
         """

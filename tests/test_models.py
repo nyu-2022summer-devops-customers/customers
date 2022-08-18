@@ -687,4 +687,3 @@ class TestAddressModel(unittest.TestCase):
     def test_find_or_404_not_found_address(self):
         """It should return 404 not found for an Address"""
         self.assertRaises(NotFound, AddressModel.find_or_404, 0)
-

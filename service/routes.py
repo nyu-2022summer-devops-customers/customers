@@ -339,6 +339,7 @@ class AddressResource(Resource):
     @api.doc('update_customers_address')
     @api.response(200, 'Address updated')
     @api.response(404, 'Address not found')
+    @api.response(400, 'The posted Address data was not valid')
     @api.marshal_with(address_model)
     @api.expect(address_model)
     def put(self, customer_id, address_id):
@@ -381,8 +382,8 @@ class AddressCollection(Resource):
     # ADD A NEW CUSTOMER ADDRESS
     # ------------------------------------------------------------------
     @api.doc('create_customers_address')
-    @api.response(400, 'The posted data was not valid')
     @api.response(404, 'Customer not found')
+    @api.response(400, 'The posted Address data was not valid')
     @api.expect(create_address_model)
     @api.marshal_with(address_model, code=201)
     def post(self, customer_id):
@@ -405,7 +406,7 @@ class AddressCollection(Resource):
     # LIST ALL ADDRESSES
     # ------------------------------------------------------------------
     @api.doc('list_customers')
-    @api.response(400, 'Bad request to non-existing customer')
+    @api.response(404,'Customer not found')
     @api.marshal_list_with(address_model)
     def get(self, customer_id):
         """

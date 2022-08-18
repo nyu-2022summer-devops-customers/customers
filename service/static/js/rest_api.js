@@ -245,9 +245,7 @@ $(function () {
         }
 
         $("#flash_message").empty();
-        let url=`${BASE_URL}?${queryString}`;
-        console.log(url);
-
+        
         let ajax = $.ajax({
             type: "GET",
             url: `${BASE_URL}?${queryString}`,
@@ -255,7 +253,6 @@ $(function () {
             data: ''
         })
         
-
         ajax.done(function(res){
             //alert(res.toSource())
             $("#search_results").empty();

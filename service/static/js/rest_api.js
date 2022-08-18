@@ -253,7 +253,6 @@ $(function () {
             data: ''
         })
         
-
         ajax.done(function(res){
             //alert(res.toSource())
             $("#search_results").empty();

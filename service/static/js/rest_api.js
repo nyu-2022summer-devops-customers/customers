@@ -245,9 +245,7 @@ $(function () {
         }
 
         $("#flash_message").empty();
-        let url=`${BASE_URL}?${queryString}`;
-
-
+        
         let ajax = $.ajax({
             type: "GET",
             url: `${BASE_URL}?${queryString}`,

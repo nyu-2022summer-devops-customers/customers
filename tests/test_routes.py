@@ -466,7 +466,7 @@ class TestCustomersService(unittest.TestCase):
         test_address.customer_id = customer_id
         logging.debug("Test Address: %s", test_address.serialize())
         response = self.client.post(f"{BASE_URL}/{customer_id}/addresses", json=test_address.serialize())
-        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
 
     # def test_delete_address_for_nonexisting_customer(self):
     #     """It shouldn't Delete the Address for an non-existing Customer"""

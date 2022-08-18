@@ -20,7 +20,7 @@ BASE_URL = '/customers'
 def abort_when_customer_not_exist(customer_id):
     customer = CustomerModel.find(customer_id)
     if customer is None:
-        abort(status.HTTP_400_BAD_REQUEST, f"Addresses with id '{customer_id}' was not found.")
+        abort(status.HTTP_404_NOT_FOUND, f"Customer with id '{customer_id}' was not found.")
 
 ############################################################
 # Health Endpoint
@@ -382,6 +382,7 @@ class AddressCollection(Resource):
     # ------------------------------------------------------------------
     @api.doc('create_customers_address')
     @api.response(400, 'The posted data was not valid')
+    @api.response(404, 'Customer not found')
     @api.expect(create_address_model)
     @api.marshal_with(address_model, code=201)
     def post(self, customer_id):

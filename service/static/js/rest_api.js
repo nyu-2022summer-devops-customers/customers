@@ -245,14 +245,14 @@ $(function () {
         }
 
         $("#flash_message").empty();
-
+        
         let ajax = $.ajax({
             type: "GET",
             url: `${BASE_URL}?${queryString}`,
             contentType: "application/json",
             data: ''
         })
-
+        
         ajax.done(function(res){
             //alert(res.toSource())
             $("#search_results").empty();

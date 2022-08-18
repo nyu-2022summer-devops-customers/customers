@@ -1,6 +1,5 @@
 """
 Test cases for CustomersModel Model
-
 """
 # from audioop import add
 from werkzeug.exceptions import NotFound

@@ -1,8 +1,10 @@
 # Customers
 [![License](https://img.shields.io/badge/License-Apache_2.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
 [![Python](https://img.shields.io/badge/Language-Python-blue.svg)](https://python.org/)
-![Build Status](https://github.com/nyu-2022summer-devops-customers/customers/actions/workflows/ci.yml/badge.svg)
+[![Build Status](https://github.com/nyu-2022summer-devops-customers/customers/actions/workflows/tdd.yml/badge.svg)](https://github.com/nyu-2022summer-devops-customers/customers/actions)
+[![Build Status](https://github.com/nyu-2022summer-devops-customers/customers/actions/workflows/bdd.yml/badge.svg)](https://github.com/nyu-2022summer-devops-customers/customers/actions)
 [![codecov](https://codecov.io/gh/nyu-2022summer-devops-customers/customers/branch/master/graph/badge.svg?token=J40BECK4ZX)](https://codecov.io/gh/nyu-2022summer-devops-customers/customers)
+[![Open in Remote - Containers](https://img.shields.io/static/v1?label=Remote%20-%20Containers&message=Open&color=blue&logo=visualstudiocode)](https://vscode.dev/redirect?url=vscode://ms-vscode-remote.remote-containers/cloneInVolume?url=https://github.com/nyu-2022summer-devops-customers/customers)
 
 Created for NYU Devops project, Summer 2022. Microservices built for handling customer data for an e-commerce site.
 
@@ -11,25 +13,72 @@ Created for NYU Devops project, Summer 2022. Microservices built for handling cu
 The project contains the following:
 
 ```text
-.gitignore          - this will ignore vagrant and other metadata files
-.flaskenv           - Environment variables to configure Flask
-.gitattributes      - File to gix Windows CRLF issues
-.devcontainers/     - Folder with support for VSCode Remote Containers
-dot-env-example     - copy to .env to use environment variables
-requirements.txt    - list if Python libraries required by your code
-config.py           - configuration parameters
-service/                   - service python package
-├── __init__.py            - package initializer
-├── models.py              - module with business models
-├── routes.py              - module with service routes
-└── utils                  - utility package
-    ├── error_handlers.py  - HTTP error handling code
-    ├── log_handlers.py    - logging setup code
-    └── status.py          - HTTP status constants
-tests/              - test cases package
-├── __init__.py     - package initializer
-├── test_models.py  - test suite for business models
-└── test_routes.py  - test suite for service routes
+.devcontainer
+   |-- Dockerfile
+   |-- devcontainer.json
+   |-- docker-compose.yml
+   |-- scripts
+   |   |-- install-tools.sh
+.flaskenv
+.gitattributes
+.github
+   |-- ISSUE_TEMPLATE
+   |   |-- bug_report.md
+   |   |-- story.md
+   |-- workflows
+   |   |-- ci.yml
+.gitignore
+.pylintrc
+Dockerfile
+LICENSE
+Makefile
+Procfile
+README.md
+deploy
+   |-- dev
+   |   |-- deployment.yaml
+   |   |-- postgresql.yaml
+   |   |-- service.yaml
+   |-- prod
+   |   |-- deployment.yaml
+   |   |-- postgresql.yaml
+   |   |-- service.yaml
+dot-env-example
+features
+   |-- customers.feature
+   |-- environment.py
+   |-- steps
+   |   |-- customers_steps.py
+   |   |-- web_steps.py
+requirements.txt
+service
+   |-- __init__.py
+   |-- config.py
+   |-- models.py
+   |-- routes.py
+   |-- static
+   |   |-- css
+   |   |   |-- blue_bootstrap.min.css
+   |   |   |-- cerulean_bootstrap.min.css
+   |   |   |-- darkly_bootstrap.min.css
+   |   |   |-- flatly_bootstrap.min.css
+   |   |   |-- slate_bootstrap.min.css
+   |   |-- index.html
+   |   |-- js
+   |   |   |-- bootstrap.min.js
+   |   |   |-- jquery-3.6.0.min.js
+   |   |   |-- rest_api.js
+   |-- utils
+   |   |-- cli_commands.py
+   |   |-- error_handlers.py
+   |   |-- log_handlers.py
+   |   |-- status.py
+setup.cfg
+tests
+   |-- __init__.py
+   |-- factories.py
+   |-- test_models.py
+   |-- test_routes.py
 ```
 Created for NYU Devops project, Summer 2022. Microservices built for handling customer data for an e-commerce site.
 
@@ -37,23 +86,24 @@ Created for NYU Devops project, Summer 2022. Microservices built for handling cu
 
 | HTTP Method | URL | Description|Input|Return
 | :--- | :--- | :--- | :--- | :--- |
-|`GET` | `/` | Get information about the customer service  |None|Json
-| `GET` | `/customers/{customer_id}` | Get customer by Customer_ID |'customer_id': string|CustomerModel Object
-| `GET` | `/customers` | Returns a list of all the Customers |None|CustomerModel Object
-| `POST` | `/customers` | Creates a new Customer record in the database |{'first_name': string, 'last_name': string, 'nickname': string, 'email': string, 'gender': 'FEMALE' or 'MALE' or'UNKNOWN', 'birthday': string, 'password': string, 'is_active': boolean}|CustomerModel Object
-| `PUT` | `/customers/{customer_id}` | Updates/Modify a Customer record in the database |'customer_id': string, 'first_name': string, 'last_name': string, 'nickname': string, 'email': string, 'gender': 'FEMALE' or 'MALE' or'UNKNOWN', 'birthday': string, 'password': string|CustomerModel Object
-| `DELETE` | `/customers/{customer_id}` | Delete the Customer with the given id number |'customer_id': string|204 Status Code
-|`GET` | `/customers/{customer_id}/addresses` | Returns a list of all Addresses of a Customer |'customer_id': string, 'address_id': integer|Address Object
-|`GET` | `/customers/{customer_id}/addresses/{address_id}` | Get an Address by address_id |'customer_id': string|Customer Object
-|`POST` | `/customers/{customer_id}/addresses` | Creates a new Address record in the database |{'customer_id': string, 'address_id': integer, 'address': string}| Address Object
-|`PUT` | `/customers/{customer_id}/addresses/{address_id}` | Updates/Modify an Address record in the database |'customer_id': string, 'address_id': integer, 'address': string|AddressModel Object
-|`DELETE` | `/customers/{customer_id}` | Delete the Address with the given address_id number |'customer_id': string|204 Status Code
-|`GET`|`/customers?birthday=<string:birthday>`|List customers by birthday|'birthday': string|200 Status Code|
-|`GET`|`/customers?nickname=<string:email>`|List customers by email|'email': string|200 Status Code|
-|`GET`|`/customers?firstname=<string:firstname>&lastname=<string:lastname>`|List customers by their name|'firstname': string, 'lastname': string|200 Status Code|
-|`GET`|`/customers?nickname=<string:nickname>`|List customers by nickname|'nickname': string|200 Status Code|
-|`PUT`|`/customers/<int:customer_id>/activate`|Active a customer|--|204 Status Code|
-|`DELETE`|`/customers/<int:customer_id>/deactivate`|Deactive a customer|--|204 Status Code|
+|`GET` |`/apidocs` | Get the documentation API | None| HTML
+|`GET` | `/api` | Get information about the customer service | None | HTML
+| `GET` | `/api/customers/{customer_id}` | Get customer by Customer_ID |'customer_id': string|CustomerModel Object
+| `GET` | `/api/customers` | Returns a list of all the Customers |None|CustomerModel Object
+| `POST` | `/api/customers` | Creates a new Customer record in the database |{'first_name': string, 'last_name': string, 'nickname': string, 'email': string, 'gender': 'FEMALE' or 'MALE' or'UNKNOWN', 'birthday': string, 'password': string, 'is_active': boolean}|CustomerModel Object
+| `PUT` | `/api/customers/{customer_id}` | Updates/Modify a Customer record in the database |'customer_id': string, 'first_name': string, 'last_name': string, 'nickname': string, 'email': string, 'gender': 'FEMALE' or 'MALE' or'UNKNOWN', 'birthday': string, 'password': string|CustomerModel Object
+| `DELETE` | `/api/customers/{customer_id}` | Delete the Customer with the given id number |'customer_id': string|204 Status Code
+|`GET` | `/api/customers/{customer_id}/addresses` | Returns a list of all Addresses of a Customer |'customer_id': string, 'address_id': integer|Address Object
+|`GET` | `/api/customers/{customer_id}/addresses/{address_id}` | Get an Address by address_id |'customer_id': string|Customer Object
+|`POST` | `/api/customers/{customer_id}/addresses` | Creates a new Address record in the database |{'customer_id': string, 'address_id': integer, 'address': string}| Address Object
+|`PUT` | `/api/customers/{customer_id}/addresses/{address_id}` | Updates/Modify an Address record in the database |'customer_id': string, 'address_id': integer, 'address': string|AddressModel Object
+|`DELETE` | `/api/customers/{customer_id}` | Delete the Address with the given address_id number |'customer_id': string|204 Status Code
+|`GET`|`/api/customers?birthday=<string:birthday>`|List customers by birthday|'birthday': string|200 Status Code|
+|`GET`|`/api/customers?nickname=<string:email>`|List customers by email|'email': string|200 Status Code|
+|`GET`|`/api/customers?firstname=<string:firstname>&lastname=<string:lastname>`|List customers by their name|'firstname': string, 'lastname': string|200 Status Code|
+|`GET`|`/api/customers?nickname=<string:nickname>`|List customers by nickname|'nickname': string|200 Status Code|
+|`PUT`|`/api/customers/<int:customer_id>/activate`|Active a customer|--|204 Status Code|
+|`DELETE`|`/api/customers/<int:customer_id>/deactivate`|Deactive a customer|--|204 Status Code|
 
 ## Prerequisite Software Installation
 
@@ -94,19 +144,8 @@ Note that there is a period `.` after the `code` command. This tells Visual Stud
 
 Once the environment is loaded you should be placed at a `bash` prompt in the `/app` folder inside of the development container. This folder is mounted to the current working directory of your repository on your computer. This means that any file you edit while inside of the `/app` folder in the container is actually being edited on your computer. You can then commit your changes to `git` from either inside or outside of the container.
 
-### Using Vagrant and VirtualBox
 
-Bring up the virtual machine using Vagrant.
-
-```shell
-$ vagrant up
-$ vagrant ssh
-$ cd /vagrant
-```
-
-This will place you in the virtual machine in the `/vagrant` folder which has been shared with your computer so that your source files can be edited outside of the VM and run inside of the VM.
-
-## Running the tests
+## Running TDD tests
 
 As developers we always want to run the tests before we change any code. That way we know if we broke the code or if someone before us did. Always run the test cases first!
 
@@ -147,32 +186,32 @@ I've also included `pylint` in the requirements. Visual Studio Code is configure
 The project uses *honcho* which gets it's commands from the `Procfile`. To start the service simply use:
 
 ```shell
-$ honcho start
+$ make run
 ```
 
 You should be able to reach the service at: http://localhost:8000. The port that is used is controlled by an environment variable defined in the `.flaskenv` file which Flask uses to load it's configuration from the environment by default.
 
-## Shutdown development environment
 
-If you are using Visual Studio Code with Docker, simply existing Visual Studio Code will stop the docker containers. They will start up again the next time you need to develop as long as you don't manually delete them.
+## Running BDD tests
 
-If you are using Vagrant and VirtualBox, when you are done, you can exit and shut down the vm with:
+To run BDD tests, you should start the service first, then using `behave` command to do BDD tests.
+
+To start the service:
 
 ```shell
-$ exit
-$ vagrant halt
+$ make run
 ```
 
-If the VM is no longer needed you can remove it with:
+Then open another terminal to run BDD tests:
 
 ```shell
-$ vagrant destroy
+$ behave
 ```
 
 ## What's featured in the project?
 
-    * app/routes.py -- the main Service routes using Python Flask
-    * app/models.py -- the data model using SQLAlchemy
+    * service/routes.py -- the main Service routes using Python Flask
+    * service/models.py -- the data model using SQLAlchemy
     * tests/test_routes.py -- test cases against the Customer service
     * tests/test_models.py -- test cases against the Customer model
   
